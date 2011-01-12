@@ -37,7 +37,9 @@ while(my $line=<STDIN>){
             $tgt_port = $3;
         }
         print "[$proto] $src_zone:$src_ip/$src_port -> $tgt_zone:$tgt_ip/$tgt_port\n";
-   }
+    }else{
+        print "$result->{'name'}\n";
+    }
 #  if($proto&&$src_zone&&$src_ip&&$src_port&&$tgt_zone&&$tgt_ip&&$tgt_port){
 #        $db->do("INSERT INTO hosts (ipaddress,zone) SELECT '$src_ip','$src_zone' WHERE NOT EXISTS (SELECT * FROM hosts WHERE ipaddress = '$src_ip')");
 #        $db->do("INSERT INTO hosts (ipaddress,zone) SELECT '$tgt_ip','$tgt_zone' WHERE NOT EXISTS (SELECT * FROM hosts WHERE ipaddress = '$tgt_ip')");
@@ -55,17 +57,3 @@ while(my $line=<STDIN>){
 #             my $newcount=$tally->[0]->[0] + 1;
 #             $db->do("UPDATE connections SET count='$newcount' WHERE  source_host_id='$src_id' AND destination_host_id='$tgt_id' AND source_port='$src_port' AND destination_port='$tgt_port' AND protocol='$proto'");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-}
-exit 1;
