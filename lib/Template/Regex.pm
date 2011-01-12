@@ -46,6 +46,7 @@ sub parse_line_segment{
     my $tt = Template->new($config);
     my $match = undef;
     foreach my $log_template (@{ $log_t }){
+        next unless $log_template->{'regex'};
         my $tpl=$log_template->{'regex'};
         # clone the tag
         my $tag_counter = $tpl;
