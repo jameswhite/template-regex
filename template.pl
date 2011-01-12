@@ -21,11 +21,11 @@ while(my $line=<STDIN>){
     chomp($line);
     my ($proto, $src_raw, $src_zone, $src_ip, $src_port, $tgt_raw, $tgt_zone, $tgt_ip, $tgt_port);
     my $result = $tr->parse_line($line);
+    if ($result->{'name'} eq 'cisco_asa.session_buildup'){
 print Data::Dumper->Dump([ $result ]);
-#    if ($result->{'name'} eq 'cisco_asa.session_buildup'){
-#        $proto = $result->{'pattern'}->[6];
-#        $proto=~tr/A-Z/a-z/;
-#        $src_raw = $result->{'pattern'}->[8];
+       $proto = $result->{'patterns'}->[6];
+        $proto=~tr/A-Z/a-z/;
+        $src_raw = $result->{'patterns'}->[8];
 #        if($src_raw=~m/([^:])+:([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
 #            $src_zone = $1; $src_ip   = $2; $src_port = $3;
 #        }
