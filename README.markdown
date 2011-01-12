@@ -7,9 +7,7 @@ into template "chunks" that would look something like:
 
     [% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] [% ASA_CODE %] Built [% DIRECTION %] [% TRANSPORT %] connection [% SESSION %] for [% IFACE_IP_PORT_P %] to [% IFACE_IP_PORT_P %]'
 
-and return the name of the template (or dot-delimited list of sub-templates along with a list ref to all the patterns matched in the provided tags. 
-
-It aims to provide a way to normalize your log parsing into the fewest patterns possible.
+and return the name of the template (and a list of patterns matched by the tokens) It aims to provide a way to normalize your log parsing into the fewest patterns possible.
 
 
 # Example
