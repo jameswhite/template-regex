@@ -30,7 +30,6 @@ sub load_template_file{
 sub parse_line{
     my $self = shift;
     my $line = shift if @_;
-print "$line\n";
     return undef unless $line;
     # send the line, top-level log templates and regular expression templates to parse_line_segment
     $self->parse_line_segment( $line, $self->{'templates'}->{'log_tpl'}, $self->{'templates'}->{'regex_tpl'});
