@@ -1,11 +1,11 @@
 # WTF is this crap? 
 I was asked to parse about a year of Cisco ASA logs and 
 This simple module just creates a way to abstract a regular expresssion that might loook like: 
->    ([0-9]{4}-[0-9]{2}-[0-9]{2})T([0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{6}|[0-9]{2}:[0-9]{2}:[0-9]{2})([+\-][0-9]{2}:[0-9]{2}) (\S+) Built (inbound|outbound) (TCP|UDP) connection ('[0-9]+) for ([^:]+:[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\/[0-9]+\s+\(([^\)]*)\)) to ([^:]+:[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\/[0-9]+\s+\(([^\)]*)\))
+    ([0-9]{4}-[0-9]{2}-[0-9]{2})T([0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{6}|[0-9]{2}:[0-9]{2}:[0-9]{2})([+\-][0-9]{2}:[0-9]{2}) (\S+) Built (inbound|outbound) (TCP|UDP) connection ('[0-9]+) for ([^:]+:[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\/[0-9]+\s+\(([^\)]*)\)) to ([^:]+:[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\/[0-9]+\s+\(([^\)]*)\))
 
 into template "chunks" that would look something like: 
 
->     [% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] [% ASA_CODE %] Built [% DIRECTION %] [% TRANSPORT %] connection [% SESSION %] for [% IFACE_IP_PORT_P %] to [% IFACE_IP_PORT_P %]'
+    [% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] [% ASA_CODE %] Built [% DIRECTION %] [% TRANSPORT %] connection [% SESSION %] for [% IFACE_IP_PORT_P %] to [% IFACE_IP_PORT_P %]'
 
 and return the name of the template (or dot-delimited list of sub-templates along with a list ref to all the patterns matched in the provided tags. 
 
