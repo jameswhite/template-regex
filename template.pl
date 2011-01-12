@@ -22,6 +22,7 @@ while(my $line=<STDIN>){
     my ($proto, $src_raw, $src_zone, $src_ip, $src_port, $tgt_raw, $tgt_zone, $tgt_ip, $tgt_port);
     my $result = $tr->parse_line($line);
     if ($result->{'name'} eq 'cisco_asa.session_buildup'){
+print Data::Dumper->Dump([ $result->{'pattern'} ]);
         $proto = $result->{'pattern'}->[6];
         $proto=~tr/A-Z/a-z/;
         $src_raw = $result->{'pattern'}->[8];
@@ -33,9 +34,15 @@ while(my $line=<STDIN>){
             $tgt_zone = $1; $tgt_ip   = $2; $tgt_port = $3;
         }
         print "[$proto] $src_zone:$src_ip/$src_port -> $tgt_zone:$tgt_ip/$tgt_port\n";
-    }else{
-        print "$result->{'name'}\n";
+#    }else{
+#        print "$result->{'name'}\n";
     }
+
+
+
+
+
+
 #  if($proto&&$src_zone&&$src_ip&&$src_port&&$tgt_zone&&$tgt_ip&&$tgt_port){
 #        $db->do("INSERT INTO hosts (ipaddress,zone) SELECT '$src_ip','$src_zone' WHERE NOT EXISTS (SELECT * FROM hosts WHERE ipaddress = '$src_ip')");
 #        $db->do("INSERT INTO hosts (ipaddress,zone) SELECT '$tgt_ip','$tgt_zone' WHERE NOT EXISTS (SELECT * FROM hosts WHERE ipaddress = '$tgt_ip')");
