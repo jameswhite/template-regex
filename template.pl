@@ -25,37 +25,33 @@ while(my $line=<STDIN>){
        $proto = $result->{'patterns'}->[6];
         $proto=~tr/A-Z/a-z/;
         $src_raw = $result->{'patterns'}->[8];
-        if($src_raw=~m/([^:])+:([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
+        if($src_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
             $src_zone = $1; $src_ip   = $2; $src_port = $3;
         }
         $tgt_raw = $result->{'pattern'}->[9];
-        if($src_raw=~m/([^:])+:([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
+        if($src_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
             $tgt_zone = $1; $tgt_ip   = $2; $tgt_port = $3;
         }
        print "[$proto] $src_zone:$src_ip/$src_port -> $tgt_zone:$tgt_ip/$tgt_port\n";
-#    }else{
-#        print "$result->{'name'}\n";
+    }else{
+        print "$result->{'name'}\n";
     }
-
-
-
-
-
-
-#  if($proto&&$src_zone&&$src_ip&&$src_port&&$tgt_zone&&$tgt_ip&&$tgt_port){
-#        $db->do("INSERT INTO hosts (ipaddress,zone) SELECT '$src_ip','$src_zone' WHERE NOT EXISTS (SELECT * FROM hosts WHERE ipaddress = '$src_ip')");
-#        $db->do("INSERT INTO hosts (ipaddress,zone) SELECT '$tgt_ip','$tgt_zone' WHERE NOT EXISTS (SELECT * FROM hosts WHERE ipaddress = '$tgt_ip')");
-#         my $src_id_arry = $db->selectall_arrayref("SELECT host_id from hosts WHERE ipaddress='$src_ip'");
-#         my $tgt_id_arry = $db->selectall_arrayref("SELECT host_id from hosts WHERE ipaddress='$tgt_ip'");
-#         #print $#{ $src_id }." -> ".$#{ $tgt_id }."\n";
-#         my $src_id = $src_id_arry->[0]->[0];
-#         my $tgt_id = $tgt_id_arry->[0]->[0];
-#         my $tally = $db->selectall_arrayref("SELECT count FROM connections WHERE source_host_id='$src_id' AND destination_host_id='$tgt_id' AND source_port='$src_port' AND destination_port='$tgt_port' AND protocol='$proto'");
-#         if($#{ $tally } == -1){
-#             #print "Inserting\n";
-#             $db->do("INSERT INTO connections (source_host_id,destination_host_id,source_port,destination_port,protocol,count) VALUES ('$src_id','$tgt_id','$src_port','$tgt_port','$proto','1')");
-#         }else{
-#             #print "Updating\n";
-#             my $newcount=$tally->[0]->[0] + 1;
-#             $db->do("UPDATE connections SET count='$newcount' WHERE  source_host_id='$src_id' AND destination_host_id='$tgt_id' AND source_port='$src_port' AND destination_port='$tgt_port' AND protocol='$proto'");
+    if($proto&&$src_zone&&$src_ip&&$src_port&&$tgt_zone&&$tgt_ip&&$tgt_port){
+        $db->do("INSERT INTO hosts (ipaddress,zone) SELECT '$src_ip','$src_zone' WHERE NOT EXISTS (SELECT * FROM hosts WHERE ipaddress = '$src_ip')");
+        $db->do("INSERT INTO hosts (ipaddress,zone) SELECT '$tgt_ip','$tgt_zone' WHERE NOT EXISTS (SELECT * FROM hosts WHERE ipaddress = '$tgt_ip')");
+        my $src_id_arry = $db->selectall_arrayref("SELECT host_id from hosts WHERE ipaddress='$src_ip'");
+        my $tgt_id_arry = $db->selectall_arrayref("SELECT host_id from hosts WHERE ipaddress='$tgt_ip'");
+        #print $#{ $src_id }." -> ".$#{ $tgt_id }."\n";
+        my $src_id = $src_id_arry->[0]->[0];
+        my $tgt_id = $tgt_id_arry->[0]->[0];
+        my $tally = $db->selectall_arrayref("SELECT count FROM connections WHERE source_host_id='$src_id' AND destination_host_id='$tgt_id' AND source_port='$src_port' AND destination_port='$tgt_port' AND protocol='$proto'");
+        if($#{ $tally } == -1){
+            #print "Inserting\n";
+            $db->do("INSERT INTO connections (source_host_id,destination_host_id,source_port,destination_port,protocol,count) VALUES ('$src_id','$tgt_id','$src_port','$tgt_port','$proto','1')");
+        }else{
+            #print "Updating\n";
+            my $newcount=$tally->[0]->[0] + 1;
+            $db->do("UPDATE connections SET count='$newcount' WHERE  source_host_id='$src_id' AND destination_host_id='$tgt_id' AND source_port='$src_port' AND destination_port='$tgt_port' AND protocol='$proto'");
+        }
+    }
 }
