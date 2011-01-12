@@ -22,21 +22,20 @@ while(my $line=<STDIN>){
     my ($proto, $src_raw, $src_zone, $src_ip, $src_port, $tgt_raw, $tgt_zone, $tgt_ip, $tgt_port);
     my $result = $tr->parse_line($line);
     if ($result->{'name'} eq 'cisco_asa.session_buildup'){
-print Data::Dumper->Dump([ $result ]);
        $proto = $result->{'patterns'}->[6];
         $proto=~tr/A-Z/a-z/;
         $src_raw = $result->{'patterns'}->[8];
-#        if($src_raw=~m/([^:])+:([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
-#            $src_zone = $1; $src_ip   = $2; $src_port = $3;
-#        }
-#        $tgt_raw = $result->{'pattern'}->[9];
-#        if($src_raw=~m/([^:])+:([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
-#            $tgt_zone = $1; $tgt_ip   = $2; $tgt_port = $3;
-#        }
-        #print "[$proto] $src_zone:$src_ip/$src_port -> $tgt_zone:$tgt_ip/$tgt_port\n";
+        if($src_raw=~m/([^:])+:([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
+            $src_zone = $1; $src_ip   = $2; $src_port = $3;
+        }
+        $tgt_raw = $result->{'pattern'}->[9];
+        if($src_raw=~m/([^:])+:([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
+            $tgt_zone = $1; $tgt_ip   = $2; $tgt_port = $3;
+        }
+       print "[$proto] $src_zone:$src_ip/$src_port -> $tgt_zone:$tgt_ip/$tgt_port\n";
 #    }else{
 #        print "$result->{'name'}\n";
-#    }
+    }
 
 
 
