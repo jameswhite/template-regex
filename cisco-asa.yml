@@ -188,7 +188,7 @@ log_tpl:
       regex: 'FTP connection from [% IFACE_IP_PORT %] to [% IFACE_IP_PORT %], user [% FTP_USER %] '
       remainder: 
         - name: retrieved_file
-        - regex: 'Retrieved file [% FTP_FILE %]'
+          regex: 'Retrieved file [% FTP_FILE %]'
         - name: stored_file
           regex: 'Stored file [% FTP_FILE %]'
     - name: ids_drop_rate_exceeded_scanning
