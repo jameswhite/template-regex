@@ -9,7 +9,7 @@ use DBI;
 use DBD::SQLite;
 use Data::Dumper;
 use Template::Regex;
-my $DBFILE="/var/tmp/connections.db"
+#my $DBFILE="/var/tmp/connections.db";
 
 # my $db = DBI->connect("dbi:SQLite:$DBFILE", "", "", {RaiseError => 1, AutoCommit => 1});
 # $db->do("CREATE TABLE IF NOT EXISTS hosts (host_id INTEGER PRIMARY KEY AUTOINCREMENT, ipaddress VARCHAR(15), zone VARCHAR(32))");
