@@ -9,11 +9,11 @@ use DBI;
 use DBD::SQLite;
 use Data::Dumper;
 use Template::Regex;
-#my $DBFILE="/var/tmp/connections.db";
+my $DBFILE="/var/tmp/connections.db";
 
-# my $db = DBI->connect("dbi:SQLite:$DBFILE", "", "", {RaiseError => 1, AutoCommit => 1});
-# $db->do("CREATE TABLE IF NOT EXISTS hosts (host_id INTEGER PRIMARY KEY AUTOINCREMENT, ipaddress VARCHAR(15), zone VARCHAR(32))");
-# $db->do("CREATE TABLE IF NOT EXISTS connections (source_host_id INTEGER, destination_host_id INTEGER, source_port INTEGER, destination_port INTEGER, protocol VARCHAR(8), count INTEGER)");
+my $db = DBI->connect("dbi:SQLite:$DBFILE", "", "", {RaiseError => 1, AutoCommit => 1});
+$db->do("CREATE TABLE IF NOT EXISTS hosts (host_id INTEGER PRIMARY KEY AUTOINCREMENT, ipaddress VARCHAR(15), zone VARCHAR(32))");
+$db->do("CREATE TABLE IF NOT EXISTS connections (source_host_id INTEGER, destination_host_id INTEGER, source_port INTEGER, destination_port INTEGER, protocol VARCHAR(8), count INTEGER)");
 
 my $tr = new Template::Regex;
 $tr->load_template_file("cisco-asa.yml");
