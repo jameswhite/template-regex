@@ -15,6 +15,13 @@ my $db = DBI->connect("dbi:SQLite:$DBFILE", "", "", {RaiseError => 1, AutoCommit
 $db->do("CREATE TABLE IF NOT EXISTS hosts (host_id INTEGER PRIMARY KEY AUTOINCREMENT, ipaddress VARCHAR(15), zone VARCHAR(32))");
 $db->do("CREATE TABLE IF NOT EXISTS connections (source_host_id INTEGER, destination_host_id INTEGER, source_port INTEGER, destination_port INTEGER, protocol VARCHAR(8), count INTEGER)");
 
+# indexes so our looping select * doesn't get increasingly slower...
+$db->do("CREATE INDEX destination_host_id_idx on connections (destination_host_id)");
+$db->do("CREATE INDEX destination_port_idx on connections (destination_port)");
+$db->do("CREATE INDEX host_id_idx on hosts (host_id)");
+$db->do("CREATE INDEX source_host_id_idx on connections (source_host_id)");
+$db->do("CREATE INDEX source_port_idx on connections (source_port)");
+
 my $tr = new Template::Regex;
 $tr->load_template_file("cisco-asa.yml");
 while(my $line=<STDIN>){
