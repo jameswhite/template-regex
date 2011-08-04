@@ -45,9 +45,13 @@ regex_tpl:
 # and pass it the list of 6 patterns that matched as arguments 
 ################################################################################
 log_tpl:
- - name: pfsense
+ - name: testing
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %] [% PARENTHETICAL %] '
-#[% PARENTHETICAL %] [% IP_PORT %] > [% IP_PORT %]'
+   remainder: 
+     - name: evertything_else
+       regex: '.*'
+ - name: works
+   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %] '
    remainder: 
      - name: evertything_else
        regex: '.*'
