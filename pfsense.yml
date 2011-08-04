@@ -53,8 +53,9 @@ log_tpl:
  - name: pfsense
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: '
    remainder: 
+# just make these go away for now (.*)
      - name: number_11
-       regex: '#011\s+'
+       regex: '#011\s+.*'
        remainder:
          - name: origninator
            regex: 'Originator - '
