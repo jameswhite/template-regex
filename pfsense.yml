@@ -50,6 +50,8 @@ log_tpl:
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %] [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]:'
    remainder: 
      - name: tcp stuff
+       regex: '[% FLAGS %],'
+     - name: tcp stuff
        regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
      - name: evertything_else
        regex: '[% ANYTHING %]'
