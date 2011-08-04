@@ -27,7 +27,7 @@ regex_tpl:
 #  TUNNEL_GROUP: \S+
 #  TYPE_CODE: '\(type \d+, code \d+\)'
 #  USER_P: \(\S+\)
-  PARENTHETICAL: \(.+\)
+  P_DATA: \(tos.*length [0-9]+\)
 ################################################################################
 # Here we have nested log substrings and their names, the logic being that 
 # you can match the first part of a line, and then iterate to match the 
@@ -46,7 +46,7 @@ regex_tpl:
 ################################################################################
 log_tpl:
  - name: testing
-   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %] [% PARENTHETICAL %] '
+   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %] [% P_DATA %] '
    remainder: 
      - name: evertything_else
        regex: '.*'
