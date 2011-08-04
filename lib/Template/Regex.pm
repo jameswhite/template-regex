@@ -70,7 +70,7 @@ sub parse_line_segment{
             $replace=~s/\(/\\\(/g;
             $replace=~s/\)/\\\)/g;
             $line=~s/^$replace//;
-            print STDERR "$line=~s/^$replace//;\n"
+            print STDERR "$line=~s/^$replace//;\n";
             $remainder = $line;
             # process the remainder of the string if exists and remainder is defined
             #print STDERR "$log_template->{'name'}.[$remainder]\n";
