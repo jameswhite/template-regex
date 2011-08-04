@@ -48,26 +48,31 @@ regex_tpl:
 ################################################################################
 log_tpl:
  - name: pfsense
-   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
+   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: '
    remainder: 
-     - name: tcp
-       regex: '[% FLAGS %], cksum [% HEX %] \(correct\), [% INT %]:[% INT %]([% INT %]) win [% INT %] '
+     - name: connection
+       regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
        remainder:
-         - name: anything
-           regex: '[% ANYTHING %]'
-     - name: dns
-       regex: '[% INT %]\+ [% QUERY %]? [% HOSTNAME %]\. \([% INT %]\)'
-       remainder:
-         - name: anything
-           regex: '[% ANYTHING %]'
-     - name: dns
-       regex: '[% INT %]+ [% DNS_LOOKUP %]? \S+ .[% INT %].'
-       remainder:
-         - name: anything
-           regex: '[% ANYTHING %]'
-     - name: tcp_stuff
-       regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
-       remainder:
+         - name: tcp
+           regex: '[% FLAGS %], cksum [% HEX %] \(correct\), [% INT %]:[% INT %]([% INT %]) win [% INT %] '
+           remainder:
+             - name: anything
+               regex: '[% ANYTHING %]'
+         - name: dns
+           regex: '[% INT %]\+ [% QUERY %]? [% HOSTNAME %]\. \([% INT %]\)'
+           remainder:
+             - name: anything
+               regex: '[% ANYTHING %]'
+         - name: dns
+           regex: '[% INT %]+ [% DNS_LOOKUP %]? \S+ .[% INT %].'
+           remainder:
+             - name: anything
+               regex: '[% ANYTHING %]'
+         - name: tcp_stuff
+           regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
+           remainder:
+             - name: anything
+               regex: '[% ANYTHING %]'
          - name: anything
            regex: '[% ANYTHING %]'
      - name: anything
