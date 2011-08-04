@@ -67,10 +67,11 @@ sub parse_line_segment{
             my @patterns = ($matched =~ /$output/g) ;
             # Parenthesis in a sed replace need to be escaped
             my $replace=$matched;
+            print STDERR "[$line]\n";
+            print STDERR "[$replace]\n";
             $replace=~s/\(/\\\(/g;
             $replace=~s/\)/\\\)/g;
             $line=~s/^$replace//;
-            print STDERR "$line=~s/^$replace//;\n";
             $remainder = $line;
             # process the remainder of the string if exists and remainder is defined
             #print STDERR "$log_template->{'name'}.[$remainder]\n";
