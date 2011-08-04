@@ -143,7 +143,7 @@ log_tpl:
          - name: dns
            regex: '[% INT %]\+ [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
          - name: dns_1au
-           regex: '[% INT %]. [1au] [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
+           regex: '[% INT %]. \[1au\] [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
          - name: tcp_stuff
            regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
          - name: snmpv1
