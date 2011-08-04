@@ -76,7 +76,11 @@ sub parse_line_segment{
             last;
         }
     }
-    return { 'name' => $entry_name, 'patterns' => $entry_patters, 'remainder' => $remainder }
+    if( ($remainder ne ""){
+        return { 'name' => $entry_name, 'patterns' => $entry_patters, 'remainder' => $remainder }
+    }else{
+        return { 'name' => $entry_name, 'patterns' => $entry_patters, 'remainder' => '' }
+    }
 }
 
 1;
