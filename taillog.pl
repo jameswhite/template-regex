@@ -66,6 +66,7 @@ sub got_log_line {
    my $last = $#{ $result->{'patterns'} } - 1;
    my $output = $result->{'name'};
    $output=~s/anything$/\[ $result->{'patterns'}->[ $last ] \]/;
+   print "$output\n";
    #print Data::Dumper->Dump([$result]);
    $heap->{'linecount'}++;
    if($heap->{'linecount'} > 10){
