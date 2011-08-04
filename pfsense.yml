@@ -82,7 +82,7 @@ log_tpl:
            regex: 'Transmit Timestamp:\s+'
            remainder:
              - name: data
-               regex: '[% INT %]\.[% INT %] .[% SDATE %] [% TIME %].\s+'
+               regex: '[% INT %]\.[% INT %] .[% SDATE %] [% TIME %].'
              - name: remainder
                regex: '[% ANYTHING %]'
          - name: receive_timestamp
@@ -96,7 +96,7 @@ log_tpl:
            regex: 'Reference Timestamp:\s+'
            remainder:
              - name: data
-               regex: '[% INT %]\.[% INT %] .[% SDATE %] [% TIME %].\s+'
+               regex: '[% INT %]\.[% INT %] .[% SDATE %] [% TIME %].'
              - name: remainder
                regex: '[% ANYTHING %]'
          - name: remainder
