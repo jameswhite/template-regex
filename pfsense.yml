@@ -53,6 +53,11 @@ log_tpl:
      - name: connection
        regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
        remainder:
+         - name: netbios_bcast
+           regex: 'NBT UDP PACKET(137): QUERY; REQUEST; BROADCAST'
+           remainder:
+             - name: anything
+               regex: '[% ANYTHING %]'
          - name: tcp
            regex: '[% FLAGS %], cksum [% HEX %] .correct.,'
 # [% INT %]:[% INT %]([% INT %]) win [% INT %] '
