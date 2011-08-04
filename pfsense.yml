@@ -62,11 +62,15 @@ log_tpl:
              - name: receive_timestamp
                regex: 'Receive Timestamp:\s+'
                remainder:
+                 - name: data
+                   regex: '[% OFFSET %]'
                  - name: remainder
                    regex: '[% ANYTHING %]'
              - name: transmit_timestamp
                regex: 'Transmit Timestamp:\s+'
                remainder:
+                 - name: data
+                   regex: '[% INT %]\.[% INT %] .[% SDATE %] [% TIME %].'
                  - name: remainder
                    regex: '[% ANYTHING %]'
              - name: remainder
