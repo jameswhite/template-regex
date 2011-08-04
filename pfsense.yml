@@ -30,6 +30,7 @@ regex_tpl:
 #  USER_P: \(\S+\)
   P_DATA: \([^()]*\([^()]*\)[^()]*\)
   QUERY: PTR|A|SRV|TXT|AAAA|SOA
+  OID: '[0-9\.]+'
 ################################################################################
 # Here we have nested log substrings and their names, the logic being that 
 # you can match the first part of a line, and then iterate to match the 
@@ -126,6 +127,8 @@ log_tpl:
            regex: '[% INT %]+ [% DNS_LOOKUP %]? \S+ .[% INT %].'
          - name: tcp_stuff
            regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
+         - name: snmpv1
+           regex: '{ SNMPv1 { GetRequest.[% INT %]. R=[% INT %]  [% OID %] [% OID %] [% OID ] } }\s+'
          - name: remainder
            regex: '[% ANYTHING %]'
  - name: no_match
