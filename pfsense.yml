@@ -54,7 +54,34 @@ log_tpl:
        regex: '#011\s+'
        remainder:
          - name: origninator
-           regex: 'originator'
+           regex: 'Originator - '
+           remainder:
+             - name: receive_timestamp
+               regex: 'Receive Timestamp:\s+'
+               remainder:
+                 - name: remainder
+                   regex: '[% ANYTHING %]'
+             - name: transmit_timestamp
+               regex: 'Transmit Timestamp:\s+'
+               remainder:
+                 - name: remainder
+                   regex: '[% ANYTHING %]'
+             - name: remainder
+               regex: '[% ANYTHING %]'
+         - name: originator_timestamp
+           regex: 'Originator Timestamp:\s+'
+             - name: remainder
+               regex: '[% ANYTHING %]'
+         - name: receive_timestamp
+           regex: 'Receive Timestamp:\s+'
+             - name: remainder
+               regex: '[% ANYTHING %]'
+         - name: reference_timestamp
+           regex: 'Reference Timestamp:\s+'
+             - name: remainder
+               regex: '[% ANYTHING %]'
+         - name: remainder
+         - name: remainder
          - name: remainder
            regex: '[% ANYTHING %]'
      - name: icmp
