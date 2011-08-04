@@ -54,7 +54,7 @@ sub new {
                                                            },
                                            },
                           object_states => {
-                                             $self => [ 'got_log_line', 'got_log_rollover' ];
+                                             $self => [ 'got_log_line', 'got_log_rollover' ],
                                            },
     );
     return $self;
