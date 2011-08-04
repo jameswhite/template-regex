@@ -7,7 +7,7 @@ regex_tpl:
 #  DURATION: \S+
 #  FTP_FILE: \S+
 #  FTP_USER: \S+
-#  HEX: 0x\S+
+  HEX: 0x\S+
   HOSTNAME: \S+
   IFACE: \S+
   RULE: \S+
@@ -22,7 +22,7 @@ regex_tpl:
   IP_PORT: '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
 #  REASON: TCP FINs|TCP Reset-I|TCP Reset-O|SYN Timeout|FIN Timeout|looping-address|Parent flow is closed
 #  SESSION: '[0-9]+'
-#  TCP_FLAG: RST|ACK|RST ACK|PSH ACK|SYN ACK|FIN ACK|FIN PSH ACK
+   FLAGS: S|A|SA
 #  TRANSPORT: TCP|UDP
 #  TUNNEL_GROUP: \S+
 #  TYPE_CODE: '\(type \d+, code \d+\)'
@@ -46,7 +46,7 @@ regex_tpl:
 ################################################################################
 log_tpl:
  - name: testing
-   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %] [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]'
+   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %] [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: [% FLAGS %], cksum [% HEX %]'
    remainder: 
      - name: evertything_else
        regex: '.*'
