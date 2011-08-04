@@ -69,7 +69,7 @@ sub got_log_line {
    print "$output\n";
    #print Data::Dumper->Dump([$result]);
    $heap->{'linecount'}++;
-   if($heap->{'linecount'} > 10){
+   if($heap->{'linecount'} > 30){
        exit 0;
    }
    #my $proto = $result->{'patterns'}->[11];
