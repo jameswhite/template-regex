@@ -65,7 +65,7 @@ sub got_log_line {
    my $result = $self->{'TR'}->parse_line($line);
    my $last = $#{ $result->{'patterns'} } - 1;
    my $output = $result->{'name'};
-   $output=~s/anything$/\[ $result->{'patterns'}->[ $last ] \]/;
+   $output=~s/anything$/\[$result->{'patterns'}->[ $last ]\]/;
    print "$output\n";
    #print Data::Dumper->Dump([$result]);
    $heap->{'linecount'}++;
