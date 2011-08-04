@@ -49,7 +49,7 @@ regex_tpl:
 log_tpl:
  - name: testing
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] '
-#   remainder: 
+   remainder: 
 #     - name: nested_paren
 #       regex: '[% P_DATA %] '
 #       remainder:
