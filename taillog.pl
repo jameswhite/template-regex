@@ -63,9 +63,9 @@ sub got_log_line {
    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
    my $line = $args[0];
    my $result = $self->{'TR'}->parse_line($line);
-   #print Data::Dumper->Dump([$result]);
    print "name: $result->{'name'}\n";
-   print "remainder: $result->{'pattern'}->[ $#{ $result->{'pattern'} } ]\n";
+   print Data::Dumper->Dump([$result]);
+   #print "remainder: $result->{'pattern'}->[ $#{ $result->{'pattern'} } ]\n";
    $heap->{'linecount'}++;
    if($heap->{'linecount'} > 10){
        exit 0;
