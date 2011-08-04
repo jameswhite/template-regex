@@ -22,7 +22,7 @@ regex_tpl:
   IP_PORT: '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
 #  REASON: TCP FINs|TCP Reset-I|TCP Reset-O|SYN Timeout|FIN Timeout|looping-address|Parent flow is closed
 #  SESSION: '[0-9]+'
-   FLAGS: S|A|SA
+  FLAGS: S|A|SA
 #  TRANSPORT: TCP|UDP
 #  TUNNEL_GROUP: \S+
 #  TYPE_CODE: '\(type \d+, code \d+\)'
