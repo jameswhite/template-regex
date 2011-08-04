@@ -9,6 +9,9 @@ use DBI;
 use DBD::SQLite;
 use Data::Dumper;
 use Template::Regex;
+################################################################################
+# Create the database
+################################################################################
 my $DBFILE="/var/tmp/connections.db";
 
 my $db = DBI->connect("dbi:SQLite:$DBFILE", "", "", {RaiseError => 1, AutoCommit => 1});
@@ -22,6 +25,9 @@ $db->do("CREATE INDEX host_id_idx on hosts (host_id)");
 $db->do("CREATE INDEX source_host_id_idx on connections (source_host_id)");
 $db->do("CREATE INDEX source_port_idx on connections (source_port)");
 
+################################################################################
+# Parse the logs
+################################################################################
 my $tr = new Template::Regex;
 $tr->load_template_file("cisco-asa.yml");
 while(my $line=<STDIN>){
@@ -43,6 +49,9 @@ while(my $line=<STDIN>){
     }else{
         print "$result->{'name'}\n";
     }
+    ############################################################################
+    # Load up the database
+    ############################################################################
     if($proto&&$src_zone&&$src_ip&&$src_port&&$tgt_zone&&$tgt_ip&&$tgt_port){
         $db->do("INSERT INTO hosts (ipaddress,zone) SELECT '$src_ip','$src_zone' WHERE NOT EXISTS (SELECT * FROM hosts WHERE ipaddress = '$src_ip')");
         $db->do("INSERT INTO hosts (ipaddress,zone) SELECT '$tgt_ip','$tgt_zone' WHERE NOT EXISTS (SELECT * FROM hosts WHERE ipaddress = '$tgt_ip')");
@@ -61,4 +70,10 @@ while(my $line=<STDIN>){
             $db->do("UPDATE connections SET count='$newcount' WHERE  source_host_id='$src_id' AND destination_host_id='$tgt_id' AND source_port='$src_port' AND destination_port='$tgt_port' AND protocol='$proto'");
         }
     }
+    ############################################################################
+    # End Load up the database
+    ############################################################################
 }
+################################################################################
+# End Parse the logs
+################################################################################
