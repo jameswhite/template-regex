@@ -28,7 +28,7 @@ regex_tpl:
 #  TUNNEL_GROUP: \S+
 #  TYPE_CODE: '\(type \d+, code \d+\)'
 #  USER_P: \(\S+\)
-  P_DATA: .*
+  P_DATA: \(.*\)
   DNS_LOOKUP: PTR|A|SRV|TXT
 ################################################################################
 # Here we have nested log substrings and their names, the logic being that 
@@ -49,13 +49,12 @@ regex_tpl:
 log_tpl:
  - name: testing
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: '
-#[% P_DATA %] [% IP_PORT %] > [% IP_PORT %]:'
    remainder: 
-#     - name: flags
-#       regex: '\S+'
-#       remainder:
-#         - name: evertything_else
-#           regex: '[% ANYTHING %]'
+     - name: nested_paren
+       regex: '[% P_DATA %]'
+       remainder:
+         - name: evertything_else
+           regex: '[% ANYTHING %]'
 #     - name: dns
 #       regex: '[% INT %]+ [% DNS_LOOKUP %]? \S+ .[% INT %].'
 #       remainder:
