@@ -66,8 +66,8 @@ sub got_log_line {
    my $result = $self->{'TR'}->parse_line($line);
    my $last = $#{ $result->{'patterns'} } - 1;
    my $output = $result->{'name'};
-   if( $output=~/remainder$/){
-       $output=~/remainder$/\[$result->{'patterns'}->[ $last ]\]/;
+   if( $output =~ m/remainder$/ ){
+       $output =~ s/remainder$/\[$result->{'patterns'}->[ $last ]\]/;
        if(defined($self->{'max_lines'})){
            $heap->{'linecount'}++ ;
            if($heap->{'linecount'} > $self->{'max_lines'}){
