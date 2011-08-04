@@ -44,6 +44,7 @@ sub new {
     POE::Session->create(
                           inline_states => {
                                              _start => sub {
+                                                             $heap->{'linecount'}=0;
                                                              $_[HEAP]{tailor} = POE::Wheel::FollowTail->new(
                                                                   Filename => $cnstr->{'file'},
                                                                   InputEvent => "got_log_line",
@@ -62,7 +63,11 @@ sub got_log_line {
    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
    my $line = $arg[0];
    my $result = $self->{'TR'}->parse_line($line);
-   print "$result->{'name'}\n";
+   print Data::Dumper->Dump([$result]);
+   $heap->{'linecount'}++;
+   if($heap->{'linecount'} > 10){
+       exit 0;
+   }
    #my $proto = $result->{'patterns'}->[11];
 }
 
