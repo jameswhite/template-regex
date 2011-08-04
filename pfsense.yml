@@ -29,6 +29,7 @@ regex_tpl:
 #  TYPE_CODE: '\(type \d+, code \d+\)'
 #  USER_P: \(\S+\)
   P_DATA: .tos.*length [0-9]+.
+  DNS_LOOKUP: PTR|A|SRV|TXT
 ################################################################################
 # Here we have nested log substrings and their names, the logic being that 
 # you can match the first part of a line, and then iterate to match the 
@@ -51,6 +52,11 @@ log_tpl:
    remainder: 
      - name: flags
        regex: '[% FLAGS %],'
+       remainder:
+         - name: evertything_else
+           regex: '[% ANYTHING %]'
+     - name: dns
+       regex: '[% INT %]+ [% DNS_LOOKUP %]? \S+ .[% INT %].'
        remainder:
          - name: evertything_else
            regex: '[% ANYTHING %]'
