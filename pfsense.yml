@@ -51,7 +51,7 @@ log_tpl:
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: '
    remainder: 
      - name: number_11
-       regex: '#011'
+       regex: '#011\s+'
        remainder:
          - name: anything
            regex: '[% ANYTHING %]'
