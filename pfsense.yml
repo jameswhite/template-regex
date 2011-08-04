@@ -67,6 +67,10 @@ log_tpl:
            regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] '
 #<mss [% INT %],nop,nop,sackOK>'
            remainder:
+             - name: no_stamp
+               regex: '<mss 1460,nop,nop,sackOK>'
+             - name: with_stamp
+               regex: '<mss 1460,sackOK,timestamp [% INT %] 0,nop,wscale 7>'
              - name: anything
                regex: '[% ANYTHING %]'
          - name: tcp
