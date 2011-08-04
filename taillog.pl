@@ -65,12 +65,14 @@ sub got_log_line {
    my $result = $self->{'TR'}->parse_line($line);
    my $last = $#{ $result->{'patterns'} } - 1;
    my $output = $result->{'name'};
-   $output=~s/anything$/\[$result->{'patterns'}->[ $last ]\]/;
-   print "$output\n";
-   #print Data::Dumper->Dump([$result]);
-   $heap->{'linecount'}++;
-   if($heap->{'linecount'} > 30){
-       exit 0;
+   if($output=~m/anything$/){
+       $output=~s/anything$/\[$result->{'patterns'}->[ $last ]\]/;
+       print "$output\n";
+       $heap->{'linecount'}++;
+       #print Data::Dumper->Dump([$result]);
+       if($heap->{'linecount'} > 40){
+           exit 0;
+       }
    }
    #my $proto = $result->{'patterns'}->[11];
 }
