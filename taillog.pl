@@ -90,6 +90,8 @@ BEGIN {
         }
         unshift(@INC,"$libdir") if ( -d "$libdir");
       }
+print join("\n",@INC);
+exit 0;
 ################################################################################
 my $pfsence = Log::Tail::Reporter->new({ 
                                          'file'     => '/var/log/pfsense/pfsense.log',
