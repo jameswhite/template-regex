@@ -1,4 +1,27 @@
 #!/usr/bin/perl -wT
+################################################################################
+BEGIN {
+        # figure out where we are and include our relative lib directory
+        use Cwd;
+        my $script=$0;
+        my $pwd = getcwd();
+        my $libdir = $pwd;
+        if($0=~s/(.*)\/([^\/]*)//){
+            $script = $2;
+            my $oldpwd = $pwd;
+            chdir($1);
+            $pwd = getcwd();
+            if($libdir=~m/\/bin$/){
+                $libdir=$pwd; $libdir=~s/\/bin$/\/lib/;
+            }else{
+                $libdir="$pwd/lib";
+            }
+        }
+        unshift(@INC,"$libdir") if ( -d "$libdir");
+      }
+print join("\n",@INC);
+exit 0;
+################################################################################
 package Log::Tail::Reporter;
 use POE qw(Wheel::FollowTail);
 use YAML;
@@ -70,29 +93,6 @@ sub got_log_rollover {
 #    }else{
 #        print "$result->{'name'}\n";
 #    }
-################################################################################
-BEGIN {
-        # figure out where we are and include our relative lib directory
-        use Cwd;
-        my $script=$0;
-        my $pwd = getcwd();
-        my $libdir = $pwd;
-        if($0=~s/(.*)\/([^\/]*)//){
-            $script = $2;
-            my $oldpwd = $pwd;
-            chdir($1);
-            $pwd = getcwd();
-            if($libdir=~m/\/bin$/){
-                $libdir=$pwd; $libdir=~s/\/bin$/\/lib/;
-            }else{
-                $libdir="$pwd/lib";
-            }
-        }
-        unshift(@INC,"$libdir") if ( -d "$libdir");
-      }
-print join("\n",@INC);
-exit 0;
-################################################################################
 my $pfsence = Log::Tail::Reporter->new({ 
                                          'file'     => '/var/log/pfsense/pfsense.log',
                                          'template' => 'pfsense.yml',
