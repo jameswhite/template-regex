@@ -29,7 +29,7 @@ regex_tpl:
 #  TYPE_CODE: '\(type \d+, code \d+\)'
 #  USER_P: \(\S+\)
   P_DATA: \([^()]*\([^()]*\)[^()]*\)
-  QUERY: PTR|A|SRV|TXT
+  QUERY: PTR|A|SRV|TXT|AAAA
 ################################################################################
 # Here we have nested log substrings and their names, the logic being that 
 # you can match the first part of a line, and then iterate to match the 
@@ -50,6 +50,11 @@ log_tpl:
  - name: pfsense
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: '
    remainder: 
+     - name: number_11
+       regex: '#011'
+       remainder:
+         - name: anything
+           regex: '[% ANYTHING %]'
      - name: icmp
        regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP %] > [% IP %]: '
        remainder:
