@@ -1,4 +1,4 @@
-#!/usr/bin/perl -wT
+#!/usr/bin/perl -w
 ################################################################################
 BEGIN {
         # figure out where we are and include our relative lib directory
