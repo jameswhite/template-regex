@@ -54,7 +54,12 @@ log_tpl:
        regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
        remainder:
          - name: netbios_bcast
-           regex: 'NBT UDP PACKET(137): QUERY; REQUEST; BROADCAST'
+           regex: 'NBT UDP PACKET.137.: QUERY; REQUEST; BROADCAST'
+           remainder:
+             - name: anything
+               regex: '[% ANYTHING %]'
+         - name: netbios_packet
+           regex: 'NBT UDP PACKET.138.'
            remainder:
              - name: anything
                regex: '[% ANYTHING %]'
