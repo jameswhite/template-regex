@@ -18,7 +18,7 @@ regex_tpl:
 #  IFACE_IP_SVC: '[^:]+:[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\/\S+'
   INT: \d+
   ACTION: pass|block
-#  IP: '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
+  IP: '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
 #  IPSEC_STAGE: .*
   IP_PORT: '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
 #  REASON: TCP FINs|TCP Reset-I|TCP Reset-O|SYN Timeout|FIN Timeout|looping-address|Parent flow is closed
@@ -50,6 +50,11 @@ log_tpl:
  - name: pfsense
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: '
    remainder: 
+     - name: icmp
+       regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP %] > [% IP %]: '
+       remainder:
+         - name: anything
+           regex: '[% ANYTHING %]'
      - name: connection
        regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
        remainder:
