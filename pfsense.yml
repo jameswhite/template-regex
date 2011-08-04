@@ -69,6 +69,8 @@ log_tpl:
            remainder:
              - name: no_stamp
                regex: '<mss 1460,nop,nop,sackOK>'
+             - name: wscale
+               regex: '<mss 1460,nop,wscale 8,nop,nop,sackOK>'
              - name: with_stamp
                regex: '<mss 1460,sackOK,timestamp [% INT %] 0,nop,wscale 7>'
              - name: anything
