@@ -75,7 +75,7 @@ sub got_log_line {
            }
        }
        print "$output\n";
-       #print Data::Dumper->Dump([$result]);
+       print Data::Dumper->Dump([$result]);
    }
 } 
 
