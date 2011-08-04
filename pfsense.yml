@@ -47,42 +47,22 @@ regex_tpl:
 # and pass it the list of 6 patterns that matched as arguments 
 ################################################################################
 log_tpl:
- - name: testing
+ - name: pfsense
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
    remainder: 
-#     - name: nested_paren
-#       regex: '[% P_DATA %] '
-#       remainder:
-#         - name: evertything_else
-#           regex: '[% ANYTHING %]'
-#     - name: dns
-#       regex: '[% INT %]+ [% DNS_LOOKUP %]? \S+ .[% INT %].'
-#       remainder:
-#         - name: evertything_else
-#           regex: '[% ANYTHING %]'
-#     - name: tcp_stuff
-#       regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
-#       remainder:
-#         - name: evertything_else
-#           regex: '[% ANYTHING %]'
-     - name: evertything_else
-       regex: '[% ANYTHING %]'
- - name: works
-   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: '
-   remainder: 
-     - name: evertything_else
-       regex: '[% ANYTHING %]'
- - name: date
-   regex: '[% DATE %]'
-   remainder:
-     - name: time
-       regex: 'T[% TIME %]'
+     - name: tcp
+       regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %]([% INT %]) win [% INT %] '
        remainder:
-         - name: offset
-           regex: '[% TZ_OFF %]'
-           remainder:
-             - name: evertything_else
-               regex: '[% ANYTHING %]'
+         - name: evertything_else
+           regex: '[% ANYTHING %]'
+     - name: dns
+       regex: '[% INT %]+ [% DNS_LOOKUP %]? \S+ .[% INT %].'
+       remainder:
+         - name: evertything_else
+           regex: '[% ANYTHING %]'
+     - name: tcp_stuff
+       regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
+       remainder:
          - name: evertything_else
            regex: '[% ANYTHING %]'
      - name: evertything_else
