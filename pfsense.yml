@@ -52,8 +52,6 @@ log_tpl:
    remainder: 
      - name: number_11
        regex: '#011\s+'
-     - name: remainder
-       regex: '[% ANYTHING %]'
        remainder:
          - name: origninator
            regex: 'originator'
@@ -68,8 +66,6 @@ log_tpl:
            regex: '[% ANYTHING %]'
      - name: connection
        regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
-     - name: remainder
-       regex: '[% ANYTHING %]'
        remainder:
          - name: ntpv3
            regex: 'NTPv3, length [% INT %]'
@@ -79,8 +75,6 @@ log_tpl:
            regex: 'NBT UDP PACKET.138.'
          - name: tcp
            regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] '
-         - name: remainder
-           regex: '[% ANYTHING %]'
  #<mss [% INT %],nop,nop,sackOK>'
            remainder:
              - name: no_stamp
