@@ -33,6 +33,7 @@ regex_tpl:
   QUERY: PTR|A|SRV|TXT|AAAA|SOA
   OID: '[0-9\.]+'
   OFFSET: '[+\-]*[0-9]+\.[0-9]+'
+  STRING: '\S+'
 ################################################################################
 # Here we have nested log substrings and their names, the logic being that 
 # you can match the first part of a line, and then iterate to match the 
@@ -149,7 +150,7 @@ log_tpl:
          - name: snmpv1
            regex: '{ SNMPv1 { GetRequest.[% INT %]. R=[% INT %]  [% OID %] [% OID %] [% OID %] } }'
          - name: snmpv1_get
-           regex: '{ SNMPv1 C=[% TEXT %] { GetRequest.[% INT %]. R=[% INT %]  [% OID %] } } '
+           regex: '{ SNMPv1 C=[% STRING %] { GetRequest.[% INT %]. R=[% INT %]  [% OID %] } } '
          - name: udp
            regex: 'UDP, length [% INT %]'
          - name: syslog
