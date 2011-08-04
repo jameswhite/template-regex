@@ -53,11 +53,21 @@ log_tpl:
      - name: icmp
        regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP %] > [% IP %]: '
        remainder:
+         - name: echo_request
+           regex: 'ICMP echo request, id [% INT %], seq [% INT %], length [% INT %]'
+           remainder:
+             - name: anything
+               regex: '[% ANYTHING %]'
          - name: anything
            regex: '[% ANYTHING %]'
      - name: connection
        regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
        remainder:
+         - name: ntpv3
+           regex: 'NTPv3, length [% INT %]'
+           remainder:
+             - name: anything
+               regex: '[% ANYTHING %]'
          - name: netbios_bcast
            regex: 'NBT UDP PACKET.137.: QUERY; REQUEST; BROADCAST'
            remainder:
