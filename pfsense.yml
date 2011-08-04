@@ -1,5 +1,6 @@
 ---
 regex_tpl:
+  ANYTHING: '.*'
   DATE: '[0-9]{4}-[0-9]{2}-[0-9]{2}'
   TIME: '[0-9]{2}:[0-9]{2}:[0-9]{2}'
   TZ_OFF: '[+\-][0-9]{2}:[0-9]{2}'
@@ -46,15 +47,15 @@ regex_tpl:
 ################################################################################
 log_tpl:
  - name: testing
-   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %] [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: [% FLAGS %], cksum [% HEX %]'
+   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %] [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]:'
    remainder: 
      - name: evertything_else
-       regex: '.*'
+       regex: '[% ANYTHING %]'
  - name: works
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %] [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]:'
    remainder: 
      - name: evertything_else
-       regex: '.*'
+       regex: '[% ANYTHING %]'
  - name: date
    regex: '[% DATE %]'
    remainder:
@@ -65,10 +66,10 @@ log_tpl:
            regex: '[% TZ_OFF %]'
            remainder:
              - name: evertything_else
-               regex: '.*'
+               regex: '[% ANYTHING %]'
          - name: evertything_else
-           regex: '.*'
+           regex: '[% ANYTHING %]'
      - name: evertything_else
-       regex: '.*'
+       regex: '[% ANYTHING %]'
  - name: no_match
-   regex: '.*'
+   regex: '[% ANYTHING %]'
