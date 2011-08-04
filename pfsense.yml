@@ -50,6 +50,7 @@ log_tpl:
    remainder:
      - name: time
        regex: 'T[% TIME %]'
+       remainder:
          - name: evertything_else
            regex: '.*'
      - name: evertything_else
