@@ -48,6 +48,10 @@ log_tpl:
  - name: date
    regex: '[% DATE %]'
    remainder:
+     - name: time
+       regex: 'T[% TIME %]'
+         - name: evertything_else
+           regex: '.*'
      - name: evertything_else
        regex: '.*'
  - name: pfsense
