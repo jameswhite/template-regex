@@ -76,6 +76,7 @@ sub got_log_line {
            }
        }
        print "$output\n";
+       print Data::Dumper->Dump([$result]);
    }
 } 
 
@@ -107,7 +108,7 @@ sub got_log_rollover {
 my $pfsence = Log::Tail::Reporter->new({ 
                                          'file'     => '/var/log/pfsense/pfsense.log',
                                          'template' => 'pfsense.yml',
-                                         #'max_lines'    => 100,
+                                         'max_lines'    => 20,
                                        });
 POE::Kernel->run();
 exit;
