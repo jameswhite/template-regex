@@ -35,7 +35,7 @@ sub new {
     my $self = {};
     my $cnstr = shift if @_;
     bless($self,$class);
-    for each my $arg ('file', 'template'){
+    foreach my $arg ('file', 'template'){
         if(! defined($cnstr->{$arg})){
             print STDERR "Necessary parameter [ $arg ] not defined. Aborting object.\n";
             return undef;
