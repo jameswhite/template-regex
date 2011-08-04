@@ -53,39 +53,25 @@ log_tpl:
      - name: number_11
        regex: '#011\s+'
        remainder:
-         - name: anything
-           regex: '[% ANYTHING %]'
+         - name: origninator
+           regex: 'originator'
      - name: icmp
        regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP %] > [% IP %]: '
        remainder:
          - name: echo_request
            regex: 'ICMP echo request, id [% INT %], seq [% INT %], length [% INT %]'
-           remainder:
-             - name: anything
-               regex: '[% ANYTHING %]'
-         - name: anything
-           regex: '[% ANYTHING %]'
      - name: connection
        regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
        remainder:
          - name: ntpv3
            regex: 'NTPv3, length [% INT %]'
-           remainder:
-             - name: anything
-               regex: '[% ANYTHING %]'
          - name: netbios_bcast
            regex: 'NBT UDP PACKET.137.: QUERY; REQUEST; BROADCAST'
-           remainder:
-             - name: anything
-               regex: '[% ANYTHING %]'
          - name: netbios_packet
            regex: 'NBT UDP PACKET.138.'
-           remainder:
-             - name: anything
-               regex: '[% ANYTHING %]'
          - name: tcp
            regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] '
-#<mss [% INT %],nop,nop,sackOK>'
+ #<mss [% INT %],nop,nop,sackOK>'
            remainder:
              - name: no_stamp
                regex: '<mss 1460,nop,nop,sackOK>'
@@ -93,31 +79,13 @@ log_tpl:
                regex: '<mss 1460,nop,wscale 8,nop,nop,sackOK>'
              - name: with_stamp
                regex: '<mss 1460,sackOK,timestamp [% INT %] 0,nop,wscale 7>'
-             - name: anything
-               regex: '[% ANYTHING %]'
          - name: tcp
            regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
-           remainder:
-             - name: anything
-               regex: '[% ANYTHING %]'
          - name: dns
            regex: '[% INT %]\+ [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
-           remainder:
-             - name: anything
-               regex: '[% ANYTHING %]'
          - name: dns
            regex: '[% INT %]+ [% DNS_LOOKUP %]? \S+ .[% INT %].'
-           remainder:
-             - name: anything
-               regex: '[% ANYTHING %]'
          - name: tcp_stuff
            regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
-           remainder:
-             - name: anything
-               regex: '[% ANYTHING %]'
-         - name: anything
-           regex: '[% ANYTHING %]'
-     - name: anything
-       regex: '[% ANYTHING %]'
  - name: no_match
    regex: '[% ANYTHING %]'

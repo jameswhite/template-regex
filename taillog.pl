@@ -66,8 +66,9 @@ sub got_log_line {
    my $result = $self->{'TR'}->parse_line($line);
    my $last = $#{ $result->{'patterns'} } - 1;
    my $output = $result->{'name'};
-   if($output=~m/anything$/){
-       $output=~s/anything$/\[$result->{'patterns'}->[ $last ]\]/;
+   # only process if if there's a remainder
+   if( $result->{'remainder'} ) ne ''){
+       $output."[".$result->{'remainder'}."]";
        if(defined($self->{'max_lines'})){
            $heap->{'linecount'}++ ;
            if($heap->{'linecount'} > $self->{'max_lines'}){
@@ -76,8 +77,8 @@ sub got_log_line {
        }
        print "$output\n";
    }
-   #my $proto = $result->{'patterns'}->[11];
 } 
+
 sub got_log_rollover {
    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     print "Log rolled over.\n"; 
