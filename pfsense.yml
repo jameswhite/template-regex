@@ -27,7 +27,7 @@ regex_tpl:
 #  TUNNEL_GROUP: \S+
 #  TYPE_CODE: '\(type \d+, code \d+\)'
 #  USER_P: \(\S+\)
-  PARENTHETICAL: \(\S+\)
+  PARENTHETICAL: \(.+\)
 ################################################################################
 # Here we have nested log substrings and their names, the logic being that 
 # you can match the first part of a line, and then iterate to match the 
