@@ -39,6 +39,7 @@ sub new {
             return undef;
         }
     }
+    $self->{'max_lines'}=$cnstr->{'max_lines'}||undef;
     $self->{'TR'} = new Template::Regex;
     $self->{'TR'}->load_template_file($cnstr->{'template'});
     POE::Session->create(
@@ -68,15 +69,15 @@ sub got_log_line {
    if($output=~m/anything$/){
        $output=~s/anything$/\[$result->{'patterns'}->[ $last ]\]/;
        print "$output\n";
-       $heap->{'linecount'}++;
-       #print Data::Dumper->Dump([$result]);
-       if($heap->{'linecount'} > 40){
-           exit 0;
+       if(defined($self->{'max_lines'})){
+           $heap->{'linecount'}++ ;
+           if($heap->{'linecount'} > $self->{'max_lines'}){
+               exit 0;
+           }
        }
    }
    #my $proto = $result->{'patterns'}->[11];
-}
-
+} 
 sub got_log_rollover {
    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     print "Log rolled over.\n"; 
@@ -105,6 +106,7 @@ sub got_log_rollover {
 my $pfsence = Log::Tail::Reporter->new({ 
                                          'file'     => '/var/log/pfsense/pfsense.log',
                                          'template' => 'pfsense.yml',
+                                         'max_lines'    => 100,
                                        });
 POE::Kernel->run();
 exit;
