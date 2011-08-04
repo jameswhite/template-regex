@@ -69,8 +69,7 @@ log_tpl:
              - name: anything
                regex: '[% ANYTHING %]'
          - name: dns
-           regex: '[% INT %]\+ [% QUERY %]\? '
-#[% HOSTNAME %]\. .[% INT %].'
+           regex: '[% INT %]\+ [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
            remainder:
              - name: anything
                regex: '[% ANYTHING %]'
