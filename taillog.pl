@@ -19,8 +19,6 @@ BEGIN {
         }
         unshift(@INC,"$libdir") if ( -d "$libdir");
       }
-print join("\n",@INC);
-exit 0;
 ################################################################################
 package Log::Tail::Reporter;
 use POE qw(Wheel::FollowTail);
