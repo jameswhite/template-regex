@@ -48,7 +48,7 @@ regex_tpl:
 ################################################################################
 log_tpl:
  - name: testing
-   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %]'
+   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on'
 #[% P_DATA %] [% IP_PORT %] > [% IP_PORT %]:'
    remainder: 
 #     - name: flags
