@@ -48,13 +48,13 @@ regex_tpl:
 ################################################################################
 log_tpl:
  - name: testing
-   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: '
-   remainder: 
-     - name: nested_paren
-       regex: '[% P_DATA %]'
-       remainder:
-         - name: evertything_else
-           regex: '[% ANYTHING %]'
+   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] '
+#   remainder: 
+#     - name: nested_paren
+#       regex: '[% P_DATA %] '
+#       remainder:
+#         - name: evertything_else
+#           regex: '[% ANYTHING %]'
 #     - name: dns
 #       regex: '[% INT %]+ [% DNS_LOOKUP %]? \S+ .[% INT %].'
 #       remainder:
