@@ -76,7 +76,7 @@ sub parse_line_segment{
             last;
         }
     }
-    if( ($remainder ne ""){
+    if($remainder ne ""){
         return { 'name' => $entry_name, 'patterns' => $entry_patters, 'remainder' => $remainder }
     }else{
         return { 'name' => $entry_name, 'patterns' => $entry_patters, 'remainder' => '' }
