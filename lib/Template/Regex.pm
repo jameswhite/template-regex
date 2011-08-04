@@ -65,14 +65,24 @@ sub parse_line_segment{
             my $matched=$1;
             # now we're matching only what was matched again with the /g option so we can get a list of patterns
             my @patterns = ($matched =~ /$output/g) ;
-            # Parenthesis in a sed replace need to be escaped
-            my $replace=$matched;
-            print STDERR "[$line]\n";
-            print STDERR "[$replace]\n";
-            $replace=~s/\(/\\\(/g;
-            $replace=~s/\)/\\\)/g;
-            $line=~s/^$replace//;
-            $remainder = $line;
+
+
+
+
+            $remainder = substr($line,length($replace));
+
+#            # nested parenthesis made this un-workable
+#            # Parenthesis in a sed replace need to be escaped
+#            my $replace=$matched;
+#            print STDERR "[$line]\n";
+#            print STDERR "[$replace]\n";
+#            $replace=~s/\(/\\\(/g;
+#            $replace=~s/\)/\\\)/g;
+#            $line=~s/^$replace//;
+#            $remainder = $line;
+#
+
+
             # process the remainder of the string if exists and remainder is defined
             #print STDERR "$log_template->{'name'}.[$remainder]\n";
             $entry_name = $log_template->{'name'};
