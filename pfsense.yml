@@ -70,18 +70,19 @@ log_tpl:
                regex: '[% ANYTHING %]'
          - name: originator_timestamp
            regex: 'Originator Timestamp:\s+'
+           remainder:
              - name: remainder
                regex: '[% ANYTHING %]'
          - name: receive_timestamp
            regex: 'Receive Timestamp:\s+'
+           remainder:
              - name: remainder
                regex: '[% ANYTHING %]'
          - name: reference_timestamp
            regex: 'Reference Timestamp:\s+'
+           remainder:
              - name: remainder
                regex: '[% ANYTHING %]'
-         - name: remainder
-         - name: remainder
          - name: remainder
            regex: '[% ANYTHING %]'
      - name: icmp
