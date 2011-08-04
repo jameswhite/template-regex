@@ -149,7 +149,7 @@ log_tpl:
          - name: snmpv1
            regex: '{ SNMPv1 { GetRequest.[% INT %]. R=[% INT %]  [% OID %] [% OID %] [% OID %] } }'
          - name: snmpv1_get
-           regex: '{ SNMPv1 C=[$ TEXT %] { GetRequest.[% INT %]. R=[% INT %]  [% OID %] } } '
+           regex: '{ SNMPv1 C=[% TEXT %] { GetRequest.[% INT %]. R=[% INT %]  [% OID %] } } '
          - name: udp
            regex: 'UDP, length [% INT %]'
          - name: syslog
