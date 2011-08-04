@@ -69,7 +69,7 @@ sub parse_line_segment{
 
 
 
-            $remainder = substr($line,length($replace));
+            $remainder = substr($line,length($matched));
 
 #            # nested parenthesis made this un-workable
 #            # Parenthesis in a sed replace need to be escaped
