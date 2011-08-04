@@ -68,7 +68,7 @@ sub got_log_line {
    my $output = $result->{'name'};
    # only process if if there's a remainder
    if( $result->{'remainder'} ne ''){
-       $output."[".$result->{'remainder'}."]";
+       $output.".[".$result->{'remainder'}."]";
        if(defined($self->{'max_lines'})){
            $heap->{'linecount'}++ ;
            if($heap->{'linecount'} > $self->{'max_lines'}){
