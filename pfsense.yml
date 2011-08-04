@@ -111,6 +111,8 @@ log_tpl:
        remainder:
          - name: echo_request
            regex: 'ICMP echo request, id [% INT %], seq [% INT %], length [% INT %]'
+         - name: igmp_query_v1
+           regex: 'igmp query v1'
          - name: remainder
            regex: '[% ANYTHING %]'
      - name: connection
@@ -141,7 +143,7 @@ log_tpl:
          - name: dns
            regex: '[% INT %]\+ [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
          - name: dns_1au
-           regex: '[% INT %]\% [1au] [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
+           regex: '[% INT %]% [1au] [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
          - name: tcp_stuff
            regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
          - name: snmpv1
