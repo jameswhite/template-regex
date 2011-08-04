@@ -29,7 +29,7 @@ regex_tpl:
 #  TYPE_CODE: '\(type \d+, code \d+\)'
 #  USER_P: \(\S+\)
   P_DATA: \([^()]*\([^()]*\)[^()]*\)
-  QUERY: PTR|A|SRV|TXT|AAAA
+  QUERY: PTR|A|SRV|TXT|AAAA|SOA
 ################################################################################
 # Here we have nested log substrings and their names, the logic being that 
 # you can match the first part of a line, and then iterate to match the 
@@ -70,6 +70,11 @@ log_tpl:
                regex: '[% ANYTHING %]'
          - name: originator_timestamp
            regex: 'Originator Timestamp:\s+'
+           remainder:
+             - name: remainder
+               regex: '[% ANYTHING %]'
+         - name: transmit_timestamp
+           regex: 'Transmit Timestamp:\s+'
            remainder:
              - name: remainder
                regex: '[% ANYTHING %]'
