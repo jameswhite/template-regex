@@ -50,21 +50,21 @@ log_tpl:
  - name: testing
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %] [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
    remainder: 
-     - name: flags
-       regex: '\S+'
-       remainder:
-         - name: evertything_else
-           regex: '[% ANYTHING %]'
-     - name: dns
-       regex: '[% INT %]+ [% DNS_LOOKUP %]? \S+ .[% INT %].'
-       remainder:
-         - name: evertything_else
-           regex: '[% ANYTHING %]'
-     - name: tcp_stuff
-       regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
-       remainder:
-         - name: evertything_else
-           regex: '[% ANYTHING %]'
+#     - name: flags
+#       regex: '\S+'
+#       remainder:
+#         - name: evertything_else
+#           regex: '[% ANYTHING %]'
+#     - name: dns
+#       regex: '[% INT %]+ [% DNS_LOOKUP %]? \S+ .[% INT %].'
+#       remainder:
+#         - name: evertything_else
+#           regex: '[% ANYTHING %]'
+#     - name: tcp_stuff
+#       regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
+#       remainder:
+#         - name: evertything_else
+#           regex: '[% ANYTHING %]'
      - name: evertything_else
        regex: '[% ANYTHING %]'
  - name: works
