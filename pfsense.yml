@@ -131,11 +131,11 @@ log_tpl:
  #<mss [% INT %],nop,nop,sackOK>'
            remainder:
              - name: no_stamp
-               regex: '<mss 1460,nop,nop,sackOK>'
+               regex: '<mss [% INT %],nop,nop,sackOK>'
              - name: wscale
-               regex: '<mss 1460,nop,wscale 8,nop,nop,sackOK>'
+               regex: '<mss [% INT %],nop,wscale [% INT %],nop,nop,sackOK>'
              - name: with_stamp
-               regex: '<mss 1460,sackOK,timestamp [% INT %] 0,nop,wscale 7>'
+               regex: '<mss [% INT %],sackOK,timestamp [% INT %] [% INT %],nop,wscale [% INT %]>'
              - name: remainder
                regex: '[% ANYTHING %]'
          - name: tcp
@@ -152,6 +152,8 @@ log_tpl:
            regex: 'UDP, length [% INT %]'
          - name: syslog
            regex: 'SYSLOG, length: [% INT %]'
+         - name: nbt_udp_unicast
+           regex: 'NBT UDP PACKET.[% INT %].: REFRESH.[% INT %].; REQUEST; UNICAST'
          - name: remainder
            regex: '[% ANYTHING %]'
  - name: no_match
