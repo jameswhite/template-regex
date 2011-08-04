@@ -52,16 +52,24 @@ log_tpl:
    remainder: 
      - name: number_11
        regex: '#011\s+'
+     - name: remainder
+       regex: '[% ANYTHING %]'
        remainder:
          - name: origninator
            regex: 'originator'
+         - name: remainder
+           regex: '[% ANYTHING %]'
      - name: icmp
        regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP %] > [% IP %]: '
        remainder:
          - name: echo_request
            regex: 'ICMP echo request, id [% INT %], seq [% INT %], length [% INT %]'
+         - name: remainder
+           regex: '[% ANYTHING %]'
      - name: connection
        regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
+     - name: remainder
+       regex: '[% ANYTHING %]'
        remainder:
          - name: ntpv3
            regex: 'NTPv3, length [% INT %]'
@@ -71,6 +79,8 @@ log_tpl:
            regex: 'NBT UDP PACKET.138.'
          - name: tcp
            regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] '
+         - name: remainder
+           regex: '[% ANYTHING %]'
  #<mss [% INT %],nop,nop,sackOK>'
            remainder:
              - name: no_stamp
@@ -79,6 +89,8 @@ log_tpl:
                regex: '<mss 1460,nop,wscale 8,nop,nop,sackOK>'
              - name: with_stamp
                regex: '<mss 1460,sackOK,timestamp [% INT %] 0,nop,wscale 7>'
+             - name: remainder
+               regex: '[% ANYTHING %]'
          - name: tcp
            regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
          - name: dns
@@ -87,5 +99,7 @@ log_tpl:
            regex: '[% INT %]+ [% DNS_LOOKUP %]? \S+ .[% INT %].'
          - name: tcp_stuff
            regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
+         - name: remainder
+           regex: '[% ANYTHING %]'
  - name: no_match
    regex: '[% ANYTHING %]'

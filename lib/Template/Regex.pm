@@ -61,7 +61,7 @@ sub parse_line_segment{
         $tpl=~s/\[%/\(\[% /g; $tpl=~s/%\]/ %\]\)/g;
         my $output = undef;
         $tt->process(\$tpl, $rgx_t, \$output) || die $tt->error();
-        if($line=~m/^($output)/){ 
+        if($line=~m/^($output)/){
             my $matched=$1;
             # now we're matching only what was matched again with the /g option so we can get a list of patterns
             my @patterns = ($matched =~ /$output/g) ;
@@ -76,11 +76,6 @@ sub parse_line_segment{
             last;
         }
     }
-    if(defined($remainder)){
-        return { 'name' => $entry_name, 'patterns' => $entry_patters, 'remainder' => $remainder }
-    }else{
-        return { 'name' => $entry_name, 'patterns' => $entry_patters, 'remainder' => '' }
-    }
+    return { 'name' => $entry_name, 'patterns' => $entry_patters }
 }
-
 1;
