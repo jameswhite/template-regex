@@ -117,6 +117,8 @@ log_tpl:
        remainder:
          - name: ntpv3
            regex: 'NTPv3, length [% INT %]'
+         - name: ntpv4
+           regex: 'NTPv4, length [% INT %]'
          - name: netbios_bcast
            regex: 'NBT UDP PACKET.137.: QUERY; REQUEST; BROADCAST'
          - name: netbios_packet
@@ -137,8 +139,8 @@ log_tpl:
            regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
          - name: dns
            regex: '[% INT %]\+ [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
-         - name: dns
-           regex: '[% INT %]+ [% DNS_LOOKUP %]? \S+ .[% INT %].'
+         - name: dns_1au
+           regex: '[% INT %]\% [1au] [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
          - name: tcp_stuff
            regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
          - name: snmpv1
