@@ -68,13 +68,13 @@ sub got_log_line {
    my $output = $result->{'name'};
    if($output=~m/anything$/){
        $output=~s/anything$/\[$result->{'patterns'}->[ $last ]\]/;
-       print "$output\n";
        if(defined($self->{'max_lines'})){
            $heap->{'linecount'}++ ;
            if($heap->{'linecount'} > $self->{'max_lines'}){
                exit 0;
            }
        }
+       print "$output\n";
    }
    #my $proto = $result->{'patterns'}->[11];
 } 
@@ -106,7 +106,7 @@ sub got_log_rollover {
 my $pfsence = Log::Tail::Reporter->new({ 
                                          'file'     => '/var/log/pfsense/pfsense.log',
                                          'template' => 'pfsense.yml',
-                                         'max_lines'    => 100,
+                                         #'max_lines'    => 100,
                                        });
 POE::Kernel->run();
 exit;
