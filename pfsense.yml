@@ -51,6 +51,11 @@ log_tpl:
      - name: time
        regex: 'T[% TIME %]'
        remainder:
+         - name: offset
+           regex: '[% TZ_OFF %]'
+           remainder:
+             - name: evertything_else
+               regex: '.*'
          - name: evertything_else
            regex: '.*'
      - name: evertything_else
