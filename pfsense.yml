@@ -100,7 +100,7 @@ log_tpl:
          - name: ntpv4
            regex: 'NTPv4, length [% INT %]'
          - name: tcp_stuff
-           regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
+           regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
          - name: snmpv1
            regex: '{ SNMPv1 { GetRequest.[% INT %]. R=[% INT %]\s+[% OID_LIST %]'
          - name: snmpv1_getnext_nostring
