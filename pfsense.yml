@@ -24,11 +24,14 @@ regex_tpl:
 #  TYPE_CODE: '\(type \d+, code \d+\)'
 #  USER_P: \(\S+\)
   P_DATA: \([^()]*\([^()]*\)[^()]*\)
-  QUERY: PTR|A|SRV|TXT|AAAA|SOA|MX
+  QUERY: PTR|A|SRV|TXT|AAAA|SOA|MX|NXDomain
   OID: '[0-9\.]+'
   OID_LIST: '[0-9\.]+|[0-9\.]+ [0-9\.]+|[0-9\.]+ [0-9\.]+ [0-9\.]+|[0-9\.]+ [0-9\.]+ [0-9\.]+ [0-9\.]+|[0-9\.]+ [0-9\.]+ [0-9\.]+ [0-9\.]+ [0-9\.]+'
   OFFSET: '[+\-]*[0-9]+\.[0-9]+'
   STRING: '\S+'
+  OFFSET_ROLE: Originator|Receive
+  TIMESTAMP_ROLE: Transmit|Reference
+  DHCP_FLAGS: none|Broadcast
   MSS_FLAGS: '<mss [0-9]+,[^>]+>'
 # # these are all over the place... ,so we just grab between the <>'s until we come up with a better regex
 # # <mss [% INT %],nop,nop,sackOK>
@@ -67,16 +70,23 @@ log_tpl:
                regex: '[% MSS_FLAGS %]'
              - name: remainder
                regex: '[% ANYTHING %]'
+         - name: tcp_ack
+           regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. ack [% INT %] win [% INT %] '
+           remainder:
+             - name: mss_data
+               regex: '[% MSS_FLAGS %]'
+             - name: remainder
+               regex: '[% ANYTHING %]'
          - name: dns
-           regex: '[% INT %]\S* [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
+           regex: '[% INT %]\S* [% QUERY %]\S* [% HOSTNAME %]\. .[% INT %].'
          - name: dns_flags
-           regex: '[% INT %]\S* \[.*\] [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
+           regex: '[% INT %]\S* \[.*\] [% QUERY %]\S* [% HOSTNAME %]\. .[% INT %].'
          - name: dns_update_flags
-           regex: '[% INT %]\S* update \[.*\] [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
+           regex: '[% INT %]\S* update \[.*\] [% QUERY %]\S* [% HOSTNAME %]\. .[% INT %].'
          - name: tcp
            regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
          - name: bootp_dhcp_reply
-           regex: 'BOOTP/DHCP, Reply, length [% INT %], hops [% INT %], xid [% HEX %], Flags \[none\]'
+           regex: 'BOOTP/DHCP, Reply, length [% INT %], hops [% INT %], xid [% HEX %], Flags \[[% DHCP_FLAGS %]\]'
          - name: radius
            regex: 'RADIUS, length: [% INT %]'
          - name: v5
@@ -151,32 +161,19 @@ log_tpl:
                    regex: '[% ANYTHING %]'
              - name: remainder
                regex: '[% ANYTHING %]'
-         - name: originator_timestamp
-           regex: 'Originator Timestamp:\s+'
-           remainder:
-             - name: data
-               regex: '[% OFFSET %]'
-             - name: remainder
-               regex: '[% ANYTHING %]'
          - name: transmit_timestamp
-           regex: 'Transmit Timestamp:\s+'
+           regex: '[% TIMESTAMP_ROLE %] Timestamp:\s+'
            remainder:
              - name: data
                regex: '[% INT %]\.[% INT %] .[% SDATE %] [% TIME %].'
              - name: remainder
                regex: '[% ANYTHING %]'
-         - name: receive_timestamp
-           regex: 'Receive Timestamp:\s+'
+      ##########################################################################
+         - name: timestamp_offset
+           regex: '[% TRANSMIT_ROLE %] Timestamp:\s+'
            remainder:
              - name: data
                regex: '[% OFFSET %]'
-             - name: remainder
-               regex: '[% ANYTHING %]'
-         - name: reference_timestamp
-           regex: 'Reference Timestamp:\s+'
-           remainder:
-             - name: data
-               regex: '[% INT %]\.[% INT %] .[% SDATE %] [% TIME %].'
              - name: remainder
                regex: '[% ANYTHING %]'
          - name: remainder
