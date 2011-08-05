@@ -64,7 +64,7 @@ log_tpl:
        regex: '[0-9]*\.*\s*[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
        remainder:
          - name: tcp
-           regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] '
+           regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %]\s*'
            remainder:
              - name: mss_data
                regex: '[% MSS_FLAGS %]'
@@ -146,9 +146,27 @@ log_tpl:
      ###########################################################################
      # Good ol' number 11
      - name: number_11
-       regex: '#011\s*.*'
+       regex: '#011\s*'
        remainder:
       ##########################################################################
+         - name: client_ethernet
+           regex: 'Client-Ethernet-Address [% MACADDR %]'
+         - name: client_ip
+           regex: 'Client-IP [% IP %]'
+         - name: client_leap_indicator
+           regex: 'Client, Leap indicator:  .[% INT %}., Stratum [% INT %], poll [% INT %], precision -*[% INT %]'
+         - name: file
+           regex: 'file "pxelinux.0" [|bootp]'
+         - name: gateway_ip
+           regex: 'Gateway-IP [% IP %]'
+         - name: root_delay_unspec
+           regex: 'Root Delay: [% INT %].[% INT %], Root dispersion: [% INT %].[% INT %], Reference-ID: .unspec.'
+         - name: root_delay_ip
+           regex: 'Root Delay: [% INT %].[% INT %], Root dispersion: [% INT %].[% INT %], Reference-ID: .[% IP %]'
+         - name: server_ip
+           regex: 'Server-IP [% IP %]'
+         - name: your-ip
+           regex: 'Your-IP [% IP %]'
          - name: origninator
            regex: 'Originator - '
            remainder:
@@ -178,7 +196,7 @@ log_tpl:
                regex: '[% ANYTHING %]'
       ##########################################################################
          - name: timestamp_offset
-           regex: '[% TRANSMIT_ROLE %] Timestamp:\s+'
+           regex: '[% OFFSET_ROLE %] Timestamp:\s+'
            remainder:
              - name: data
                regex: '[% OFFSET %]'
