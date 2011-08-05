@@ -120,6 +120,8 @@ log_tpl:
      - name: connection
        regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
        remainder:
+         - name: radius
+           regex: 'RADIUS, length: [% INT %]'
          - name: v5
            regex: 'v5'
          - name: ntpv3
@@ -153,9 +155,11 @@ log_tpl:
          - name: snmpv1
            regex: '{ SNMPv1 { GetRequest.[% INT %]. R=[% INT %]\s+[% OID_LIST %]'
          - name: snmpv1_get
-           regex: '{ SNMPv1 C=[% STRING %] { GetRequest.[% INT %]. R=[% INT %]  [% OID_LIST %] } } '
-         - name: snmpv2_get
-           regex: '{ SNMPv2c C=[% STRING %] { GetNextRequest.[% INT %]. R=[% INT %]  [% OID_LIST %] } }'
+           regex: '{ SNMPv1 C=[% STRING %] { GetRequest.[% INT %]. R=[% INT %]\s+[% OID_LIST %]\s+} } '
+         - name: snmpv1_getnext
+           regex: '{ SNMPv1 C=[% STRING %] { GetNextRequest.[% INT %]. R=[% INT %]\s+[% OID_LIST %]\s+} } '
+         - name: snmpv2_getnext
+           regex: '{ SNMPv2c C=[% STRING %] { GetNextRequest.[% INT %]. R=[% INT %]\s+[% OID_LIST %]\s+} } '
          - name: udp
            regex: 'UDP, length [% INT %]'
          - name: syslog
