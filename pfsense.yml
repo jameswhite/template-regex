@@ -134,16 +134,9 @@ log_tpl:
            regex: 'NTPv4, length [% INT %]'
          - name: tcp
            regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] '
- #<mss [% INT %],nop,nop,sackOK>'
            remainder:
-             - name: no_stamp
+             - name: mss_data
                regex: '[% MSS_FLAGS %]'
-#             - name: wscale
-#               regex: '<mss [% INT %],nop,wscale [% INT %],nop,nop,sackOK>'
-#             - name: with_stamp
-#               regex: '<mss [% INT %],sackOK,timestamp [% INT %] [% INT %],nop,wscale [% INT %]>'
-#             - name: with_stamp_eol
-#               regex: '<mss [% INT %],nop,wscale [% INT %],nop,nop,timestamp [% INT %] [% INT %],sackOK,eol>'
              - name: remainder
                regex: '[% ANYTHING %]'
          - name: tcp
