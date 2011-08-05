@@ -146,7 +146,7 @@ log_tpl:
          - name: remainder
            regex: '[% ANYTHING %]'
      ###########################################################################
-     # Good ol' number 11
+     # Good ol' number 11                                                      #
      - name: number_11
        regex: '#011\s*'
        remainder:
@@ -154,13 +154,13 @@ log_tpl:
          - name: windows_msg
            regex: 'Msg: [% WINDOWS_MSG %]'
          - name: facility_local
-           regex: 'Facility local[% INT %] .[% INT %]., Severity [% SYSLOG_SEVERITY %].[% INT %].'
+           regex: 'Facility local[% INT %] .[% INT %]., Severity [% SYSLOG_SEVERITY %] .[% INT %].'
          - name: client_ethernet
            regex: 'Client-Ethernet-Address [% MACADDR %]'
          - name: client_ip
            regex: 'Client-IP [% IP %]'
          - name: client_leap_indicator
-           regex: 'Client, Leap indicator:  .[% INT %]., Stratum [% INT %], poll [% INT %], precision -*[% INT %]'
+           regex: 'Client, Leap indicator:  .[% INT %]., Stratum [% INT %], poll [% INT %]s*, precision -*[% INT %]'
          - name: file
            regex: 'file "pxelinux.0" [|bootp]'
          - name: gateway_ip
@@ -173,6 +173,7 @@ log_tpl:
            regex: 'Server-IP [% IP %]'
          - name: your-ip
            regex: 'Your-IP [% IP %]'
+      ##########################################################################
          - name: origninator
            regex: 'Originator - '
            remainder:
@@ -212,7 +213,7 @@ log_tpl:
                regex: '[% ANYTHING %]'
          - name: remainder
            regex: '[% ANYTHING %]'
-     #
+     #                                                                         #
      ###########################################################################
      - name: remainder
        regex: '[% ANYTHING %]'
