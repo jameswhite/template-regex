@@ -171,7 +171,7 @@ log_tpl:
                regex: '[% ANYTHING %]'
                regex: '[% ANYTHING %]'
       ##########################################################################
-         - name: timestamp_data
+         - name: bldar
            regex: '[% TIMESTAMP_ROLE %] Timestamp:\s+'
            remainder:
              - name: data
