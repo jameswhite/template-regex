@@ -81,14 +81,18 @@ log_tpl:
                regex: '[% MSS_FLAGS %]'
              - name: remainder
                regex: '[% ANYTHING %]'
+        ########################################################################
          - name: dns
            regex: '[% INT %]\S* [% QUERY %]\S* [% HOSTNAME %]\.* .[% INT %].'
          - name: dns_flags
            regex: '[% INT %]\S* \[.*\] [% QUERY %]\S* [% HOSTNAME %]\.* .[% INT %].'
          - name: dns_update_flags
            regex: '[% INT %]\S* update \[.*\] [% QUERY %]\S* [% HOSTNAME %]\.* .[% INT %].'
+         - name: dns_binary_slashes
+           regex: '[% INT %]\S* [% INT %]/[% INT %]/[% INT %] [% QUERY %]\S* [% HOSTNAME %]\.*:*[0-9]*\s*[0-9]*\s*[0-9]*\s+.[% INT %].'
          - name: dns_notify_flags
            regex: '[% INT %]\S* notify \[.*\] [% QUERY %]\S* [% HOSTNAME %]\.* .[% INT %].'
+        ########################################################################
          - name: tcp
            regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
          - name: bootp_dhcp_reply
