@@ -32,6 +32,7 @@ regex_tpl:
   P_DATA: \([^()]*\([^()]*\)[^()]*\)
   QUERY: PTR|A|SRV|TXT|AAAA|SOA|MX
   OID: '[0-9\.]+'
+  OID_LIST: '[0-9\.]+|[0-9\.]+ [0-9\.]+|[0-9\.]+ [0-9\.]+ [0-9\.]+|[0-9\.]+ [0-9\.]+ [0-9\.]+ [0-9\.]+|[0-9\.]+ [0-9\.]+ [0-9\.]+ [0-9\.]+ [0-9\.]+'
   OFFSET: '[+\-]*[0-9]+\.[0-9]+'
   STRING: '\S+'
 ################################################################################
@@ -125,10 +126,6 @@ log_tpl:
            regex: 'NTPv3, length [% INT %]'
          - name: ntpv4
            regex: 'NTPv4, length [% INT %]'
-         - name: netbios_bcast
-           regex: 'NBT UDP PACKET.137.: QUERY; REQUEST; BROADCAST'
-         - name: netbios_packet
-           regex: 'NBT UDP PACKET.138.'
          - name: tcp
            regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] '
  #<mss [% INT %],nop,nop,sackOK>'
@@ -153,16 +150,22 @@ log_tpl:
            regex: '[% INT %]\S* update \[1a\] \[2n\] [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
          - name: tcp_stuff
            regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
-         - name: snmpv1
-           regex: '{ SNMPv1 { GetRequest.[% INT %]. R=[% INT %]  [% OID %] [% OID %] [% OID %] } }'
+#         - name: snmpv1
+#           regex: '{ SNMPv1 { GetRequest.[% INT %]. R=[% INT %]  [% OID %] [% OID %] [% OID %] } }'
          - name: snmpv1_get
-           regex: '{ SNMPv1 C=[% STRING %] { GetRequest.[% INT %]. R=[% INT %]  [% OID %] } } '
+           regex: '{ SNMPv1 C=[% STRING %] { GetRequest.[% INT %]. R=[% INT %]  [% OID_LIST %] } } '
          - name: snmpv2_get
-           regex: '{ SNMPv2c C=[% STRING %] { GetNextRequest.[% INT %]. R=[% INT %]  [% OID %] } }'
+           regex: '{ SNMPv2c C=[% STRING %] { GetNextRequest.[% INT %]. R=[% INT %]  [% OID_LIST %] } }'
          - name: udp
            regex: 'UDP, length [% INT %]'
          - name: syslog
            regex: 'SYSLOG, length: [% INT %]'
+         - name: netbios_unicast
+           regex: 'NBT UDP PACKET.[% INT %].: QUERY; REQUEST; UNiCAST'
+         - name: netbios_bcast
+           regex: 'NBT UDP PACKET.[% INT %].: QUERY; REQUEST; BROADCAST'
+         - name: netbios_packet
+           regex: 'NBT UDP PACKET.[% INT %].'
          - name: nbt_udp_unicast
            regex: 'NBT UDP PACKET.[% INT %].: REFRESH.[% INT %].; REQUEST; UNICAST'
          - name: nbt_udp_broadcast
