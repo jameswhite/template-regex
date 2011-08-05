@@ -34,6 +34,8 @@ regex_tpl:
   TIMESTAMP_ROLE: Transmit|Reference|Receive
   DHCP_FLAGS: none|Broadcast
   MSS_FLAGS: '<mss [0-9]+,[^>]+>'
+  SYSLOG_SEVERITY: notice|debug|warn|warning|info|err|error|crit|critical|emerg|emergency|alert
+  WINDOWS_MSG: .*
 # # these are all over the place... ,so we just grab between the <>'s until we come up with a better regex
 # # <mss [% INT %],nop,nop,sackOK>
 # # <mss [% INT %],nop,wscale [% INT %],nop,nop,sackOK>
@@ -149,12 +151,16 @@ log_tpl:
        regex: '#011\s*'
        remainder:
       ##########################################################################
+         - name: windows_msg
+           regex: 'Msg: [% WINDOWS_MSG %]'
+         - name: facility_local
+           regex: 'Facility local[% INT %} ([% INT %}), Severity [% SYSLOG_SEVERITY %]([% INT %})'
          - name: client_ethernet
            regex: 'Client-Ethernet-Address [% MACADDR %]'
          - name: client_ip
            regex: 'Client-IP [% IP %]'
-#         - name: client_leap_indicator
-#           regex: 'Client, Leap indicator:  .[% INT %}., Stratum [% INT %], poll [% INT %], precision \-*[% INT %]'
+         - name: client_leap_indicator
+           regex: 'Client, Leap indicator:  .[% INT %]., Stratum [% INT %], poll [% INT %], precision -*[% INT %]'
          - name: file
            regex: 'file "pxelinux.0" [|bootp]'
          - name: gateway_ip
@@ -190,6 +196,8 @@ log_tpl:
          - name: timestamp_data
            regex: '[% TIMESTAMP_ROLE %] Timestamp:\s+'
            remainder:
+             - name: offset
+               regex: '[% OFFSET %]'
              - name: data
                regex: '[% INT %]\.[% INT %] .[% SDATE %] [% TIME %].'
              - name: remainder
