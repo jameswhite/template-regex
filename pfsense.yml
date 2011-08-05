@@ -160,8 +160,8 @@ log_tpl:
                    regex: '[% OFFSET %]'
                  - name: remainder
                    regex: '[% ANYTHING %]'
-             - name: transmit_timestamp
-               regex: 'Transmit Timestamp:\s+'
+             - name: timestamp_data
+               regex: '[% TIMESTAMP_ROLE %] Timestamp:\s+'
                remainder:
                  - name: data
                    regex: '[% INT %]\.[% INT %] .[% SDATE %] [% TIME %].'
@@ -171,7 +171,7 @@ log_tpl:
                regex: '[% ANYTHING %]'
                regex: '[% ANYTHING %]'
       ##########################################################################
-         - name: bldar
+         - name: timestamp_data
            regex: '[% TIMESTAMP_ROLE %] Timestamp:\s+'
            remainder:
              - name: data
