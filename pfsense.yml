@@ -154,7 +154,7 @@ log_tpl:
          - name: windows_msg
            regex: 'Msg: [% WINDOWS_MSG %]'
          - name: facility_local
-           regex: 'Facility local[% INT %} ([% INT %}), Severity [% SYSLOG_SEVERITY %]([% INT %})'
+           regex: 'Facility local[% INT %] .[% INT %}., Severity [% SYSLOG_SEVERITY %].[% INT %}.'
          - name: client_ethernet
            regex: 'Client-Ethernet-Address [% MACADDR %]'
          - name: client_ip
