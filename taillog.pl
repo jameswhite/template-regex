@@ -76,7 +76,11 @@ sub got_log_line {
        }
        print "$output\n";
    }else{
-       print STDERR "$result->{'name'}\n";
+       $heatp->{'last'}='' unless $heap->{'last'};
+       if($heatp->{'last'} ne $result->{'name'}){
+           print STDERR "$result->{'name'}\n";
+           $heap->{'last'} = $result->{'name'};
+       }
    }
    #my $proto = $result->{'patterns'}->[11];
 } 
