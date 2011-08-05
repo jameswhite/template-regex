@@ -19,19 +19,19 @@ regex_tpl:
   ACTION: pass|block
   IP: '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
   IP_PORT: '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
-  FLAGS: S|A|SA
+  FLAGS: S|A|SA|R
 #  TRANSPORT: TCP|UDP
 #  TUNNEL_GROUP: \S+
 #  TYPE_CODE: '\(type \d+, code \d+\)'
 #  USER_P: \(\S+\)
   P_DATA: \([^()]*\([^()]*\)[^()]*\)
-  QUERY: PTR|A|SRV|TXT|AAAA|SOA|MX|NXDomain|ServFail
+  QUERY: PTR|A|SRV|TXT|AAAA|SOA|MX|NXDomain|ServFail|CNAME
   OID: '[0-9\.]+'
   OID_LIST: '[0-9\.]+|[0-9\.]+ [0-9\.]+|[0-9\.]+ [0-9\.]+ [0-9\.]+|[0-9\.]+ [0-9\.]+ [0-9\.]+ [0-9\.]+|[0-9\.]+ [0-9\.]+ [0-9\.]+ [0-9\.]+ [0-9\.]+'
   OFFSET: '[+\-]*[0-9]+\.[0-9]+'
   STRING: '\S+'
   OFFSET_ROLE: Originator|Receive
-  TIMESTAMP_ROLE: Transmit|Reference
+  TIMESTAMP_ROLE: Transmit|Reference|Receive
   DHCP_FLAGS: none|Broadcast
   MSS_FLAGS: '<mss [0-9]+,[^>]+>'
 # # these are all over the place... ,so we just grab between the <>'s until we come up with a better regex
@@ -84,6 +84,8 @@ log_tpl:
            regex: '[% INT %]\S* \[.*\] [% QUERY %]\S* [% HOSTNAME %]\.* .[% INT %].'
          - name: dns_update_flags
            regex: '[% INT %]\S* update \[.*\] [% QUERY %]\S* [% HOSTNAME %]\.* .[% INT %].'
+         - name: dns_notify_flags
+           regex: '[% INT %]\S* notify \[.*\] [% QUERY %]\S* [% HOSTNAME %]\.* .[% INT %].'
          - name: tcp
            regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
          - name: bootp_dhcp_reply
@@ -145,13 +147,14 @@ log_tpl:
      ###########################################################################
      # Good ol' number 11
      - name: number_11
-       regex: '#011\s*'
+       regex: '#011\s*.*'
        remainder:
+      ##########################################################################
          - name: origninator
            regex: 'Originator - '
            remainder:
              - name: receive_timestamp
-               regex: 'Receive Timestamp:\s+'
+               regex: '[% TIMESTAMP_ROLE %] Timestamp:\s+'
                remainder:
                  - name: data
                    regex: '[% OFFSET %]'
@@ -166,6 +169,8 @@ log_tpl:
                    regex: '[% ANYTHING %]'
              - name: remainder
                regex: '[% ANYTHING %]'
+               regex: '[% ANYTHING %]'
+      ##########################################################################
          - name: transmit_timestamp
            regex: '[% TIMESTAMP_ROLE %] Timestamp:\s+'
            remainder:
