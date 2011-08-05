@@ -58,7 +58,7 @@ log_tpl:
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: '
    remainder: 
      - name: connection
-       regex: '[% INT %]*\.*\s*[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
+       regex: '[0-9]*\.*\s*[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
        remainder:
          - name: tcp
            regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] '
@@ -114,7 +114,7 @@ log_tpl:
          - name: remainder
            regex: '[% ANYTHING %]'
      - name: icmp
-       regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP %] > [% IP %]: '
+       regex: '[0-9]*\.*\s*[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP %] > [% IP %]: '
        remainder:
          - name: echo_request
            regex: 'ICMP echo request, id [% INT %], seq [% INT %], length [% INT %]'
