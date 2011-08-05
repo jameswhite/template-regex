@@ -76,8 +76,8 @@ sub got_log_line {
        }
        print "$output\n";
    }else{
-       $heatp->{'last'}='' unless $heap->{'last'};
-       if($heatp->{'last'} ne $result->{'name'}){
+       $heap->{'last'}='' unless( defined($heap->{'last'}));
+       if($heap->{'last'} ne $result->{'name'}){
            print STDERR "$result->{'name'}\n";
            $heap->{'last'} = $result->{'name'};
        }
