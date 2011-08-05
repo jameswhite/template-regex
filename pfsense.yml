@@ -40,7 +40,6 @@ regex_tpl:
 # # <mss [% INT %],sackOK,timestamp [% INT %] [% INT %],nop,wscale [% INT %]>
 # # <mss [% INT %],nop,wscale [% INT %],nop,nop,timestamp [% INT %] [% INT %],sackOK,eol>
 # # <mss [% INT %],nop,wscale [% INT %],nop,nop,timestamp [% INT %] [% INT %],nop,nop,sackOK> # new
-
 ################################################################################
 # Here we have nested log substrings and their names, the logic being that 
 # you can match the first part of a line, and then iterate to match the 
@@ -168,7 +167,6 @@ log_tpl:
                  - name: remainder
                    regex: '[% ANYTHING %]'
              - name: remainder
-               regex: '[% ANYTHING %]'
                regex: '[% ANYTHING %]'
       ##########################################################################
          - name: timestamp_data
