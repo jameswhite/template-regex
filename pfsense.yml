@@ -130,7 +130,7 @@ log_tpl:
      ###########################################################################
      # just make these go away for now (.*)
      - name: number_11
-       regex: '#011\s+.*'
+       regex: '#011\s*.*'
        remainder:
          - name: origninator
            regex: 'Originator - '
