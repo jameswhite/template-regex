@@ -57,6 +57,69 @@ log_tpl:
  - name: pfsense
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: '
    remainder: 
+     - name: connection
+       regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
+       remainder:
+           remainder:
+             - name: mss_data
+               regex: '[% MSS_FLAGS %]'
+             - name: remainder
+               regex: '[% ANYTHING %]'
+         - name: dns
+           regex: '[% INT %]\S* [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
+         - name: dns_1au
+           regex: '[% INT %]\S* \[1au\] [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
+         - name: dns_update
+           regex: '[% INT %]\S* update \[.*\] [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
+         - name: tcp
+           regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
+         - name: bootp_dhcp_reply
+           regex: 'BOOTP/DHCP, Reply, length [% INT %], hops [% INT %], xid [% HEX %], Flags \[none\]'
+         - name: radius
+           regex: 'RADIUS, length: [% INT %]'
+         - name: v5
+           regex: 'v5'
+         - name: ntpv3
+           regex: 'NTPv3, length [% INT %]'
+         - name: ntpv4
+           regex: 'NTPv4, length [% INT %]'
+         - name: tcp
+           regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] '
+         - name: tcp_stuff
+           regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
+         - name: snmpv1
+           regex: '{ SNMPv1 { GetRequest.[% INT %]. R=[% INT %]\s+[% OID_LIST %]'
+         - name: snmpv1_get
+           regex: '{ SNMPv1 C=[% STRING %] { GetRequest.[% INT %]. R=[% INT %]\s+[% OID_LIST %]\s+} } '
+         - name: snmpv1_getnext
+           regex: '{ SNMPv1 C=[% STRING %] { GetNextRequest.[% INT %]. R=[% INT %]\s+[% OID_LIST %]\s+} } '
+         - name: snmpv2_getnext
+           regex: '{ SNMPv2c C=[% STRING %] { GetNextRequest.[% INT %]. R=[% INT %]\s+[% OID_LIST %]\s+} } '
+         - name: udp
+           regex: 'UDP, length [% INT %]'
+         - name: syslog
+           regex: 'SYSLOG, length: [% INT %]'
+         - name: netbios_unicast
+           regex: 'NBT UDP PACKET.[% INT %].: QUERY; REQUEST; UNiCAST'
+         - name: netbios_bcast
+           regex: 'NBT UDP PACKET.[% INT %].: QUERY; REQUEST; BROADCAST'
+         - name: netbios_packet
+           regex: 'NBT UDP PACKET.[% INT %].'
+         - name: nbt_udp_unicast
+           regex: 'NBT UDP PACKET.[% INT %].: REFRESH.[% INT %].; REQUEST; UNICAST'
+         - name: nbt_udp_broadcast
+           regex: 'NBT UDP PACKET.[% INT %].: REGISTRATION; REQUEST; BROADCAST'
+         - name: remainder
+           regex: '[% ANYTHING %]'
+     - name: icmp
+       regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP %] > [% IP %]: '
+       remainder:
+         - name: echo_request
+           regex: 'ICMP echo request, id [% INT %], seq [% INT %], length [% INT %]'
+         - name: igmp_query_v1
+           regex: 'igmp query v1'
+         - name: remainder
+           regex: '[% ANYTHING %]'
 # just make these go away for now (.*)
      - name: number_11
        regex: '#011\s+.*'
@@ -108,69 +171,6 @@ log_tpl:
                regex: '[% INT %]\.[% INT %] .[% SDATE %] [% TIME %].'
              - name: remainder
                regex: '[% ANYTHING %]'
-         - name: remainder
-           regex: '[% ANYTHING %]'
-     - name: icmp
-       regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP %] > [% IP %]: '
-       remainder:
-         - name: echo_request
-           regex: 'ICMP echo request, id [% INT %], seq [% INT %], length [% INT %]'
-         - name: igmp_query_v1
-           regex: 'igmp query v1'
-         - name: remainder
-           regex: '[% ANYTHING %]'
-     - name: connection
-       regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
-       remainder:
-         - name: bootp_dhcp_reply
-           regex: 'BOOTP/DHCP, Reply, length [% INT %], hops [% INT %], xid [% HEX %], Flags \[none\]'
-         - name: radius
-           regex: 'RADIUS, length: [% INT %]'
-         - name: v5
-           regex: 'v5'
-         - name: ntpv3
-           regex: 'NTPv3, length [% INT %]'
-         - name: ntpv4
-           regex: 'NTPv4, length [% INT %]'
-         - name: tcp
-           regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] '
-           remainder:
-             - name: mss_data
-               regex: '[% MSS_FLAGS %]'
-             - name: remainder
-               regex: '[% ANYTHING %]'
-         - name: tcp
-           regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
-         - name: dns
-           regex: '[% INT %]\S* [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
-         - name: dns_1au
-           regex: '[% INT %]\S* \[1au\] [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
-         - name: dns_update
-           regex: '[% INT %]\S* update \[.*\] [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
-         - name: tcp_stuff
-           regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
-         - name: snmpv1
-           regex: '{ SNMPv1 { GetRequest.[% INT %]. R=[% INT %]\s+[% OID_LIST %]'
-         - name: snmpv1_get
-           regex: '{ SNMPv1 C=[% STRING %] { GetRequest.[% INT %]. R=[% INT %]\s+[% OID_LIST %]\s+} } '
-         - name: snmpv1_getnext
-           regex: '{ SNMPv1 C=[% STRING %] { GetNextRequest.[% INT %]. R=[% INT %]\s+[% OID_LIST %]\s+} } '
-         - name: snmpv2_getnext
-           regex: '{ SNMPv2c C=[% STRING %] { GetNextRequest.[% INT %]. R=[% INT %]\s+[% OID_LIST %]\s+} } '
-         - name: udp
-           regex: 'UDP, length [% INT %]'
-         - name: syslog
-           regex: 'SYSLOG, length: [% INT %]'
-         - name: netbios_unicast
-           regex: 'NBT UDP PACKET.[% INT %].: QUERY; REQUEST; UNiCAST'
-         - name: netbios_bcast
-           regex: 'NBT UDP PACKET.[% INT %].: QUERY; REQUEST; BROADCAST'
-         - name: netbios_packet
-           regex: 'NBT UDP PACKET.[% INT %].'
-         - name: nbt_udp_unicast
-           regex: 'NBT UDP PACKET.[% INT %].: REFRESH.[% INT %].; REQUEST; UNICAST'
-         - name: nbt_udp_broadcast
-           regex: 'NBT UDP PACKET.[% INT %].: REGISTRATION; REQUEST; BROADCAST'
          - name: remainder
            regex: '[% ANYTHING %]'
  - name: remainder
