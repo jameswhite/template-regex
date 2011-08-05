@@ -120,6 +120,8 @@ log_tpl:
      - name: connection
        regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
        remainder:
+         - name: bootp_dhcp_reply
+           regex: 'BOOTP/DHCP, Reply, length [% INT %], hops [% INT %], xid [% HEX %], Flags \[none\]'
          - name: radius
            regex: 'RADIUS, length: [% INT %]'
          - name: v5
