@@ -153,8 +153,8 @@ log_tpl:
            regex: 'Client-Ethernet-Address [% MACADDR %]'
          - name: client_ip
            regex: 'Client-IP [% IP %]'
-         - name: client_leap_indicator
-           regex: 'Client, Leap indicator:  .[% INT %}., Stratum [% INT %], poll [% INT %], precision -*[% INT %]'
+#         - name: client_leap_indicator
+#           regex: 'Client, Leap indicator:  .[% INT %}., Stratum [% INT %], poll [% INT %], precision \-*[% INT %]'
          - name: file
            regex: 'file "pxelinux.0" [|bootp]'
          - name: gateway_ip
