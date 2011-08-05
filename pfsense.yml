@@ -34,8 +34,10 @@ regex_tpl:
   TIMESTAMP_ROLE: Transmit|Reference|Receive
   DHCP_FLAGS: none|Broadcast
   MSS_FLAGS: '<mss [0-9]+,[^>]+>'
+  SYSLOG_FACILITY: auth|authpriv|cron|daemon|ftp|kern|local[0-7]|lpr|mail|news|syslog|user|uucp
   SYSLOG_SEVERITY: notice|debug|warn|warning|info|err|error|crit|critical|emerg|emergency|alert
   WINDOWS_MSG: .*
+  USERNAME: \S+
 # # these are all over the place... ,so we just grab between the <>'s until we come up with a better regex
 # # <mss [% INT %],nop,nop,sackOK>
 # # <mss [% INT %],nop,wscale [% INT %],nop,nop,sackOK>
@@ -146,21 +148,27 @@ log_tpl:
          - name: remainder
            regex: '[% ANYTHING %]'
      ###########################################################################
-     # Good ol' number 11                                                      #
-     - name: number_11
+     # Good ol' number 11 for a tab                                            #
+     - name: TAB
        regex: '#011\s*'
        remainder:
       ##########################################################################
          - name: windows_msg
            regex: 'Msg: [% WINDOWS_MSG %]'
          - name: facility_local
-           regex: 'Facility local[% INT %] .[% INT %]., Severity [% SYSLOG_SEVERITY %] .[% INT %].'
+           regex: 'Facility [% SYSLOG_FACILITY %] .[% INT %]., Severity [% SYSLOG_SEVERITY %] .[% INT %].'
          - name: client_ethernet
            regex: 'Client-Ethernet-Address [% MACADDR %]'
          - name: client_ip
            regex: 'Client-IP [% IP %]'
          - name: client_leap_indicator
+           regex: 'Client, Leap indicator:  .[% INT %]., Stratum [% INT %], poll [% INT %]s*'
+         - name: client_leap_indicator_unsync
+           regex: 'Client, Leap indicator: clock unsynchronized .[% INT %]., Stratum [% INT %]s, poll [% INT %]s*'
+         - name: client_leap_indicator_prec
            regex: 'Client, Leap indicator:  .[% INT %]., Stratum [% INT %], poll [% INT %]s*, precision -*[% INT %]'
+         - name: client_leap_indicator_unsync_prec
+           regex: 'Client, Leap indicator: clock unsynchronized .[% INT %]., Stratum [% INT %], poll [% INT %]s*, precision -*[% INT %]'
          - name: file
            regex: 'file "pxelinux.0" [|bootp]'
          - name: gateway_ip
@@ -173,6 +181,32 @@ log_tpl:
            regex: 'Server-IP [% IP %]'
          - name: your-ip
            regex: 'Your-IP [% IP %]'
+         - name: access_request
+           regex: 'Access Request .[% INT %]., id: [% HEX %], Authenticator: [% STRING %]'
+         - name: acct_auth_attr
+           regex: 'Accounting Authentication Attribute .[% INT %]., length: [% INT %], Value: RADIUS'
+         - name: acct_delay_attr
+           regex: 'Accounting Delay Attribute .[% INT %]., length: [% INT %], Value: [% INT %] secs'
+         - name: acct_req
+           regex: 'Accounting Request .[% INT %]., id: [% HEX %], Authenticator: [% STRING %]'
+         - name: acc_sess_id
+           regex: 'Accounting Session ID Attribute .[% INT %]., length: [% INT %], Value: 0000D74D'
+         - name: acct_status_attr
+           regex: 'Accounting Status Attribute .[% INT %]., length: [% INT %], Value: Start'
+         - name: calling_station_attr
+           regex: 'Calling Station Attribute .[% INT %]., length: [% INT %], Value: [% IP %]'
+         - name: nas_ip_addr
+           regex: 'NAS IP Address Attribute .[% INT %]., length: [% INT %], Value: [% IP %]'
+         - name: nas_port_attr
+           regex: 'NAS Port Attribute .[% INT %]., length: [% INT %], Value: [% INT %]'
+         - name: nas_port_type_attr
+           regex: 'NAS Port Type Attribute .[% INT %]., length: [% INT %], Value: Virtual'
+         - name: passwd_attr
+           regex: 'Password Attribute .[% INT %]., length: [% INT %], Value: '
+         - name: service_type_attr
+           regex: 'Service Type Attribute .[% INT %]., length: [% INT %], Value: NAS Prompt'
+         - name: username_attr
+           regex: 'Username Attribute .[% INT %]., length: [% INT %], Value: [% USERNAME %]'
       ##########################################################################
          - name: origninator
            regex: 'Originator - '
