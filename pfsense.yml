@@ -119,6 +119,8 @@ log_tpl:
      - name: connection
        regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
        remainder:
+         - name: v5
+           regex: 'v5'
          - name: ntpv3
            regex: 'NTPv3, length [% INT %]'
          - name: ntpv4
@@ -151,13 +153,17 @@ log_tpl:
            regex: '{ SNMPv1 { GetRequest.[% INT %]. R=[% INT %]  [% OID %] [% OID %] [% OID %] } }'
          - name: snmpv1_get
            regex: '{ SNMPv1 C=[% STRING %] { GetRequest.[% INT %]. R=[% INT %]  [% OID %] } } '
+         - name: snmpv2_get
+           regex: '{ SNMPv2c C=[% STRING %] { GetNextRequest.[% INT %]. R=[% INT %]  [% OID %] } }'
          - name: udp
            regex: 'UDP, length [% INT %]'
          - name: syslog
            regex: 'SYSLOG, length: [% INT %]'
          - name: nbt_udp_unicast
            regex: 'NBT UDP PACKET.[% INT %].: REFRESH.[% INT %].; REQUEST; UNICAST'
+         - name: nbt_udp_broadcast
+           regex: 'NBT UDP PACKET.[% INT %].: REGISTRATION; REQUEST; BROADCAST'
          - name: remainder
            regex: '[% ANYTHING %]'
- - name: no_match
+ - name: remainder
    regex: '[% ANYTHING %]'
