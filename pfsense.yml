@@ -30,7 +30,7 @@ regex_tpl:
 #  TYPE_CODE: '\(type \d+, code \d+\)'
 #  USER_P: \(\S+\)
   P_DATA: \([^()]*\([^()]*\)[^()]*\)
-  QUERY: PTR|A|SRV|TXT|AAAA|SOA
+  QUERY: PTR|A|SRV|TXT|AAAA|SOA|MX
   OID: '[0-9\.]+'
   OFFSET: '[+\-]*[0-9]+\.[0-9]+'
   STRING: '\S+'
@@ -142,9 +142,9 @@ log_tpl:
          - name: tcp
            regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
          - name: dns
-           regex: '[% INT %]\+ [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
+           regex: '[% INT %]\S* [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
          - name: dns_1au
-           regex: '[% INT %]\S+ \[1au\] [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
+           regex: '[% INT %]\S* \[1au\] [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
          - name: tcp_stuff
            regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
          - name: snmpv1
