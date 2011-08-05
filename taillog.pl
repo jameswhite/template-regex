@@ -75,6 +75,8 @@ sub got_log_line {
            }
        }
        print "$output\n";
+   }else{
+       print STDERR "$result->{'name'}\n";
    }
    #my $proto = $result->{'patterns'}->[11];
 } 
