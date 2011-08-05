@@ -89,7 +89,9 @@ log_tpl:
          - name: dns_update_flags
            regex: '[% INT %]\S* update \[.*\] [% QUERY %]\S* [% HOSTNAME %]\.* .[% INT %].'
          - name: dns_binary_slashes
-           regex: '[% INT %]\S* [% INT %]/[% INT %]/[% INT %] [% QUERY %]\S* [% HOSTNAME %]\.*:*[0-9]*\s*[0-9]*\s*[0-9]*\s+.[% INT %].'
+           regex: '[% INT %]\S* [% INT %]/[% INT %]/[% INT %] [% QUERY %]\S* [% HOSTNAME %]\.*:*[0-9]*\s*[0-9]*\s*[0-9]*\s+.[% INT %].\s*'
+         - name: dns_binary_slashes_host
+           regex: '[% INT %]\S* [% INT %]/[% INT %]/[% INT %] [% HOSTNAME %] [% QUERY %]\S* [% HOSTNAME %]\.*:*[0-9]*\s*[0-9]*\s*[0-9]*\s+.[% INT %].\s*'
          - name: dns_notify_flags
            regex: '[% INT %]\S* notify \[.*\] [% QUERY %]\S* [% HOSTNAME %]\.* .[% INT %].'
         ########################################################################
@@ -138,6 +140,8 @@ log_tpl:
      - name: icmp
        regex: '[0-9]*\.*\s*[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP %] > [% IP %]: '
        remainder:
+         - name: icmp
+           regex: 'icmp'
          - name: echo_request
            regex: 'ICMP echo request, id [% INT %], seq [% INT %], length [% INT %]'
          - name: echo_reply
@@ -152,7 +156,7 @@ log_tpl:
          - name: remainder
            regex: '[% ANYTHING %]'
      ###########################################################################
-     # Good ol' number 11 for a tab                                            #
+     # Good ol' bang zero 11 for a tab                                         #
      - name: TAB
        regex: '#011\s*'
        remainder:
@@ -173,8 +177,10 @@ log_tpl:
            regex: 'Client, Leap indicator:  .[% INT %]., Stratum [% INT %], poll [% INT %]s*, precision -*[% INT %]'
          - name: client_leap_indicator_unsync_prec
            regex: 'Client, Leap indicator: clock unsynchronized .[% INT %]., Stratum [% INT %], poll [% INT %]s*, precision -*[% INT %]'
-         - name: file
-           regex: 'file "pxelinux.0" [|bootp]'
+         - name: tftp_pxelinux_0
+           regex: 'file "pxelinux.0" \[|bootp\]'
+         - name: tftp_thinstation
+           regex: 'file "thinstation.nbi.zpxe" \[|bootp\]'
          - name: gateway_ip
            regex: 'Gateway-IP [% IP %]'
          - name: root_delay_unspec
@@ -194,15 +200,19 @@ log_tpl:
          - name: acct_req
            regex: 'Accounting Request .[% INT %]., id: [% HEX %], Authenticator: [% STRING %]'
          - name: acc_sess_id
-           regex: 'Accounting Session ID Attribute .[% INT %]., length: [% INT %], Value: 0000D74D'
+           regex: 'Accounting Session ID Attribute .[% INT %]., length: [% INT %], Value: .*'
          - name: acct_status_attr
            regex: 'Accounting Status Attribute .[% INT %]., length: [% INT %], Value: Start'
          - name: calling_station_attr
            regex: 'Calling Station Attribute .[% INT %]., length: [% INT %], Value: [% IP %]'
+         - name: calling_station_attr_src
+           regex: 'Calling Station Attribute .[% INT %]., length: [% INT %], Value: ip:source-ip=[% IP %]'
          - name: nas_ip_addr
            regex: 'NAS IP Address Attribute .[% INT %]., length: [% INT %], Value: [% IP %]'
          - name: nas_port_attr
            regex: 'NAS Port Attribute .[% INT %]., length: [% INT %], Value: [% INT %]'
+         - name: nas_port_id_attr
+           regex: 'NAS Port ID Attribute .[% INT %]., length: [% INT %], Value: [% STRING %]'
          - name: nas_port_type_attr
            regex: 'NAS Port Type Attribute .[% INT %]., length: [% INT %], Value: Virtual'
          - name: passwd_attr
@@ -211,6 +221,12 @@ log_tpl:
            regex: 'Service Type Attribute .[% INT %]., length: [% INT %], Value: NAS Prompt'
          - name: username_attr
            regex: 'Username Attribute .[% INT %]., length: [% INT %], Value: [% USERNAME %]'
+         - name: reply_attr
+           regex: 'Reply Attribute .[% INT %]., length: [% INT %], Value: Password: '
+         - name: vendor_attr
+           regex: 'Vendor Attribute: [% INT %], Length: [% INT %], Value: ip:source-ip=[% IP %]'
+         - name: vendor_specific_attr
+           regex: 'Vendor Specific Attribute .[% INT %]., length: [% INT %], Value: Vendor: .* ([% INT %])'
       ##########################################################################
          - name: origninator
            regex: 'Originator - '
