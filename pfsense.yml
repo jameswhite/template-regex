@@ -122,7 +122,13 @@ log_tpl:
            regex: 'igmp query v1'
          - name: remainder
            regex: '[% ANYTHING %]'
-# just make these go away for now (.*)
+     - name: numbered_connection
+       regex: '[% INT %]\. [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
+       remainder:
+         - name: remainder
+           regex: '[% ANYTHING %]'
+     ###########################################################################
+     # just make these go away for now (.*)
      - name: number_11
        regex: '#011\s+.*'
        remainder:
@@ -175,6 +181,8 @@ log_tpl:
                regex: '[% ANYTHING %]'
          - name: remainder
            regex: '[% ANYTHING %]'
+     #
+     ###########################################################################
      - name: remainder
        regex: '[% ANYTHING %]'
  - name: remainder
