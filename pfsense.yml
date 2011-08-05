@@ -69,9 +69,9 @@ log_tpl:
                regex: '[% ANYTHING %]'
          - name: dns
            regex: '[% INT %]\S* [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
-         - name: dns_1au
-           regex: '[% INT %]\S* \[1au\] [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
-         - name: dns_update
+         - name: dns_flags
+           regex: '[% INT %]\S* \[.*\] [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
+         - name: dns_update_flags
            regex: '[% INT %]\S* update \[.*\] [% QUERY %]\? [% HOSTNAME %]\. .[% INT %].'
          - name: tcp
            regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
