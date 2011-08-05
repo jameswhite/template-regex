@@ -175,5 +175,7 @@ log_tpl:
                regex: '[% ANYTHING %]'
          - name: remainder
            regex: '[% ANYTHING %]'
+     - name: remainder
+       regex: '[% ANYTHING %]'
  - name: remainder
    regex: '[% ANYTHING %]'
