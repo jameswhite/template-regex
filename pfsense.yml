@@ -60,6 +60,8 @@ log_tpl:
      - name: connection
        regex: '[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
        remainder:
+         - name: tcp
+           regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] '
            remainder:
              - name: mss_data
                regex: '[% MSS_FLAGS %]'
@@ -83,8 +85,6 @@ log_tpl:
            regex: 'NTPv3, length [% INT %]'
          - name: ntpv4
            regex: 'NTPv4, length [% INT %]'
-         - name: tcp
-           regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. win [% INT %] '
          - name: tcp_stuff
            regex: '[% FLAGS %], cksum [% HEX %] (correct), [% INT %]:[% INT %].[% INT %]. win [% INT %] <mss [% INT %],nop,nop,sackOK>'
          - name: snmpv1
