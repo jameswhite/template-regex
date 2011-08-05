@@ -77,6 +77,7 @@ sub got_log_line {
        print "$output\n";
    }else{
        $heap->{'last'}='' unless( defined($heap->{'last'}));
+       # remove line-after-line of repeated output
        if($heap->{'last'} ne $result->{'name'}){
            print STDERR "$result->{'name'}\n";
            $heap->{'last'} = $result->{'name'};
