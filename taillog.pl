@@ -102,7 +102,12 @@ sub sketch_connection {
 #        print "$src_ip:$src_port -> $tgt_ip:$tgt_port/$proto\n";
         print "";
     }elsif($match =~m/^cisco_asa/){
-        print "Unhandled: $match [$#{ $args }]\n"; 
+        if($match =~ m/cisco_asa.session_teardown/){
+            # we only care about the buildup part of session
+            print "";
+        }else{
+            print "Unhandled: $match [$#{ $args }]\n"; 
+        }
     }elsif($match =~ m/pfsense.connection/){
         print "";
         #print Data::Dumper->Dump([$args]);
