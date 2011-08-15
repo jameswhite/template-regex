@@ -114,6 +114,8 @@ sub sketch_connection {
         # we're looking for allowed things
         }elsif($match =~ m/cisco_asa.deny/){
             print "";
+        }elsif($match =~ m/cisco_asa.discard/){
+            print "";
         # omit localhost for now
         }elsif($match =~ m/cisco_asa.local_host_buildup/){
             print "";
@@ -139,6 +141,8 @@ sub sketch_connection {
 #        $tgt_port = pop(@tgt);
 #        $tgt = join('.',@tgt);
 #        print "$src:$src_port -> $tgt:$tgt_port/$proto\n";
+    }elsif($match =~ m/pfsense.icmp/){
+        print "";
     }elsif($match =~ m/pfsense.tab/){
         # just ignore these for now
         print "";
