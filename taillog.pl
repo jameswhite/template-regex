@@ -105,6 +105,15 @@ sub sketch_connection {
         if($match =~ m/cisco_asa.session_teardown/){
             # we only care about the buildup part of session
             print "";
+        }elsif($match =~ m/cisco_asa.icmp_tear.*/){
+            # we only care about the buildup part of session
+            print "";
+        }elsif($match =~ m/cisco_asa.dynamic_tear/){
+            # we only care about the buildup part of session
+            print "";
+        }elsif($match =~ m/cisco_asa.deny/){
+            # we only care about the buildup part of session
+            print "";
         }else{
             print "Unhandled: $match [$#{ $args }]\n"; 
         }
