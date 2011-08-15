@@ -75,7 +75,6 @@ sub got_log_line {
            }
        }
        print "$output\n";
-       print "$line\n";
    }else{
        $heap->{'last'}='' unless( defined($heap->{'last'}));
        # remove line-after-line of repeated output
@@ -103,7 +102,7 @@ sub sketch_connection {
 #        print "$src_ip:$src_port -> $tgt_ip:$tgt_port/$proto\n";
         print "";
     }elsif($match =~m/^cisco_asa/){
-        print "";
+        print "Unhandled: $match [$#{ $args }]\n"; 
     }elsif($match =~ m/pfsense.connection/){
         print "";
         #print Data::Dumper->Dump([$args]);
@@ -120,6 +119,9 @@ sub sketch_connection {
 #        $tgt_port = pop(@tgt);
 #        $tgt = join('.',@tgt);
 #        print "$src:$src_port -> $tgt:$tgt_port/$proto\n";
+    }elsif($match =~ m/pfsense.tab/){
+        # just ignore these for now
+        print "";
     }else{
         print "Unhandled: $match [$#{ $args }]\n"; 
     }

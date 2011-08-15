@@ -29,6 +29,7 @@ regex_tpl:
   IP: '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
   IPSEC_STAGE: .*
   IP_PORT: '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\/[0-9]+'
+  PORT: '[0-9]+'
   REASON: TCP FINs|TCP Reset-I|TCP Reset-O|SYN Timeout|FIN Timeout|looping-address|Parent flow is closed
   SESSION: '[0-9]+'
   TCP_FLAG: RST|ACK|RST ACK|PSH ACK|SYN ACK|FIN ACK|FIN PSH ACK
@@ -198,8 +199,10 @@ log_tpl:
       regex: ' \[   [% IP %]] drop rate-[% INT %] exceeded. Current burst rate is [% INT %] per second, max configured rate is [% INT %]; Current average rate is [% INT %] per second, max configured rate is [% INT %]; Cumulative total count is [% INT %]'
     - name: cleared_tcp_urgent
       regex: 'Cleared TCP urgent flag from [% IFACE_IP_PORT %] to [% IFACE_IP_PORT %]'
-    - name: asa_n_nnnn
-      regex: '\%ASA-[% INT %]-[% INT %].*'
+    - name: nat_t
+      regex: 'NAT-T keepalive received from [% IP %]/[% PORT %] to [% IFACE %]:[% IP %]/[% PORT %]'
+       - name: remainder
+         regex: '[% ANYTHING %]'
     - name: remainder
       regex: '[% ANYTHING %]'
  - name: cisco_asa_code_matched
