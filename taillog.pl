@@ -132,6 +132,8 @@ sub sketch_connection {
             print "";
         }elsif($match =~ m/cisco_asa.pitcher_key_aquire/){
             print "";
+        }elsif($match =~ m/cisco_asa.udp_route_fail/){
+            print "";
         }elsif($match =~ m/cisco_asa.nat_t/){
             print "";
         }elsif($match =~ m/cisco_asa.dynamic_build/){
