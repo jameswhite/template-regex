@@ -124,6 +124,12 @@ sub sketch_connection {
             print "";
         }elsif($match =~ m/cisco_asa.ftp/){
             print "";
+        }elsif($match =~ m/cisco_asa.ids/){
+            print "";
+        }elsif($match =~ m/cisco_asa.ipsec/){
+            print "";
+        }elsif($match =~ m/cisco_asa.nat_t/){
+            print "";
         }elsif($match =~ m/cisco_asa.dynamic_build/){
             #print Data::Dumper->Dump([ $args ]);
 #            if($args->[6] =~ m/(\S+):(\S+)\/([0-9]+)/){
