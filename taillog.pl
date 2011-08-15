@@ -104,8 +104,16 @@ sub sketch_connection {
     }elsif($match =~m/^cisco_asa/){
         print "";
     }elsif ($match =~m/pfsense.connection/){
-        #'[0-9]*\.*\s*[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
-        print Data::Dumper->Dump([$args]);
+        if($9=~m/proto\s+(\S+)\s+/);
+        $proto=$1;
+        $proto=~tr/A-Z/a-z/;
+        @src=split('.',$args->[10]);
+        $src_port=pop(@src);
+        $src=join('.',@src);
+        @tgt=split('.',$args->[10]);
+        $tgt_port=pop(@tgt);
+        $tgt=join('.',@tgt);
+        print "$src:$src_port -> $tgt:$tgt_port/$proto\n";
     }else{
         print "Unhandled: $match [$#{ $args }]\n"; 
     }
