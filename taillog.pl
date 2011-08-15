@@ -89,40 +89,38 @@ sub got_log_line {
 sub sketch_connection {
     my ($self, $match, $args) = ( @_ );
     if ($match eq 'cisco_asa.session_buildup'){
-        #$proto = $args->[6];
-        #$proto=~tr/A-Z/a-z/;
-        #$src_raw = $args->[8];
-        #if($src_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
-        #    $src_ip = $2; $src_port = $3;
-        #}
-        #$tgt_raw = $args->[9];
-        #if($tgt_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
-        #    $tgt_ip = $2; $tgt_port = $3;
-        #}
-        #print "$src_ip:$src_port -> $tgt_ip:$tgt_port/$proto\n";
+#        $proto = $args->[6];
+#        $proto=~tr/A-Z/a-z/;
+#        $src_raw = $args->[8];
+#        if($src_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
+#            $src_ip = $2; $src_port = $3;
+#        }
+#        $tgt_raw = $args->[9];
+#        if($tgt_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
+#            $tgt_ip = $2; $tgt_port = $3;
+#        }
+#        print "$src_ip:$src_port -> $tgt_ip:$tgt_port/$proto\n";
         print "";
     }elsif($match =~m/^cisco_asa/){
         print "";
     }elsif($match =~ m/pfsense.connection/){
         #print Data::Dumper->Dump([$args]);
-        $proto=~tr/A-Z/a-z/;
-        $proto='';
-        if($args->[9] =~ m/proto\s+(\S+)\s+/){
-            $proto = $1;
-            $proto =~ tr/A-Z/a-z/;
-        }
-        @src = split(/\./,$args->[10]);
-        $src_port = pop(@src);
-        $src = join('.',@src);
-
-        @tgt = split(/\./,$args->[11]);
-        $tgt_port = pop(@tgt);
-        $tgt = join('.',@tgt);
+#        $proto='';
+#        if($args->[9] =~ m/proto\s+(\S+)\s+/){
+#            $proto = $1;
+#            $proto =~ tr/A-Z/a-z/;
+#        }
+#        @src = split(/\./,$args->[10]);
+#        $src_port = pop(@src);
+#        $src = join('.',@src);
+#
+#        @tgt = split(/\./,$args->[11]);
+#        $tgt_port = pop(@tgt);
+#        $tgt = join('.',@tgt);
 
         print "$src:$src_port -> $tgt:$tgt_port/$proto\n";
     }else{
-        print "";
-        #print "Unhandled: $match [$#{ $args }]\n"; 
+        print "Unhandled: $match [$#{ $args }]\n"; 
     }
 }
 
