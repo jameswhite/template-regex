@@ -216,6 +216,43 @@ log_tpl:
       remainder:
         - name: remainder
           regex: '[% ANYTHING %]'
+    - name: aaa
+      regex: 'AAA '
+      remainder:
+        - name: user_auth_success
+          regex: 'user authentication Successful : .* : user = [% USER %]'
+        - name: transaction_status_accept
+          regex: 'transaction status ACCEPT : user = [% USER %]'
+        - name: auth_server_inaccesable
+          regex: 'authentication server not accessible : server =\s+[% IP %] : user = [% USER %]'
+        - name: remainder
+          regex: '[% ANYTHING %]'
+    - name: login_permitted
+      regex: 'Login permitted from [% IP_PORT %] to [% IFACE_IP_PORT %] for user "[% USER %]"'
+      remainder:
+        - name: remainder
+          regex: '[% ANYTHING %]'
+    - name: ssh_session_normal_termination
+      regex: 'SSH session from [% IP %] on interface [% IFACE %] for user "[% USER %]" terminated normally'
+      remainder:
+        - name: remainder
+          regex: '[% ANYTHING %]'
+    - name: aaa_failback_local
+      regex: 'Attempting AAA Fallback method LOCAL for Authentication request for user [% USER %] : Auth-server group .* unreachable'
+      remainder:
+        - name: remainder
+          regex: '[% ANYTHING %]'
+    - name: user
+      regex: 'User '
+      remainder:
+        - name: auth_success
+          regex: 'authentication succeeded: Uname: [% USER %]'
+        - name: priv_level_change
+          regex: 'priv level changed: Uname: [% USER %] From: [% INT %] To: [% INT %]'
+        - name: logout
+          regex: 'logged out: Uname: [% USER %]'
+        - name: remainder
+          regex: '[% ANYTHING %]'
     - name: user_executed_cmd
       regex: 'User .[% USER %]. executed '
       remainder:

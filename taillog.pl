@@ -140,6 +140,8 @@ sub sketch_connection {
             print "";
         }elsif($match =~ m/cisco_asa.esmtp_size_violation/){
             print "";
+        }elsif($match =~ m/cisco_asa.user_executed/){
+            print "";
         }elsif($match =~ m/cisco_asa.dynamic_build/){
 #            if($args->[6] =~ m/(\S+):(\S+)\/([0-9]+)/){
 #                $src_if = $1; $src_ip = $2; $src_port = $3;
