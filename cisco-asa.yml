@@ -251,15 +251,10 @@ log_tpl:
           regex: 'priv level changed: Uname: [% USER %] From: [% INT %] To: [% INT %]'
         - name: logout
           regex: 'logged out: Uname: [% USER %]'
-        - name: remainder
-          regex: '[% ANYTHING %]'
-    - name: user_executed_cmd
-      regex: 'User .[% USER %]. executed '
-      remainder:
-        - name: cmd
-          regex: 'cmd: [% ANYTHING %]'
-        - name: the_cmd
-          regex: 'the .[% ANYTHING %]. command.'
+        - name: executed_cmd
+          regex: '.[% USER %]. executed cmd: [% ANYTHING %]'
+        - name: executed_the_cmd
+          regex: '.[% USER %]. executed the .[% ANYTHING %]. command.'
         - name: remainder
           regex: '[% ANYTHING %]'
     - name: remainder
