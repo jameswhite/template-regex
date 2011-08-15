@@ -38,7 +38,7 @@ regex_tpl:
   TYPE_CODE: '\(type \d+, code \d+\)'
   TZ_OFF: '[+\-][0-9]{2}:[0-9]{2}'
   USER_P: \(\S+\)
-  ANYTHING: (.*)
+  ANYTHING: '.*'
 ################################################################################
 # Here we have nested log substrings and their names, the logic being that 
 # you can match the first part of a line, and then iterate to match the 
