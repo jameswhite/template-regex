@@ -217,12 +217,12 @@ log_tpl:
         - name: remainder
           regex: '[% ANYTHING %]'
     - name: user_executed_cmd
-      regex: 'User \'[% USER %]\' executed '
+      regex: 'User .[% USER %]. executed '
       remainder:
         - name: cmd
           regex: 'cmd: [% ANYTHING %]'
         - name: the_cmd
-          regex: 'the \'[% ANYTHING %]\' command.'
+          regex: 'the .[% ANYTHING %]. command.'
         - name: remainder
           regex: '[% ANYTHING %]'
     - name: remainder
