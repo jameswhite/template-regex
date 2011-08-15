@@ -35,7 +35,7 @@ regex_tpl:
   SESSION: '[0-9]+'
   TCP_FLAG: RST|ACK|RST ACK|PSH ACK|SYN ACK|FIN ACK|FIN PSH ACK
   TIME: '[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{6}|[0-9]{2}:[0-9]{2}:[0-9]{2}'
-  TRANSPORT: TCP|UDP
+  TRANSPORT: TCP|UDP|ICMP
   TUNNEL_GROUP: \S+
   TYPE_CODE: '\(type \d+, code \d+\)'
   TZ_OFF: '[+\-][0-9]{2}:[0-9]{2}'
