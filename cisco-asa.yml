@@ -206,7 +206,7 @@ log_tpl:
         - name: remainder
           regex: '[% ANYTHING %]'
     - name: udp_route_fail
-      regex: 'Routing failed to locate next hop for UDP from [% IFACE %]:% IP %]/[% PORT %] to [% IFACE %]:[% IP %]/[% PORT %]'
+      regex: 'Routing failed to locate next hop for UDP from [% IFACE %]:[% IP %]/[% PORT %] to [% IFACE %]:[% IP %]/[% PORT %]'
       remainder:
         - name: remainder
           regex: '[% ANYTHING %]'
