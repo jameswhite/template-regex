@@ -88,7 +88,21 @@ sub got_log_line {
 
 sub sketch_connection {
     my ($self, $match, $args) = ( @_ );
-    print "$match [$#{ $args }]\n"; 
+    if ($match eq 'cisco_asa.session_buildup'){
+        $proto = $args->[6];
+        $proto=~tr/A-Z/a-z/;
+        $src_raw = $args->[8];
+        if($src_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
+            $src_zone = $1; $src_ip = $2; $src_port = $3;
+        }
+        $tgt_raw = $args->[9];
+        if($src_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
+            $tgt_zone = $1; $tgt_ip = $2; $tgt_port = $3;
+        }
+       print "[$proto] $src_zone:$src_ip/$src_port -> $tgt_zone:$tgt_ip/$tgt_port\n";
+    }else{
+        print "Unhandled: $match [$#{ $args }]\n"; 
+    }
 }
 
 sub got_log_rollover {
