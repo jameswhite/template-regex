@@ -197,6 +197,8 @@ log_tpl:
       regex: ' \[   [% IP %]] drop rate-[% INT %] exceeded. Current burst rate is [% INT %] per second, max configured rate is [% INT %]; Current average rate is [% INT %] per second, max configured rate is [% INT %]; Cumulative total count is [% INT %]'
     - name: cleared_tcp_urgent
       regex: 'Cleared TCP urgent flag from [% IFACE_IP_PORT %] to [% IFACE_IP_PORT %]'
+    - name: remainder
+      regex: '[% ANYTHING %]'
  - name: cisco_asa_code_matched
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] [% ASA_CODE %]'
  - name: cisco_asa_host_matched
@@ -207,5 +209,5 @@ log_tpl:
    regex: '[% DATE %]T[% TIME %]'
  - name: cisco_asa_date_matched
    regex: '[% DATE %]' 
- - name: evertything_else
-   regex: '.*'
+ - name: remainder
+   regex: '[% ANYTHING %]'
