@@ -122,6 +122,10 @@ sub sketch_connection {
         # icmp ignore for now
         }elsif($match =~ m/cisco_asa.icmp/){
             print "";
+        }elsif($match =~ m/cisco_asa.ftp/){
+            print "";
+        }elsif($match =~ m/cisco_asa.dynamic_build/){
+            print Data::Dumper->Dump([ $args ]);
         }else{
             print "Unhandled: $match [$#{ $args }]\n"; 
         }
