@@ -79,14 +79,14 @@ sub got_log_line {
        $heap->{'last'}='' unless( defined($heap->{'last'}));
        # remove line-after-line of repeated output
        if($heap->{'last'} ne $result->{'name'}){
-           $self->relation($result->{'name'}, $result->{'patterns'}};
+           $self->sketch_connection($result->{'name'}, $result->{'patterns'});
            $heap->{'last'} = $result->{'name'};
        }
    }
    #my $proto = $result->{'patterns'}->[11];
 } 
 
-sub relation {
+sub sketch_connection {
     my ($self, $match, $args) = ( @_ );
     print "$match [$#{ $args }]\n"; 
 }
