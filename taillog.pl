@@ -125,7 +125,7 @@ sub sketch_connection {
         }elsif($match =~ m/cisco_asa.ftp/){
             print "";
         }elsif($match =~ m/cisco_asa.dynamic_build/){
-            print Data::Dumper->Dump([ $args ]);
+            print Data::Dumper->Dump([ $args->[6], $args->[7] ]);
         }else{
             print "Unhandled: $match [$#{ $args }]\n"; 
         }
