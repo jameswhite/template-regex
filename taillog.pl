@@ -132,9 +132,13 @@ sub sketch_connection {
             print "";
         }elsif($match =~ m/cisco_asa.pitcher_key_aquire/){
             print "";
+        }elsif($match =~ m/cisco_asa.pitcher_key_delete/){
+            print "";
         }elsif($match =~ m/cisco_asa.udp_route_fail/){
             print "";
         }elsif($match =~ m/cisco_asa.nat_t/){
+            print "";
+        }elsif($match =~ m/cisco_asa.esmtp_size_violation/){
             print "";
         }elsif($match =~ m/cisco_asa.dynamic_build/){
 #            if($args->[6] =~ m/(\S+):(\S+)\/([0-9]+)/){
