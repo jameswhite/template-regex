@@ -105,7 +105,7 @@ sub sketch_connection {
         print "";
     }elsif ($match =~m/pfsense.connection/){
         #'[0-9]*\.*\s*[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
-        print "$args->[6] -> $args->[7]\n";
+        print Data::Dumper->Dump([$args]);
     }else{
         print "Unhandled: $match [$#{ $args }]\n"; 
     }
