@@ -79,12 +79,18 @@ sub got_log_line {
        $heap->{'last'}='' unless( defined($heap->{'last'}));
        # remove line-after-line of repeated output
        if($heap->{'last'} ne $result->{'name'}){
-           print STDERR "$result->{'name'}\n";
+           $self->relation($result->{'name'}, $result->{'patterns'}};
            $heap->{'last'} = $result->{'name'};
        }
    }
    #my $proto = $result->{'patterns'}->[11];
 } 
+
+sub relation {
+    my ($self, $match, $args) = ( @_ );
+    print "$match [$#{ $args }]\n"; 
+}
+
 sub got_log_rollover {
    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     print "Log rolled over.\n"; 
@@ -92,24 +98,6 @@ sub got_log_rollover {
 
 1;
 
-#'[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] pf: [% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %] [% PARENTHETICAL %] [% IP_PORT %] > [% IP_PORT %]'
-#    chomp($line);
-#    my ($proto, $src_raw, $src_zone, $src_ip, $src_port, $tgt_raw, $tgt_zone, $tgt_ip, $tgt_port);
-#    if ($result->{'name'} eq 'cisco_asa.session_buildup'){
-#       $proto = $result->{'patterns'}->[6];
-#        $proto=~tr/A-Z/a-z/;
-#        $src_raw = $result->{'patterns'}->[8];
-#        if($src_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
-#            $src_zone = $1; $src_ip   = $2; $src_port = $3;
-#        }
-#        $tgt_raw = $result->{'pattern'}->[9];
-#        if($src_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
-#            $tgt_zone = $1; $tgt_ip   = $2; $tgt_port = $3;
-#        }
-#       print "[$proto] $src_zone:$src_ip/$src_port -> $tgt_zone:$tgt_ip/$tgt_port\n";
-#    }else{
-#        print "$result->{'name'}\n";
-#    }
 my $pfsence = Log::Tail::Reporter->new({ 
                                          'file'     => '/var/log/pfsense/pfsense.log',
                                          'template' => 'pfsense.yml',
