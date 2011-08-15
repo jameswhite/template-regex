@@ -39,6 +39,7 @@ regex_tpl:
   TUNNEL_GROUP: \S+
   TYPE_CODE: '\(type \d+, code \d+\)'
   TZ_OFF: '[+\-][0-9]{2}:[0-9]{2}'
+  USER: '\S+'
   USER_P: \(\S+\)
   ANYTHING: '.*'
 ################################################################################
@@ -213,6 +214,15 @@ log_tpl:
     - name: udp_egress_iface_fail
       regex: 'Failed to locate egress interface for UDP from [% IFACE %]:[% IPV6 %]/[% PORT %] to [% IPV6 %]/[% PORT %]'
       remainder:
+        - name: remainder
+          regex: '[% ANYTHING %]'
+    - name: user_executed_cmd
+      regex: 'User \'[% USER %]\' executed '
+      remainder:
+        - name: cmd
+          regex: 'cmd: [% ANYTHING %]'
+        - name: the_cmd
+          regex: 'the \'[% ANYTHING %]\' command.'
         - name: remainder
           regex: '[% ANYTHING %]'
     - name: remainder
