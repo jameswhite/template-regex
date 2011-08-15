@@ -88,6 +88,16 @@ sub got_log_line {
 
 sub sketch_connection {
     my ($self, $match, $args) = ( @_ );
+    my @ignore = ( 
+                   'cisco_asa.aaa_failback_local',
+                   'cisco_asa.aaa.user_auth_success',
+                   'cisco_asa.aaa.transaction_status_accept',
+                   'cisco_asa.user.auth_success',
+                   'cisco_asa.user.priv_level_change',
+                   'cisco_asa.user.executed_cmd',
+                   'cisco_asa.user.executed_the_cmd',
+                 );
+
     if ($match eq 'cisco_asa.session_buildup'){
 #        $proto = $args->[6];
 #        $proto=~tr/A-Z/a-z/;
@@ -140,7 +150,7 @@ sub sketch_connection {
             print "";
         }elsif($match =~ m/cisco_asa.esmtp_size_violation/){
             print "";
-        }elsif($match =~ m/cisco_asa.user_executed/){
+        }elsif(grep(/$match/, @ignore)){
             print "";
         }elsif($match =~ m/cisco_asa.dynamic_build/){
 #            if($args->[6] =~ m/(\S+):(\S+)\/([0-9]+)/){
