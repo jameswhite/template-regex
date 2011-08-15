@@ -31,7 +31,7 @@ regex_tpl:
   IPSEC_STAGE: .*
   IP_PORT: '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\/[0-9]+'
   PORT: '[0-9]+'
-  REASON: TCP FINs|TCP Reset-I|TCP Reset-O|SYN Timeout|FIN Timeout|looping-address|Parent flow is closed
+  REASON: TCP FINs|TCP Reset-I|TCP Reset-O|SYN Timeout|FIN Timeout|looping-address|Parent flow is closed|Connection timeout
   SESSION: '[0-9]+'
   TCP_FLAG: RST|ACK|RST ACK|PSH ACK|SYN ACK|FIN ACK|FIN PSH ACK
   TIME: '[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{6}|[0-9]{2}:[0-9]{2}:[0-9]{2}'
