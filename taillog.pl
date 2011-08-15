@@ -99,7 +99,9 @@ sub sketch_connection {
         if($src_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
             $tgt_zone = $1; $tgt_ip = $2; $tgt_port = $3;
         }
-       print "[$proto] $src_zone:$src_ip/$src_port -> $tgt_zone:$tgt_ip/$tgt_port\n";
+       print "$src_ip/$src_port -> $tgt_ip/$tgt_port/$proto\n";
+    }elsif($match =~m/^cisco_asa/){
+        print "";
     }else{
         print "Unhandled: $match [$#{ $args }]\n"; 
     }
