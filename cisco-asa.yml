@@ -27,6 +27,7 @@ regex_tpl:
   IFACE_IP_SVC: '[^:]+:[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\/\S+'
   INT: \d+
   IP: '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
+  IPV6: '[0-9a-f:]+'
   IPSEC_STAGE: .*
   IP_PORT: '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\/[0-9]+'
   PORT: '[0-9]+'
@@ -201,6 +202,16 @@ log_tpl:
       regex: 'Cleared TCP urgent flag from [% IFACE_IP_PORT %] to [% IFACE_IP_PORT %]'
     - name: nat_t
       regex: 'NAT-T keepalive received from [% IP %]/[% PORT %] to [% IFACE %]:[% IP %]/[% PORT %]'
+      remainder:
+        - name: remainder
+          regex: '[% ANYTHING %]'
+    - name: udp_route_fail
+      regex: 'Routing failed to locate next hop for UDP from [% IFACE %]:% IP %]/[% PORT %] to [% IFACE %]:[% IP %]/[% PORT %]'
+      remainder:
+        - name: remainder
+          regex: '[% ANYTHING %]'
+    - name: udp_egress_iface_fail
+      regex: 'Failed to locate egress interface for UDP from [% IFACE %]:[% IPV6 %]/[% PORT %] to [% IPV6 %]/[% PORT %]'
       remainder:
         - name: remainder
           regex: '[% ANYTHING %]'

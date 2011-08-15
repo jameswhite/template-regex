@@ -128,10 +128,13 @@ sub sketch_connection {
             print "";
         }elsif($match =~ m/cisco_asa.ipsec/){
             print "";
+        }elsif($match =~ m/cisco_asa.ike_no_policy/){
+            print "";
+        }elsif($match =~ m/cisco_asa.pitcher_key_aquire/){
+            print "";
         }elsif($match =~ m/cisco_asa.nat_t/){
             print "";
         }elsif($match =~ m/cisco_asa.dynamic_build/){
-            #print Data::Dumper->Dump([ $args ]);
 #            if($args->[6] =~ m/(\S+):(\S+)\/([0-9]+)/){
 #                $src_if = $1; $src_ip = $2; $src_port = $3;
 #            }
@@ -139,6 +142,8 @@ sub sketch_connection {
 #                $tgt_if = $1; $tgt_ip = $2; $tgt_port = $3;
 #            }
             print "";
+        }elsif($match =~ m/cisco_asa.udp_permitted/){
+            print Data::Dumper->Dump([ $args ]);
         }else{
             print "Unhandled: $match [$#{ $args }]\n"; 
         }
