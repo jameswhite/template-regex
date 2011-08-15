@@ -106,20 +106,21 @@ sub sketch_connection {
     }elsif($match =~ m/pfsense.connection/){
         $proto='';
         if($args->[9] =~ m/proto\s+(\S+)\s+/){
-            $proto=$1;
-            $proto=~tr/A-Z/a-z/;
+            $proto = $1;
+            $proto =~ tr/A-Z/a-z/;
         }
-        @src=split('.',$args->[10]);
-        $src_port=pop(@src);
-        $src=join('.',@src);
+        @src = split('.',$args->[10]);
+        $src_port = pop(@src);
+        $src = join('.',@src);
 
-        @tgt=split('.',$args->[10]);
-        $tgt_port=pop(@tgt);
-        $tgt=join('.',@tgt);
+        @tgt = split('.',$args->[10]);
+        $tgt_port = pop(@tgt);
+        $tgt = join('.',@tgt);
 
         print "$src:$src_port -> $tgt:$tgt_port/$proto\n";
     }else{
-        print "Unhandled: $match [$#{ $args }]\n"; 
+        print "";
+        #print "Unhandled: $match [$#{ $args }]\n"; 
     }
 }
 
