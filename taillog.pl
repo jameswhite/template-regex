@@ -105,7 +105,7 @@ sub sketch_connection {
         print "";
     }elsif($match =~ m/pfsense.connection/){
         $proto='';
-        if($args=>[9]=~m/proto\s+(\S+)\s+/){
+        if($args->[9] =~ m/proto\s+(\S+)\s+/){
             $proto=$1;
             $proto=~tr/A-Z/a-z/;
         }
