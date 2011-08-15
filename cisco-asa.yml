@@ -201,8 +201,8 @@ log_tpl:
       regex: 'Cleared TCP urgent flag from [% IFACE_IP_PORT %] to [% IFACE_IP_PORT %]'
     - name: nat_t
       regex: 'NAT-T keepalive received from [% IP %]/[% PORT %] to [% IFACE %]:[% IP %]/[% PORT %]'
-       - name: remainder
-         regex: '[% ANYTHING %]'
+        - name: remainder
+          regex: '[% ANYTHING %]'
     - name: remainder
       regex: '[% ANYTHING %]'
  - name: cisco_asa_code_matched
