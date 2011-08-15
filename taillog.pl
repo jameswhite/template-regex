@@ -97,9 +97,9 @@ sub sketch_connection {
         }
         $tgt_raw = $args->[9];
         if($tgt_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
-            $1; $tgt_ip = $2; $tgt_port = $3;
+            $tgt_ip = $2; $tgt_port = $3;
         }
-       print "$src_ip/$src_port -> $tgt_ip/$tgt_port/$proto\n";
+       print "$src_ip:$src_port -> $tgt_ip:$tgt_port/$proto\n";
     }elsif($match =~m/^cisco_asa/){
         print "";
     }else{
