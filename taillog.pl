@@ -104,7 +104,7 @@ sub sketch_connection {
     }elsif($match =~m/^cisco_asa/){
         print "";
     }elsif($match =~ m/pfsense.connection/){
-        print Data::Dumper->Dump([$args]);
+        #print Data::Dumper->Dump([$args]);
         $proto=~tr/A-Z/a-z/;
         $proto='';
         if($args->[9] =~ m/proto\s+(\S+)\s+/){
