@@ -145,7 +145,14 @@ sub sketch_connection {
 #            }
             print "";
         }elsif($match =~ m/cisco_asa.udp_permitted/){
-            print Data::Dumper->Dump([ $args ]);
+            #print Data::Dumper->Dump([ $args ]);
+#            if($args->[6] =~ m/(\S+):(\S+)\/([0-9]+)/){
+#                $src_if = $1; $src_ip = $2; $src_port = $3;
+#            }
+#            if($args->[7] =~ m/(\S+):(\S+)\/([0-9]+)/){
+#                $tgt_if = $1; $tgt_ip = $2; $tgt_port = $3;
+#            }
+#            $proto=udp;
         }else{
             print "Unhandled: $match [$#{ $args }]\n"; 
         }
