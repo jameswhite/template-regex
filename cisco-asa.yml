@@ -198,7 +198,7 @@ log_tpl:
     - name: cleared_tcp_urgent
       regex: 'Cleared TCP urgent flag from [% IFACE_IP_PORT %] to [% IFACE_IP_PORT %]'
     - name: asa_n_nnnn
-      regex: '%ASA-[% INT %]-[% INT %]'
+      regex: '\%ASA-[% INT %]-[% INT %]'
     - name: remainder
       regex: '[% ANYTHING %]'
  - name: cisco_asa_code_matched
