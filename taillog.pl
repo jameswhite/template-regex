@@ -111,11 +111,11 @@ sub sketch_connection {
             $proto = $1;
             $proto =~ tr/A-Z/a-z/;
         }
-        @src = split('.',$args->[10]);
+        @src = split(/\./,$args->[10]);
         $src_port = pop(@src);
         $src = join('.',@src);
 
-        @tgt = split('.',$args->[11]);
+        @tgt = split(/\./,$args->[11]);
         $tgt_port = pop(@tgt);
         $tgt = join('.',@tgt);
 
