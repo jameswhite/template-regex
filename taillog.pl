@@ -117,7 +117,7 @@ my $pfsence = Log::Tail::Reporter->new({
                                        });
 my $cisco  = Log::Tail::Reporter->new({ 
                                          'file'     => '/var/log/cisco/network.log',
-                                         'template' => 'cisco.yml',
+                                         'template' => 'cisco-asa.yml',
                                          #'max_lines'    => 100,
                                        });
 POE::Kernel->run();
