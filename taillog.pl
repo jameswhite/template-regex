@@ -89,20 +89,20 @@ sub got_log_line {
 sub sketch_connection {
     my ($self, $match, $args) = ( @_ );
     if ($match eq 'cisco_asa.session_buildup'){
-        $proto = $args->[6];
-        $proto=~tr/A-Z/a-z/;
-        $src_raw = $args->[8];
-        if($src_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
-            $src_ip = $2; $src_port = $3;
-        }
-        $tgt_raw = $args->[9];
-        if($tgt_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
-            $tgt_ip = $2; $tgt_port = $3;
-        }
-       #print "$src_ip:$src_port -> $tgt_ip:$tgt_port/$proto\n";
-       print;
+        #$proto = $args->[6];
+        #$proto=~tr/A-Z/a-z/;
+        #$src_raw = $args->[8];
+        #if($src_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
+        #    $src_ip = $2; $src_port = $3;
+        #}
+        #$tgt_raw = $args->[9];
+        #if($tgt_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
+        #    $tgt_ip = $2; $tgt_port = $3;
+        #}
+        #print "$src_ip:$src_port -> $tgt_ip:$tgt_port/$proto\n";
+        print "";
     }elsif($match =~m/^cisco_asa/){
-        print;
+        print "";
     }else{
         print "Unhandled: $match [$#{ $args }]\n"; 
     }
