@@ -201,6 +201,7 @@ log_tpl:
       regex: 'Cleared TCP urgent flag from [% IFACE_IP_PORT %] to [% IFACE_IP_PORT %]'
     - name: nat_t
       regex: 'NAT-T keepalive received from [% IP %]/[% PORT %] to [% IFACE %]:[% IP %]/[% PORT %]'
+      remainder:
         - name: remainder
           regex: '[% ANYTHING %]'
     - name: remainder
