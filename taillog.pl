@@ -103,7 +103,7 @@ sub sketch_connection {
         print "";
     }elsif($match =~m/^cisco_asa/){
         print "";
-    }elsif ($match =~m/pfsence.connection/){
+    }elsif ($match =~m/pfsense.connection/){
         #'[0-9]*\.*\s*[% INT %] rule [% RULE %]: [% ACTION %] [% DIRECTION %] on [% IFACE %]: [% P_DATA %] [% IP_PORT %] > [% IP_PORT %]: '
         print "$args->[6] -> $args->[7]\n";
     }else{
