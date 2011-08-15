@@ -102,17 +102,23 @@ sub sketch_connection {
 #        print "$src_ip:$src_port -> $tgt_ip:$tgt_port/$proto\n";
         print "";
     }elsif($match =~m/^cisco_asa/){
+        # we only care about the buildup part of session
         if($match =~ m/cisco_asa.session_teardown/){
-            # we only care about the buildup part of session
             print "";
         }elsif($match =~ m/cisco_asa.icmp_tear.*/){
-            # we only care about the buildup part of session
+            print "";
+        }elsif($match =~ m/cisco_asa.local_host_teardown/){
             print "";
         }elsif($match =~ m/cisco_asa.dynamic_tear/){
-            # we only care about the buildup part of session
             print "";
+        # we're looking for allowed things
         }elsif($match =~ m/cisco_asa.deny/){
-            # we only care about the buildup part of session
+            print "";
+        # omit localhost for now
+        }elsif($match =~ m/cisco_asa.local_host_buildup/){
+            print "";
+        # icmp ignore for now
+        }elsif($match =~ m/cisco_asa.icmp/){
             print "";
         }else{
             print "Unhandled: $match [$#{ $args }]\n"; 
