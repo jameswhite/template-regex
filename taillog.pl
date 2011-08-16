@@ -157,8 +157,7 @@ sub sketch_connection {
          if($tgt_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
              $tgt_ip = $2; $tgt_port = $3;
          }
-         print "$src_ip:$src_port -> $tgt_ip:$tgt_port/$proto\n";
-        print "";
+         $kernel->yield("send_sketch","$src_ip:$src_port -> $tgt_ip:$tgt_port/$proto");
     }elsif($match =~ m/cisco_asa.dynamic_build/){      # we want connection buildups through the firewalls
          if($args->[6] =~ m/(\S+):(\S+)\/([0-9]+)/){
              $src_if = $1; $src_ip = $2; $src_port = $3;
@@ -166,9 +165,8 @@ sub sketch_connection {
          if($args->[7] =~ m/(\S+):(\S+)\/([0-9]+)/){
              $tgt_if = $1; $tgt_ip = $2; $tgt_port = $3;
          }
-        print "";
+         $kernel->yield("send_sketch","$src_ip:$src_port -> $tgt_ip:$tgt_port/$proto");
     }elsif($match =~ m/cisco_asa.udp_permitted/){       # we want connection buildups through the firewalls
-        #print Data::Dumper->Dump([ $args ]);
          if($args->[6] =~ m/(\S+):(\S+)\/([0-9]+)/){
              $src_if = $1; $src_ip = $2; $src_port = $3;
          }
@@ -177,8 +175,6 @@ sub sketch_connection {
          }
          $proto='udp';
     }elsif($match =~ m/pfsense.connection/){            # we want connection buildups through the firewalls
-        print "";
-        #print Data::Dumper->Dump([$args]);
          $proto='';
          if($args->[9] =~ m/proto\s+(\S+)\s+/){
              $proto = $1;
@@ -191,7 +187,7 @@ sub sketch_connection {
          @tgt = split(/\./,$args->[11]);
          $tgt_port = pop(@tgt);
          $tgt = join('.',@tgt);
-         print "$src:$src_port -> $tgt:$tgt_port/$proto\n";
+         $kernel->yield("send_sketch","$src_ip:$src_port -> $tgt_ip:$tgt_port/$proto");
     }else{
         print STDERR "Unhandled: $match [$#{ $args }]\n"; 
     }
