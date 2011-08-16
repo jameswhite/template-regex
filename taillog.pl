@@ -89,6 +89,7 @@ sub got_log_line {
 sub sketch_connection {
     my ($self, $match, $args) = ( @_ );
     my @ignore = ( 
+                   'cisco_asa.aaa.auth_server_inaccesable',
                    'cisco_asa.aaa_failback_local',
                    'cisco_asa.aaa.user_auth_success',
                    'cisco_asa.aaa.transaction_status_accept',
@@ -108,8 +109,11 @@ sub sketch_connection {
                    'cisco_asa.nat_t',
                    'cisco_asa.pitcher_key_aquire',
                    'cisco_asa.pitcher_key_delete',
+                   'cisco_asa.ssh_session_normal_termination',
                    'cisco_asa.udp_route_fail',
+                   'cisco_asa.udp_egress_iface_fail',
                    'cisco_asa.user.auth_success',
+                   'cisco_asa.user.logout',
                    'cisco_asa.user.priv_level_change',
                    'cisco_asa.user.executed_cmd',
                    'cisco_asa.user.executed_the_cmd',

@@ -168,7 +168,9 @@ log_tpl:
     - name: ike_no_policy
       regex: 'IKE Initiator unable to find policy: Intf [% IFACE %], Src: [% IP %], Dst: [% IP %]'
     - name: sa_created
-      regex: 'IPSEC: An outbound LAN-to-LAN SA (SPI= [% HEX %]) between [% IP %] and [% IP %] (user= [% TUNNEL_GROUP %]) has been created.'
+      regex: 'IPSEC: An outbound LAN-to-LAN SA .SPI= [% HEX %]. between [% IP %] and [% IP %] .user= [% TUNNEL_GROUP %]. has been created.'
+    - name: sa_deleted
+      regex: 'IPSEC: An outbound LAN-to-LAN SA .SPI= [% HEX %]. between [% IP %] and [% IP %] .user= [% TUNNEL_GROUP %]. has been deleted.'
     - name: deny_tcp
       regex: 'Deny tcp src [% IFACE_IP_PORT %] dst [% IFACE_IP_PORT %] by access-group [% ACCESS_GROUP %] \[[% HEX %], [% HEX %]\]'
     - name: deny_tcp_no_conn
