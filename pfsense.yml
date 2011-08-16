@@ -19,7 +19,7 @@ regex_tpl:
   ACTION: pass|block
   IP: '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
   IP_PORT: '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
-  FLAGS: S|A|SA|R
+  FLAGS: S|A|SA|R|F
 #  TRANSPORT: TCP|UDP
 #  TUNNEL_GROUP: \S+
 #  TYPE_CODE: '\(type \d+, code \d+\)'
