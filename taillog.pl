@@ -86,7 +86,7 @@ sub got_log_line {
        $heap->{'last'}='' unless( defined($heap->{'last'}));
        # remove line-after-line of repeated output
        if($heap->{'last'} ne $result->{'name'}){
-           $self->sketch_connection($result->{'name'}, $result->{'patterns'});
+           $kernel->yield("sketch_connection",$result->{'name'}, $result->{'patterns'});
            $heap->{'last'} = $result->{'name'};
        }
    }
