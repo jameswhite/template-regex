@@ -67,6 +67,7 @@ sub new {
                                                       ],
                                            ],
     );
+    $self->{'client'} =
     POE::Component::Client::TCP->new(
                                       RemoteAddress => $host,
                                       RemotePort    => $port,
@@ -85,10 +86,36 @@ sub new {
                                       ServerInput => sub {
                                                            my ($kernel, $heap, $input) = @_[KERNEL, HEAP, ARG0];
                                                            print "got input from $host:$port ...\n";
-                                                           push @{$heap->{banner_buffer}}, $input;
-                                                           $kernel->delay(send_enter    => undef);
-                                                           $kernel->delay(input_timeout => 1);
+                                                           print STDERR "$input\n";
                                                          },
+                                      # These are handlers for additional events not included in the
+                                      # default Server::TCP module.  In this example, they handle
+                                      # timers that have gone off.
+                                      InlineStates => {  # The server has not sent us anything yet.  Send an ENTER
+                                                         # keystroke (really a network newline, \x0D\x0A), and wait
+                                                         # some more.
+                                                         put => sub {
+                                                                             print Data::Dumper->Dump([@_]);
+                                                                             print "sending enter on $host:$port ...\n";
+                                                                             $_[HEAP]->{server}->put("");    # sends enter
+                                                                           },
+                                                                     
+                                                                           # The server sent us something already, but it has become idle
+                                                                           # again.  Display what the server sent us so far, and shut
+                                                                           # down.
+                                                         input_timeout => sub {
+                                                                                 my ($kernel, $heap) = @_[KERNEL, HEAP];
+                                                                                 print "got input timeout from $host:$port ...\n";
+                                                                                 print ",----- Banner from $host:$port\n";
+                                                                                 foreach (@{$heap->{banner_buffer}}) {
+                                                                                   print "| $_";
+                                                                         
+                                                                                   # print "| ", unpack("H*", $_), "\n";
+                                                                                 }
+                                                                                 print "`-----\n";
+                                                                                 #$kernel->yield("shutdown");
+                                                                               },
+                                                      },
                                     );
     return $self;
 }
@@ -121,7 +148,7 @@ sub got_log_line {
 
 sub send_sketch {
     my ($self, $kernel, $heap, $sender, $sketch, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-    $_[HEAP]->{server}->put("$sketch"); 
+    $kernel->post($self->{'client'},"put","$sketch"); 
 }
 
 sub sketch_connection {
