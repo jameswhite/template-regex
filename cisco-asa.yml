@@ -20,7 +20,7 @@ regex_tpl:
   FTP_FILE: \S+
   FTP_USER: \S+
   HEX: 0x\S+
-  HEXSTR: [0-9A-F]+
+  HEXSTR: '[0-9A-F]+'
   HOSTNAME: \S+
   IFACE: \S+
   IFACE_IP: '[^:]+:[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
