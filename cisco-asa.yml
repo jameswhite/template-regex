@@ -46,7 +46,7 @@ regex_tpl:
   USER_P: \(\S+\)
   VPN_ROLE: VPN-Primary|VPN-Secondary
   VPN_DIRECTION: Receiving|Sending
-  VPN_PHASE: Phase\s*1|Phase\s*2
+  VPN_PHASE: Phase.*1|Phase.*2
   VPN_MESSAGE: Rekey Centry|Rekey Del|New SA Active|Exchange
   HA_DIRECTION: to standby|from active
   MESSAGE: .*
