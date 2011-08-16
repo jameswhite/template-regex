@@ -76,6 +76,8 @@ log_tpl:
       regex: 'Asymmetric NAT rules matched for forward and reverse flows; Connection for [% PROTO %] src [% IFACE_IP_PORT %] dst [% IFACE_IP_PORT %] denied due to NAT reverse path failure'
     - name: invalid_transport_field_udp
       regex: 'Invalid transport field for protocol=UDP, from [% IP_PORT %] to [% IP_PORT %]'
+    - name: translation_failed
+      regex: 'regular translation creation failed for [% PROTO %] src [% IFACE_IP %] dst [% IFACE_IP %] .type [% INT %], code [% INT %].'
     - name: local_host_buildup
       regex: 'Built local-host [% IFACE_IP %]'
     - name: local_host_teardown
@@ -128,7 +130,7 @@ log_tpl:
         - name: constr_proxy_id
           regex: 'constructing qm hash payload'
         - name: ike_init_phase2
-          regex: 'IKE Initiator: New Phase 2, Intf production, IKE Peer [% IP %]  local Proxy Address [% IP %], remote Proxy Address [% IP %],  Crypto map \(vpn\)'
+          regex: 'IKE Initiator: New Phase 2, Intf production, IKE Peer [% IP %]  local Proxy Address [% IP %], remote Proxy Address [% IP %],  Crypto map .vpn.'
         - name: ike_init_start_qm
           regex: 'IKE Initiator starting QM: msg id = '
         - name: ike_init_sending_1st_qm
@@ -146,11 +148,11 @@ log_tpl:
         - name: processsing_notify
           regex: 'processing notify payload'
         - name: qm_fsm_error
-          regex: 'QM FSM error \(P2 struct &[% HEX %], mess id [% HEX %]\)'
+          regex: 'QM FSM error .P2 struct &[% HEX %], mess id [% HEX %].'
         - name: recieve_keep_alive
           regex: 'Received keep-alive of type DPD R-U-THERE'
         - name: recieve_non_routine_notify
-          regex: 'Received non-routine Notify message: Invalid ID info \([% INT %]\)'
+          regex: 'Received non-routine Notify message: Invalid ID info .[% INT %].'
         - name: remove_peer_fail
           regex: 'Removing peer from correlator table failed, no match'
         - name: send_keep_alive_ruthereack
@@ -193,7 +195,7 @@ log_tpl:
     - name: deny_tcp
       regex: 'Deny tcp src [% IFACE_IP_PORT %] dst [% IFACE_IP_PORT %] by access-group [% ACCESS_GROUP %] \[[% HEX %], [% HEX %]\]'
     - name: deny_tcp_no_conn
-      regex: 'Deny TCP \(no connection\) from [% IP_PORT %] to [% IP_PORT %] flags [% TCP_FLAG %] on interface [% IFACE %]'
+      regex: 'Deny TCP .no connection. from [% IP_PORT %] to [% IP_PORT %] flags [% TCP_FLAG %] on interface [% IFACE %]'
     - name: discard_tcp
       regex: 'TCP request discarded from [% IP_PORT %] to [% IFACE_IP_PORT %]'
     - name: discard_udp_iface
@@ -308,8 +310,6 @@ log_tpl:
       regex: '[% INT %] in use, [% INT %] most used'
     - name: ssl_sess_terminated
       regex: 'SSL session with client [% IFACE_IP_PORT %] terminated.'
-    - name: translation_failed
-      regex: 'regular translation creation failed for [% PROTO %] src [% IFACE_IP %] dst [% IFACE_IP %] (type [% INT %], code [% INT %].'
     - name: teardown_tcp
       regex: 'Teardown TCP connection [% INT %] for [% IFACE_IP_PORT %] to [% IFACE_IP_PORT %] duration [% DURATION %] bytes [% INT %] Tunnel has been torn down'
     - name: ipaa
