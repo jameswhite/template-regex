@@ -56,7 +56,12 @@ sub new {
                                                            },
                                            },
                           object_states => [
-                                             $self => [ 'got_log_line', 'got_log_rollover' ],
+                                             $self => [ 
+                                                        'got_log_line', 
+                                                        'got_log_rollover',
+                                                        'sketch_connection',
+                                                        'send_sketch',
+                                                      ],
                                            ],
     );
     return $self;
@@ -88,8 +93,13 @@ sub got_log_line {
    #my $proto = $result->{'patterns'}->[11];
 } 
 
+sub send_sketch {
+    my ($self, $kernel, $heap, $sender, $sketch, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    print "$sketch\n";
+}
+
 sub sketch_connection {
-    my ($self, $match, $args) = ( @_ );
+    my ($self, $kernel, $heap, $sender, $match, $args, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my @ignore = ( 
                    'cisco_asa.aaa.auth_server_inaccesable',
                    'cisco_asa.aaa_failback_local',
@@ -165,7 +175,7 @@ sub sketch_connection {
          if($args->[7] =~ m/(\S+):(\S+)\/([0-9]+)/){
              $tgt_if = $1; $tgt_ip = $2; $tgt_port = $3;
          }
-         $proto=udp;
+         $proto='udp';
     }elsif($match =~ m/pfsense.connection/){            # we want connection buildups through the firewalls
         print "";
         #print Data::Dumper->Dump([$args]);
@@ -192,6 +202,58 @@ sub got_log_rollover {
     print STDERR "Log rolled over.\n"; 
 }
 
+#POE::Component::Client::TCP->new(
+#                                  RemoteAddress => $host,
+#                                  RemotePort    => $port,
+#                                  Filter        => "POE::Filter::Stream",
+#
+#                                  # The client has connected.  Display some status and prepare to
+#                                  # gather information.  Start a timer that will send ENTER if the
+#                                  # server does not talk to us for a while.
+#                                  Connected => sub {
+#                                                     print "connected to $host:$port ...\n";
+#                                                     $_[HEAP]->{banner_buffer} = [];
+#                                                     $_[KERNEL]->delay(send_enter => 5);
+#                                  },
+#                                  # The connection failed.
+#                                  ConnectError => sub { print "could not connect to $host:$port ...\n"; },
+#                                  ServerInput => sub {
+#                                                       my ($kernel, $heap, $input) = @_[KERNEL, HEAP, ARG0];
+#                                                       print "got input from $host:$port ...\n";
+#                                                       push @{$heap->{banner_buffer}}, $input;
+#                                                       $kernel->delay(send_enter    => undef);
+#                                                       $kernel->delay(input_timeout => 1);
+#                                                     },
+#                                  # These are handlers for additional events not included in the
+#                                  # default Server::TCP module.  In this example, they handle
+#                                  # timers that have gone off.
+#                                  InlineStates => {  # The server has not sent us anything yet.  Send an ENTER
+#                                                     # keystroke (really a network newline, \x0D\x0A), and wait
+#                                                     # some more.
+#                                                     send_enter => sub {
+#                                                                         print "sending enter on $host:$port ...\n";
+#                                                                         $_[HEAP]->{server}->put("");    # sends enter
+#                                                                         $_[KERNEL]->delay(input_timeout => 5);
+#                                                                       },
+#                                                                 
+#                                                                       # The server sent us something already, but it has become idle
+#                                                                       # again.  Display what the server sent us so far, and shut
+#                                                                       # down.
+#                                                     input_timeout => sub {
+#                                                                             my ($kernel, $heap) = @_[KERNEL, HEAP];
+#                                                                             print "got input timeout from $host:$port ...\n";
+#                                                                             print ",----- Banner from $host:$port\n";
+#                                                                             foreach (@{$heap->{banner_buffer}}) {
+#                                                                               print "| $_";
+#                                                                     
+#                                                                               # print "| ", unpack("H*", $_), "\n";
+#                                                                             }
+#                                                                             print "`-----\n";
+#                                                                             $kernel->yield("shutdown");
+#                                                                           },
+#                                                  },
+#                                );
+#
 1;
 
 $|=1;
