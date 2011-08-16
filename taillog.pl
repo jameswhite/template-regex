@@ -92,13 +92,34 @@ sub sketch_connection {
                    'cisco_asa.aaa_failback_local',
                    'cisco_asa.aaa.user_auth_success',
                    'cisco_asa.aaa.transaction_status_accept',
+                   'cisco_asa.session_teardown',
+                   'cisco_asa.icmp_tear',
+                   'cisco_asa.local_host_teardown',
+                   'cisco_asa.dynamic_tear',
+                   'cisco_asa.deny',
+                   'cisco_asa.discard',
+                   'cisco_asa.esmtp_size_violation',
+                   'cisco_asa.ftp',
+                   'cisco_asa.icmp',
+                   'cisco_asa.ids',
+                   'cisco_asa.ike_no_policy',
+                   'cisco_asa.ipsec',
+                   'cisco_asa.local_host_buildup',
+                   'cisco_asa.nat_t',
+                   'cisco_asa.pitcher_key_aquire',
+                   'cisco_asa.pitcher_key_delete',
+                   'cisco_asa.udp_route_fail',
                    'cisco_asa.user.auth_success',
                    'cisco_asa.user.priv_level_change',
                    'cisco_asa.user.executed_cmd',
                    'cisco_asa.user.executed_the_cmd',
+                   'pfsense.icmp',
+                   'pfsense.tab',
                  );
 
-    if ($match eq 'cisco_asa.session_buildup'){
+    if(grep(/$match/, @ignore)){                      # do nothing, we dont' care about these right now.
+        print ""; 
+    }elsif ($match eq 'cisco_asa.session_buildup'){   # we want connection buildups through the firewalls
 #        $proto = $args->[6];
 #        $proto=~tr/A-Z/a-z/;
 #        $src_raw = $args->[8];
@@ -111,68 +132,24 @@ sub sketch_connection {
 #        }
 #        print "$src_ip:$src_port -> $tgt_ip:$tgt_port/$proto\n";
         print "";
-    }elsif($match =~m/^cisco_asa/){
-        # we only care about the buildup part of session
-        if($match =~ m/cisco_asa.session_teardown/){
-            print "";
-        }elsif($match =~ m/cisco_asa.icmp_tear.*/){
-            print "";
-        }elsif($match =~ m/cisco_asa.local_host_teardown/){
-            print "";
-        }elsif($match =~ m/cisco_asa.dynamic_tear/){
-            print "";
-        # we're looking for allowed things
-        }elsif($match =~ m/cisco_asa.deny/){
-            print "";
-        }elsif($match =~ m/cisco_asa.discard/){
-            print "";
-        # omit localhost for now
-        }elsif($match =~ m/cisco_asa.local_host_buildup/){
-            print "";
-        # icmp ignore for now
-        }elsif($match =~ m/cisco_asa.icmp/){
-            print "";
-        }elsif($match =~ m/cisco_asa.ftp/){
-            print "";
-        }elsif($match =~ m/cisco_asa.ids/){
-            print "";
-        }elsif($match =~ m/cisco_asa.ipsec/){
-            print "";
-        }elsif($match =~ m/cisco_asa.ike_no_policy/){
-            print "";
-        }elsif($match =~ m/cisco_asa.pitcher_key_aquire/){
-            print "";
-        }elsif($match =~ m/cisco_asa.pitcher_key_delete/){
-            print "";
-        }elsif($match =~ m/cisco_asa.udp_route_fail/){
-            print "";
-        }elsif($match =~ m/cisco_asa.nat_t/){
-            print "";
-        }elsif($match =~ m/cisco_asa.esmtp_size_violation/){
-            print "";
-        }elsif(grep(/$match/, @ignore)){
-            print "";
-        }elsif($match =~ m/cisco_asa.dynamic_build/){
-#            if($args->[6] =~ m/(\S+):(\S+)\/([0-9]+)/){
-#                $src_if = $1; $src_ip = $2; $src_port = $3;
-#            }
-#            if($args->[7] =~ m/(\S+):(\S+)\/([0-9]+)/){
-#                $tgt_if = $1; $tgt_ip = $2; $tgt_port = $3;
-#            }
-            print "";
-        }elsif($match =~ m/cisco_asa.udp_permitted/){
-            #print Data::Dumper->Dump([ $args ]);
-#            if($args->[6] =~ m/(\S+):(\S+)\/([0-9]+)/){
-#                $src_if = $1; $src_ip = $2; $src_port = $3;
-#            }
-#            if($args->[7] =~ m/(\S+):(\S+)\/([0-9]+)/){
-#                $tgt_if = $1; $tgt_ip = $2; $tgt_port = $3;
-#            }
-#            $proto=udp;
-        }else{
-            print "Unhandled: $match [$#{ $args }]\n"; 
-        }
-    }elsif($match =~ m/pfsense.connection/){
+    }elsif($match =~ m/cisco_asa.dynamic_build/){      # we want connection buildups through the firewalls
+#        if($args->[6] =~ m/(\S+):(\S+)\/([0-9]+)/){
+#            $src_if = $1; $src_ip = $2; $src_port = $3;
+#        }
+#        if($args->[7] =~ m/(\S+):(\S+)\/([0-9]+)/){
+#            $tgt_if = $1; $tgt_ip = $2; $tgt_port = $3;
+#        }
+        print "";
+    }elsif($match =~ m/cisco_asa.udp_permitted/){       # we want connection buildups through the firewalls
+        #print Data::Dumper->Dump([ $args ]);
+#        if($args->[6] =~ m/(\S+):(\S+)\/([0-9]+)/){
+#            $src_if = $1; $src_ip = $2; $src_port = $3;
+#        }
+#        if($args->[7] =~ m/(\S+):(\S+)\/([0-9]+)/){
+#            $tgt_if = $1; $tgt_ip = $2; $tgt_port = $3;
+#        }
+#        $proto=udp;
+    }elsif($match =~ m/pfsense.connection/){            # we want connection buildups through the firewalls
         print "";
         #print Data::Dumper->Dump([$args]);
 #        $proto='';
@@ -188,11 +165,6 @@ sub sketch_connection {
 #        $tgt_port = pop(@tgt);
 #        $tgt = join('.',@tgt);
 #        print "$src:$src_port -> $tgt:$tgt_port/$proto\n";
-    }elsif($match =~ m/pfsense.icmp/){
-        print "";
-    }elsif($match =~ m/pfsense.tab/){
-        # just ignore these for now
-        print "";
     }else{
         print "Unhandled: $match [$#{ $args }]\n"; 
     }
