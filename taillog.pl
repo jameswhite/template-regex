@@ -95,9 +95,8 @@ sub new {
                                                          # keystroke (really a network newline, \x0D\x0A), and wait
                                                          # some more.
                                                          put => sub {
-                                                                             print Data::Dumper->Dump([@_]);
-                                                                             print "sending enter on $host:$port ...\n";
-                                                                             $_[HEAP]->{server}->put("");    # sends enter
+                                                                      my ($self,$kernel,$heap,$sender,@args)=@_[OBJECT,KERNEL,HEAP,SENDER,ARG0 .. $#_];
+                                                                             $_[HEAP]->{server}->put($args[0]);
                                                                            },
                                                                      
                                                                            # The server sent us something already, but it has become idle
