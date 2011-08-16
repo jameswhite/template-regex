@@ -182,11 +182,11 @@ sub sketch_connection {
          }
          @src = split(/\./,$args->[10]);
          $src_port = pop(@src);
-         $src = join('.',@src);
+         $src_ip = join('.',@src);
  
          @tgt = split(/\./,$args->[11]);
          $tgt_port = pop(@tgt);
-         $tgt = join('.',@tgt);
+         $tgt_ip = join('.',@tgt);
          $kernel->yield("send_sketch","$src_ip:$src_port -> $tgt_ip:$tgt_port/$proto");
     }else{
         print STDERR "Unhandled: $match [$#{ $args }]\n"; 
