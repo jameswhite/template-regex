@@ -86,7 +86,7 @@ sub new {
                                       ServerInput => sub {
                                                            my ($kernel, $heap, $input) = @_[KERNEL, HEAP, ARG0];
                                                            print "got input from $host:$port ...\n";
-                                                           print STDERR "$input\n";
+                                                           print STDERR "$input";
                                                          },
                                       # These are handlers for additional events not included in the
                                       # default Server::TCP module.  In this example, they handle
@@ -193,6 +193,10 @@ sub sketch_connection {
                    'cisco_asa_host_matched',
                    'pfsense.icmp',
                    'pfsense.tab',
+                   'cisco_asa.login_permitted',
+                   'cisco_asa.begin_config',
+                   'cisco_asa.end_config',
+                   'cisco_asa.ssh_session_connection_closed',
                  );
     my $ignore=0;
     foreach my $i (@ignore){ if($match =~m/$i/){ $ignore=1; } }
