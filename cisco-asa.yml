@@ -74,6 +74,8 @@ log_tpl:
    remainder: 
     - name: asymmetric_nat_rules
       regex: 'Asymmetric NAT rules matched for forward and reverse flows; Connection for [% PROTO %] src [% IFACE_IP_PORT %] dst [% IFACE_IP_PORT %] denied due to NAT reverse path failure'
+    - name: asymmetric_nat_rules_icmp
+      regex: 'Asymmetric NAT rules matched for forward and reverse flows; Connection for [% PROTO %] src [% IFACE_IP %] dst [% IFACE_IP %] denied due to NAT reverse path failure'
     - name: invalid_transport_field_udp
       regex: 'Invalid transport field for protocol=UDP, from [% IP_PORT %] to [% IP_PORT %]'
     - name: translation_failed
@@ -209,7 +211,7 @@ log_tpl:
     - name: deny_land_attack
       regex: 'Deny IP due to Land Attack from [% IP %] to [% IP %]'
     - name: icmp_no_conn
-      regex: 'No matching connection for ICMP error message: icmp src [% IFACE_IP %] dst [% IFACE_IP %] [% TYPE_CODE %] on [% IFACE %] interface.  Original IP payload: udp src [% IP_PORT %] dst [% IP_PORT %]'
+      regex: 'No matching connection for ICMP error message: icmp src [% IFACE_IP %] dst [% IFACE_IP %] [% TYPE_CODE %] on [% IFACE %] interface.  Original IP payload: [% PROTO %] src [% IP_PORT %] dst [% IP_PORT %]'
     - name: esmtp_size_violation
       regex: 'Detected ESMTP size violation from [% IFACE_IP_PORT %] to [% IFACE_IP_PORT %]; declared size is: [% INT %], actual size is [% INT %]'
     - name: ftp
@@ -309,7 +311,7 @@ log_tpl:
     - name: ssl_sess_terminated
       regex: 'SSL session with client [% IFACE_IP_PORT %] terminated.'
     - name: teardown_tcp
-      regex: 'Teardown TCP connection [% INT %] for [% IFACE_IP_PORT %] to [% IFACE_IP_PORT %] duration [% DURATION %] bytes [% INT %] Tunnel has been torn down'
+      regex: 'Teardown TCP connection [% INT %] for [% IFACE_IP_PORT %] to [% IFACE_IP_PORT %] duration [% DURATION %] bytes [% INT %] [% MESSAGE %]'
     - name: ipaa
       regex: 'IPAA: Freeing local pool address [% IP %]'
     - name: ssl_vpn_termination
