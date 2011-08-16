@@ -95,7 +95,7 @@ sub got_log_line {
 
 sub send_sketch {
     my ($self, $kernel, $heap, $sender, $sketch, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-    print "$sketch\n";
+    print ".oO($sketch)\n";
 }
 
 sub sketch_connection {
