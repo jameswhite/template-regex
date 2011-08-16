@@ -288,8 +288,6 @@ log_tpl:
           regex: '[% ANYTHING %]'
     - name: cipher
       regex: 'Cipher.[% INT %]. : [% CIPHER %]'
-    - name: remainder
-      regex: '[% ANYTHING %]'
     - name: vpn_message
       regex: '[% VPN_ROLE %] [% VPN_DIRECTION %] [% VPN_PHASE %] message .my cookie [% HEXSTR %], his cookie [% HEXSTR %], old msg id [% HEXSTR %], msg id [% HEXSTR %]. [% HA_DIRECTION %] unit'
     - name: vpn_ha_update_fail
@@ -316,6 +314,8 @@ log_tpl:
       regex: 'IPAA: Freeing local pool address [% IP %]'
     - name: ssl_vpn_termination
       regex: 'Group = [% GROUP %], Username = [% USER %], IP = [% IP %], Session disconnected. Session Type: SSL, Duration: [% DURATION %], Bytes xmt: [% INT %], Bytes rcv: [% INT %], Reason: [% ANYTHING %]'
+    - name: remainder
+      regex: '[% ANYTHING %]'
  - name: cisco_asa_code_matched
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] [% ASA_CODE %]'
  - name: cisco_asa_host_matched
