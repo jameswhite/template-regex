@@ -24,6 +24,8 @@ package Log::Tail::Reporter;
 use POE qw(Wheel::FollowTail);
 use YAML;
 use Template::Regex;
+use POE::Component::Client::TCP;
+use POE::Filter::Stream;
 
 # Net::Infrastructure is what we use to match 
 # use Net::Infrastructure; 
@@ -74,7 +76,7 @@ sub got_log_line {
                exit 0;
            }
        }
-       print "$output\n";
+       print STDERR "$output\n";
    }else{
        $heap->{'last'}='' unless( defined($heap->{'last'}));
        # remove line-after-line of repeated output
@@ -132,62 +134,62 @@ sub sketch_connection {
     my $ignore=0;
     foreach my $i (@ignore){ if($match =~m/$i/){ $ignore=1; } }
 
-    if($ignore == 1){                              # do nothing, we dont' care about these right now.
-        print ""; 
+    if($ignore == 1){                                 # do nothing, we dont' care about these right now.
+        print STDERR "";
     }elsif ($match eq 'cisco_asa.session_buildup'){   # we want connection buildups through the firewalls
-#        $proto = $args->[6];
-#        $proto=~tr/A-Z/a-z/;
-#        $src_raw = $args->[8];
-#        if($src_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
-#            $src_ip = $2; $src_port = $3;
-#        }
-#        $tgt_raw = $args->[9];
-#        if($tgt_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
-#            $tgt_ip = $2; $tgt_port = $3;
-#        }
-#        print "$src_ip:$src_port -> $tgt_ip:$tgt_port/$proto\n";
+         $proto = $args->[6];
+         $proto=~tr/A-Z/a-z/;
+         $src_raw = $args->[8];
+         if($src_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
+             $src_ip = $2; $src_port = $3;
+         }
+         $tgt_raw = $args->[9];
+         if($tgt_raw=~m/([^:]+):([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\/([0-9]+)\s+\(([^\)]*)\)/){
+             $tgt_ip = $2; $tgt_port = $3;
+         }
+         print "$src_ip:$src_port -> $tgt_ip:$tgt_port/$proto\n";
         print "";
     }elsif($match =~ m/cisco_asa.dynamic_build/){      # we want connection buildups through the firewalls
-#        if($args->[6] =~ m/(\S+):(\S+)\/([0-9]+)/){
-#            $src_if = $1; $src_ip = $2; $src_port = $3;
-#        }
-#        if($args->[7] =~ m/(\S+):(\S+)\/([0-9]+)/){
-#            $tgt_if = $1; $tgt_ip = $2; $tgt_port = $3;
-#        }
+         if($args->[6] =~ m/(\S+):(\S+)\/([0-9]+)/){
+             $src_if = $1; $src_ip = $2; $src_port = $3;
+         }
+         if($args->[7] =~ m/(\S+):(\S+)\/([0-9]+)/){
+             $tgt_if = $1; $tgt_ip = $2; $tgt_port = $3;
+         }
         print "";
     }elsif($match =~ m/cisco_asa.udp_permitted/){       # we want connection buildups through the firewalls
         #print Data::Dumper->Dump([ $args ]);
-#        if($args->[6] =~ m/(\S+):(\S+)\/([0-9]+)/){
-#            $src_if = $1; $src_ip = $2; $src_port = $3;
-#        }
-#        if($args->[7] =~ m/(\S+):(\S+)\/([0-9]+)/){
-#            $tgt_if = $1; $tgt_ip = $2; $tgt_port = $3;
-#        }
-#        $proto=udp;
+         if($args->[6] =~ m/(\S+):(\S+)\/([0-9]+)/){
+             $src_if = $1; $src_ip = $2; $src_port = $3;
+         }
+         if($args->[7] =~ m/(\S+):(\S+)\/([0-9]+)/){
+             $tgt_if = $1; $tgt_ip = $2; $tgt_port = $3;
+         }
+         $proto=udp;
     }elsif($match =~ m/pfsense.connection/){            # we want connection buildups through the firewalls
         print "";
         #print Data::Dumper->Dump([$args]);
-#        $proto='';
-#        if($args->[9] =~ m/proto\s+(\S+)\s+/){
-#            $proto = $1;
-#            $proto =~ tr/A-Z/a-z/;
-#        }
-#        @src = split(/\./,$args->[10]);
-#        $src_port = pop(@src);
-#        $src = join('.',@src);
-#
-#        @tgt = split(/\./,$args->[11]);
-#        $tgt_port = pop(@tgt);
-#        $tgt = join('.',@tgt);
-#        print "$src:$src_port -> $tgt:$tgt_port/$proto\n";
+         $proto='';
+         if($args->[9] =~ m/proto\s+(\S+)\s+/){
+             $proto = $1;
+             $proto =~ tr/A-Z/a-z/;
+         }
+         @src = split(/\./,$args->[10]);
+         $src_port = pop(@src);
+         $src = join('.',@src);
+ 
+         @tgt = split(/\./,$args->[11]);
+         $tgt_port = pop(@tgt);
+         $tgt = join('.',@tgt);
+         print "$src:$src_port -> $tgt:$tgt_port/$proto\n";
     }else{
-        print "Unhandled: $match [$#{ $args }]\n"; 
+        print STDERR "Unhandled: $match [$#{ $args }]\n"; 
     }
 }
 
 sub got_log_rollover {
    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-    print "Log rolled over.\n"; 
+    print STDERR "Log rolled over.\n"; 
 }
 
 1;
