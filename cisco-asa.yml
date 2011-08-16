@@ -16,7 +16,7 @@ regex_tpl:
   DATE: '[0-9]{4}-[0-9]{2}-[0-9]{2}'
   # note we don't need parenthesis here becuase all tags are parenthesis-wrapped before being evaluated. 
   DIRECTION: inbound|outbound
-  DURATION: \S+
+  DURATION: '[0-9]+h*:[0-9]+m*:[0-9]+s*'
   FTP_FILE: \S+
   FTP_USER: \S+
   HEX: 0x\S+
