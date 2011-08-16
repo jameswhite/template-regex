@@ -119,7 +119,7 @@ sub sketch_connection {
     my $ignore=0;
     foreach my $i (@ignore){ if($match =~m/$i/){ $ignore=1; } }
 
-    if($ignore == 1)){                              # do nothing, we dont' care about these right now.
+    if($ignore == 1){                              # do nothing, we dont' care about these right now.
         print ""; 
     }elsif ($match eq 'cisco_asa.session_buildup'){   # we want connection buildups through the firewalls
 #        $proto = $args->[6];
