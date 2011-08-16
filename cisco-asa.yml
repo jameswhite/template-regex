@@ -289,7 +289,7 @@ log_tpl:
     - name: cipher
       regex: 'Cipher.[% INT %]. : [% CIPHER %]'
     - name: vpn_message
-      regex: '[% VPN_ROLE %] [% VPN_DIRECTION %] [% VPN_PHASE %] message .my cookie [% HEXSTR %], his cookie [% HEXSTR %], old msg id [% HEXSTR %], msg id [% HEXSTR %]. [% HA_DIRECTION %] unit'
+      regex: '.[% VPN_ROLE %]. [% VPN_DIRECTION %] [% VPN_PHASE %] message .my cookie [% HEXSTR %], his cookie [% HEXSTR %], old msg id [% HEXSTR %], msg id [% HEXSTR %]. [% HA_DIRECTION %] unit'
     - name: vpn_ha_update_fail
       regex: '[% VPN_ROLE %] Failed to update IPSec failover runtime data on the standby unit.'
     - name: group_message
