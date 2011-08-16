@@ -147,7 +147,7 @@ sub got_log_line {
 
 sub send_sketch {
     my ($self, $kernel, $heap, $sender, $sketch, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-    $kernel->post($self->{'client'},"put","$sketch"); 
+    $kernel->post($self->{'client'},"put","[$sketch]"); 
 }
 
 sub sketch_connection {
@@ -184,6 +184,7 @@ sub sketch_connection {
                    'cisco_asa.translation_failed',
                    'cisco_asa.udp_route_fail',
                    'cisco_asa.udp_egress_iface_fail',
+                   'cisco_asa.usage',
                    'cisco_asa.user.auth_success',
                    'cisco_asa.user.logout',
                    'cisco_asa.user.priv_level_change',
@@ -253,7 +254,6 @@ sub got_log_rollover {
 1;
 
 $|=1;
-
 my $pfsence = Log::Tail::Reporter->new({ 
                                          'file'     => '/var/log/pfsense/pfsense.log',
                                          'template' => 'pfsense.yml',
