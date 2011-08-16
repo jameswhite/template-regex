@@ -93,7 +93,7 @@ sub sketch_connection {
                    'cisco_asa.aaa.user_auth_success',
                    'cisco_asa.aaa.transaction_status_accept',
                    'cisco_asa.session_teardown',
-                   'cisco_asa.icmp_tear',
+                   'cisco_asa.icmp_tear.*',
                    'cisco_asa.local_host_teardown',
                    'cisco_asa.dynamic_tear',
                    'cisco_asa.deny',
@@ -103,7 +103,7 @@ sub sketch_connection {
                    'cisco_asa.icmp',
                    'cisco_asa.ids',
                    'cisco_asa.ike_no_policy',
-                   'cisco_asa.ipsec',
+                   'cisco_asa.ipsec.*',
                    'cisco_asa.local_host_buildup',
                    'cisco_asa.nat_t',
                    'cisco_asa.pitcher_key_aquire',
@@ -116,8 +116,10 @@ sub sketch_connection {
                    'pfsense.icmp',
                    'pfsense.tab',
                  );
+    my $ignore=0;
+    foreach my $i (@ignore){ if($match =~m/$i/){ $ignore=1; } }
 
-    if(grep(/$match/, @ignore)){                      # do nothing, we dont' care about these right now.
+    if($ignore == 1)){                              # do nothing, we dont' care about these right now.
         print ""; 
     }elsif ($match eq 'cisco_asa.session_buildup'){   # we want connection buildups through the firewalls
 #        $proto = $args->[6];
