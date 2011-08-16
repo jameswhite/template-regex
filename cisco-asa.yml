@@ -33,6 +33,7 @@ regex_tpl:
   IPSEC_STAGE: .*
   IP_PORT: '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\/[0-9]+'
   PORT: '[0-9]+'
+  PROTO: tcp|udp|icmp
   REASON: TCP FINs|TCP Reset-I|TCP Reset-O|SYN Timeout|FIN Timeout|looping-address|Parent flow is closed|Connection timeout
   SESSION: '[0-9]+'
   TCP_FLAG: RST|ACK|RST ACK|PSH ACK|SYN ACK|FIN ACK|FIN PSH ACK
