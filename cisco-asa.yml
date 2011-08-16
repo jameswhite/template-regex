@@ -231,7 +231,7 @@ log_tpl:
         - name: remainder
           regex: '[% ANYTHING %]'
     - name: login_permitted
-      regex: 'Login permitted from [% IP_PORT %] to [% IFACE_IP_PORT %] for user "[% USER %]"'
+      regex: 'Login permitted from [% IP_PORT %] to [% IFACE_IP_PORT %] for user .[% USER %].'
       remainder:
         - name: remainder
           regex: '[% ANYTHING %]'
@@ -264,6 +264,11 @@ log_tpl:
       regex: 'Cipher.[% INT %]. : [% CIPHER %]'
     - name: remainder
       regex: '[% ANYTHING %]'
+    - name: invalid_transport_field_udp
+      regex: 'Invalid transport field for protocol=UDP, from [% IP_PORT %] to [% IP_PORT %]'
+      remainder:
+        - name: remainder
+          regex: '[% ANYTHING %]'
  - name: cisco_asa_code_matched
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] [% ASA_CODE %]'
  - name: cisco_asa_host_matched

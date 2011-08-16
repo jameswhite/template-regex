@@ -117,6 +117,7 @@ sub sketch_connection {
                    'cisco_asa.user.priv_level_change',
                    'cisco_asa.user.executed_cmd',
                    'cisco_asa.user.executed_the_cmd',
+                   'cisco_asa_host_matched',
                    'pfsense.icmp',
                    'pfsense.tab',
                  );

@@ -226,7 +226,8 @@ log_tpl:
          - name: vendor_attr
            regex: 'Vendor Attribute: [% INT %], Length: [% INT %], Value: ip:source-ip=[% IP %]'
          - name: vendor_specific_attr
-           regex: 'Vendor Specific Attribute .[% INT %]., length: [% INT %], Value: Vendor: .* ([% INT %])'
+           regex: 'Vendor Specific Attribute .[% INT %]., length: [% INT %], Value: Vendor: .* .[% INT %].'
+
       ##########################################################################
          - name: origninator
            regex: 'Originator - '
