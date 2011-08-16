@@ -114,6 +114,7 @@ sub sketch_connection {
                    'cisco_asa.sa_inbound_deleted',
                    'cisco_asa.sa_outbound_created',
                    'cisco_asa.sa_outbound_deleted',
+                   'cisco_asa.translation_failed',
                    'cisco_asa.udp_route_fail',
                    'cisco_asa.udp_egress_iface_fail',
                    'cisco_asa.user.auth_success',

@@ -314,6 +314,8 @@ log_tpl:
       regex: 'IPAA: Freeing local pool address [% IP %]'
     - name: ssl_vpn_termination
       regex: 'Group = [% GROUP %], Username = [% USER %], IP = [% IP %], Session disconnected. Session Type: SSL, Duration: [% DURATION %], Bytes xmt: [% INT %], Bytes rcv: [% INT %], Reason: [% ANYTHING %]'
+    ##########################################################################
+    #
     - name: remainder
       regex: '[% ANYTHING %]'
  - name: cisco_asa_code_matched

@@ -75,7 +75,7 @@ log_tpl:
              - name: remainder
                regex: '[% ANYTHING %]'
          - name: tcp_ack
-           regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. ack [% INT %] win [% INT %] '
+           regex: '[% FLAGS %], cksum [% HEX %] .correct., [% INT %]:[% INT %].[% INT %]. ack [% INT %] win [% INT %]\s*'
            remainder:
              - name: mss_data
                regex: '[% MSS_FLAGS %]'
