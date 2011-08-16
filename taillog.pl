@@ -110,6 +110,8 @@ sub sketch_connection {
                    'cisco_asa.pitcher_key_aquire',
                    'cisco_asa.pitcher_key_delete',
                    'cisco_asa.ssh_session_normal_termination',
+                   'cisco_asa.sa_created',
+                   'cisco_asa.sa_deleted',
                    'cisco_asa.udp_route_fail',
                    'cisco_asa.udp_egress_iface_fail',
                    'cisco_asa.user.auth_success',

@@ -167,10 +167,16 @@ log_tpl:
       regex: 'Pitcher: received key delete msg, spi [% HEX %]'
     - name: ike_no_policy
       regex: 'IKE Initiator unable to find policy: Intf [% IFACE %], Src: [% IP %], Dst: [% IP %]'
-    - name: sa_created
+      ##########################################################################
+    - name: sa_outbound_created
       regex: 'IPSEC: An outbound LAN-to-LAN SA .SPI= [% HEX %]. between [% IP %] and [% IP %] .user= [% TUNNEL_GROUP %]. has been created.'
-    - name: sa_deleted
+    - name: sa_outbound_deleted
       regex: 'IPSEC: An outbound LAN-to-LAN SA .SPI= [% HEX %]. between [% IP %] and [% IP %] .user= [% TUNNEL_GROUP %]. has been deleted.'
+    - name: sa_inbound_created
+      regex: 'IPSEC: An inbound LAN-to-LAN SA .SPI= [% HEX %]. between [% IP %] and [% IP %] .user= [% TUNNEL_GROUP %]. has been created.'
+    - name: sa_inbound_deleted
+      regex: 'IPSEC: An inbound LAN-to-LAN SA .SPI= [% HEX %]. between [% IP %] and [% IP %] .user= [% TUNNEL_GROUP %]. has been deleted.'
+      ##########################################################################
     - name: deny_tcp
       regex: 'Deny tcp src [% IFACE_IP_PORT %] dst [% IFACE_IP_PORT %] by access-group [% ACCESS_GROUP %] \[[% HEX %], [% HEX %]\]'
     - name: deny_tcp_no_conn
@@ -231,12 +237,17 @@ log_tpl:
         - name: remainder
           regex: '[% ANYTHING %]'
     - name: login_permitted
-      regex: 'Login permitted from [% IP_PORT %] to [% IFACE_IP_PORT %] for user .[% USER %].'
+      regex: 'Login permitted from [% IP_PORT %] to [% IFACE_IP_SVC %] for user .[% USER %].'
       remainder:
         - name: remainder
           regex: '[% ANYTHING %]'
     - name: ssh_session_normal_termination
-      regex: 'SSH session from [% IP %] on interface [% IFACE %] for user "[% USER %]" terminated normally'
+      regex: 'SSH session from [% IP %] on interface [% IFACE %] for user .[% USER %]. terminated normally'
+      remainder:
+        - name: remainder
+          regex: '[% ANYTHING %]'
+    - name: ssh_session_connection_closed
+      regex: 'SSH session from [% IP %] on interface [% IFACE %] for user .[% USER %]. disconnected by SSH server, reason: "TCP connection closed" .[% HEX %]. '
       remainder:
         - name: remainder
           regex: '[% ANYTHING %]'

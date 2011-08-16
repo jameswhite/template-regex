@@ -81,6 +81,11 @@ log_tpl:
                regex: '[% MSS_FLAGS %]'
              - name: remainder
                regex: '[% ANYTHING %]'
+         - name: tcp_ack
+           regex: '[% INT %], .* IXFR? [% HOSTNAME %] .[% INT %].'
+           remainder:
+             - name: remainder
+               regex: '[% ANYTHING %]'
         ########################################################################
          - name: dns
            regex: '[% INT %]\S* [% QUERY %]\S* [% HOSTNAME %]\.* .[% INT %].'
