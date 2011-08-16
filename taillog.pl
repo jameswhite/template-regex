@@ -96,7 +96,7 @@ sub new {
                                                          # some more.
                                                          put => sub {
                                                                       my ($self,$kernel,$heap,$sender,@args)=@_[OBJECT,KERNEL,HEAP,SENDER,ARG0 .. $#_];
-                                                                             $_[HEAP]->{server}->put($args[0]);
+                                                                             $_[HEAP]->{server}->put("$args[0]\n");
                                                                            },
                                                                      
                                                                            # The server sent us something already, but it has become idle
