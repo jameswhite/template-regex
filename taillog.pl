@@ -205,6 +205,8 @@ sub got_log_rollover {
 
 1;
 
+$|=1;
+
 my $pfsence = Log::Tail::Reporter->new({ 
                                          'file'     => '/var/log/pfsense/pfsense.log',
                                          'template' => 'pfsense.yml',
