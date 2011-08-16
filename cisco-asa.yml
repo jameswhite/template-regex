@@ -72,6 +72,8 @@ log_tpl:
  - name: cisco_asa
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] [% ASA_CODE %] '
    remainder: 
+    - name: asymmetric_nat_rules
+      regex: 'Asymmetric NAT rules matched for forward and reverse flows; Connection for [% PROTO %] src [% IFACE_IP_PORT %] dst [% IFACE_IP_PORT %] denied due to NAT reverse path failure'
     - name: local_host_buildup
       regex: 'Built local-host [% IFACE_IP %]'
     - name: local_host_teardown
@@ -290,8 +292,6 @@ log_tpl:
       regex: '[% VPN_ROLE %] [% VPN_DIRECTION %] [% VPN_PHASE %] message .my cookie [% HEXSTR %], his cookie [% HEXSTR %], old msg id [% HEXSTR %], msg id [% HEXSTR %]. [% HA_DIRECTION %] unit'
     - name: vpn_ha_update_fail
       regex: '[% VPN_ROLE %] Failed to update IPSec failover runtime data on the standby unit.'
-    - name: asymmetric_nat_rules
-      regex: 'Asymmetric NAT rules matched for forward and reverse flows; Connection for [% PROTO %] src [% IFACE_IP_PORT %] dst [% IFACE_IP_PORT %] denied due to NAT reverse path failure'
     - name: group_message
       regex: 'Group <[% GROUP %]> User <[% USER %]> IP <[% IP %]> [% MESSAGE %]'
     - name: begin_config
@@ -308,6 +308,8 @@ log_tpl:
       regex: '[% INT %] in use, [% INT %] most used'
     - name: ssl_sess_terminated
       regex: 'SSL session with client [% IFACE_IP_PORT %] terminated.'
+    - name: translation_failed
+      regex: 'regular translation creation failed for [% PROTO %] src [% IFACE_IP %] dst [% IFACE_IP %] (type [% INT %], code [% INT %].'
     - name: teardown_tcp
       regex: 'Teardown TCP connection [% INT %] for [% IFACE_IP_PORT %] to [% IFACE_IP_PORT %] duration [% DURATION %] bytes [% INT %] Tunnel has been torn down'
     - name: ipaa
