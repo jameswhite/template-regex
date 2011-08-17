@@ -67,6 +67,16 @@ sub new {
     return $self;
 }
 
+sub ip2n{
+    my $self=shift;
+    return unpack N => pack CCCC => split /\./ => shift;
+}
+
+sub n2ip{
+    my $self=shift;
+    return join('.',map { ($_[0] >> 8*(3-$_)) % 256 } 0 .. 3);
+}
+
 sub got_log_line {
    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
    my $line = $args[0];
@@ -93,29 +103,25 @@ sub send_sketch {
 
 sub sketch_connection {
     my ($self, $kernel, $heap, $sender, $match, $patterns, $line, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my $start_net=$self->ip2n("10.100.1.0");
     if ($match eq 'cisco_asa.ipsec_route_add'){   # we want connection buildups through the firewalls
-
         my ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
         $asa=~s/\..*//;
-        my @octets = split(/\./,$network);
-        $octets[$#octets]++;
-        my $soekris = join('.',@octets);
+        $time=~s/\..*//; # lose the milliseconds
+        my $soekris = (($self->ip2n($network) - $start_net)/4) + 1;
         print "$date $time: $asa $soekris connected.\n"
 
     }elsif($match eq 'cisco_asa.ipsec_route_del'){   # we want connection buildups through the firewalls
-
         my ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
         $asa=~s/\..*//;
-        my @octets = split(/\./,$network);
-        $octets[$#octets]++;
-        my $soekris = join('.',@octets);
+        $time=~s/\..*//; # lose the milliseconds
+        my $soekris = (($self->ip2n($network) - $start_net)/4) + 1;
         print "$date $time: $asa $soekris disconnected.\n"
-
     }
 }
 
 sub got_log_rollover {
-   my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     print STDERR "Log rolled over.\n"; 
 }
 
