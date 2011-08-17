@@ -52,10 +52,10 @@ sub new {
                                              _start => sub {
                                                              $_[HEAP]{linecount}=0;
                                                              $_[HEAP]{tailor} = POE::Wheel::FollowTail->new(
-                                                                  Filename => $cnstr->{'file'},
-                                                                  InputEvent => "got_log_line",
-                                                                  ResetEvent => "got_log_rollover",
-                                                             );
+                                                                                                             Filename => $cnstr->{'file'},
+                                                                                                             InputEvent => "got_log_line",
+                                                                                                             ResetEvent => "got_log_rollover",
+                                                                                                           );
                                                            },
                                            },
                           object_states => [
@@ -169,6 +169,7 @@ sub sketch_connection {
                    'cisco_asa.icmp',
                    'cisco_asa.ids',
                    'cisco_asa.ike_no_policy',
+                   'cisco_asa.invalid_transport_field_udp',
                    'cisco_asa.ipsec.*',
                    'cisco_asa.local_host_buildup',
                    'cisco_asa.nat_t',
@@ -182,6 +183,7 @@ sub sketch_connection {
                    'cisco_asa.sa_outbound_created',
                    'cisco_asa.sa_outbound_deleted',
                    'cisco_asa.translation_failed',
+                   'cisco_asa.teardown_tcp',
                    'cisco_asa.udp_route_fail',
                    'cisco_asa.udp_egress_iface_fail',
                    'cisco_asa.usage',
