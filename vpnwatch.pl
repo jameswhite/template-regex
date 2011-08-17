@@ -160,7 +160,7 @@ sub irc_001 {
 
      # we join our channels
      $irc->yield( join => $_ ) for ('#infrastructure');
-     $irc->yield( privmsg => '#infrastructure' => "$date $time: $asa skrs$soekris connected.");
+     $irc->yield( privmsg => '#infrastructure' => "*cough*");
      return;
 }
 
