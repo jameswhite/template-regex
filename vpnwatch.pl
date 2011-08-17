@@ -159,8 +159,8 @@ sub irc_001 {
      print "Connected to ", $irc->server_name(), "\n";
 
      # we join our channels
-     $self->{'irc'}->yield( join => $_ ) for ('#infrastructure');
-     $self->{'irc'}->yield( privmsg => '#infrastructure' => "$date $time: $asa skrs$soekris connected.");
+     $irc->yield( join => $_ ) for ('#infrastructure');
+     $irc->yield( privmsg => '#infrastructure' => "$date $time: $asa skrs$soekris connected.");
      return;
 }
 
