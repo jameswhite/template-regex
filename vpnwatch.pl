@@ -157,7 +157,7 @@ sub irc_001 {
      print "Connected to ", $irc->server_name(), "\n";
 
      # we join our channels
-     $irc->yield( join => $_ ) for @channels;
+     $irc->yield( join => $_ ) for ('#infrastructure');
      return;
 }
 
