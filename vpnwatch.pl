@@ -70,7 +70,6 @@ sub new {
 sub got_log_line {
    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
    my $line = $args[0];
-   print "$line\n";
    my $result = $self->{'TR'}->parse_line($line);
    my $last = $#{ $result->{'patterns'} } - 1;
    my $output = $result->{'name'};
@@ -95,9 +94,23 @@ sub send_sketch {
 sub sketch_connection {
     my ($self, $kernel, $heap, $sender, $match, $patterns, $line, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     if ($match eq 'cisco_asa.ipsec_route_add'){   # we want connection buildups through the firewalls
-        print Data::Dumper->Dump([$match,$line,$patterns]);
-    }elsif ($match eq 'cisco_asa.ipsec_route_del'){   # we want connection buildups through the firewalls
-        print Data::Dumper->Dump([$match,$line,$patterns]);
+
+        my ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
+        $asa=~s/\..*//;
+        my @octets = split(/\./,$network);
+        $octets[$#octets]++;
+        my $soekris = join('.',@octets);
+        print "$date $time: $asa $soekris connected.\n"
+
+    }elsif($match eq 'cisco_asa.ipsec_route_del'){   # we want connection buildups through the firewalls
+
+        my ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
+        $asa=~s/\..*//;
+        my @octets = split(/\./,$network);
+        $octets[$#octets]++;
+        my $soekris = join('.',@octets);
+        print "$date $time: $asa $soekris disconnected.\n"
+
     }
 }
 
