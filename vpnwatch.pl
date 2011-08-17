@@ -109,14 +109,14 @@ sub sketch_connection {
         $asa=~s/\..*//;
         $time=~s/\..*//; # lose the milliseconds
         my $soekris = (($self->ip2n($network) - $start_net)/4) + 1;
-        print "$date $time: $asa $soekris connected.\n"
+        print "$date $time: $asa skrs$soekris connected.\n"
 
     }elsif($match eq 'cisco_asa.ipsec_route_del'){   # we want connection buildups through the firewalls
         my ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
         $asa=~s/\..*//;
         $time=~s/\..*//; # lose the milliseconds
         my $soekris = (($self->ip2n($network) - $start_net)/4) + 1;
-        print "$date $time: $asa $soekris disconnected.\n"
+        print "$date $time: $asa skrs$soekris disconnected.\n"
     }
 }
 
