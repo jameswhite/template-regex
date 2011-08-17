@@ -138,7 +138,7 @@ sub sketch_connection {
         if($soekris < 10 ){ $soekris = "000$soekris"; }
         elsif($soekris < 100 ){ $soekris = "00$soekris"; }
         elsif($soekris < 1000 ){ $soekris = "0$soekris"; }
-        $self->{'irc'}->yield( privmsg => '#infrastructure' => "$date $time: $asa skrs$soekris connected.");
+        $self->{'irc'}->yield( privmsg => '#infrastructure' => "$date $time: $asa skrs$soekris disconnected.");
         print "$date $time: $asa skrs$soekris disconnected.\n"
     }
 }
