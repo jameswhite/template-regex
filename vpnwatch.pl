@@ -24,8 +24,9 @@ package Log::Tail::Reporter;
 use POE qw(Wheel::FollowTail);
 use YAML;
 use Template::Regex;
-use POE::Component::Client::TCP;
 use POE::Filter::Stream;
+use POE qw(Component::IRC);
+
 
 # Net::Infrastructure is what we use to match 
 # use Net::Infrastructure; 
@@ -41,30 +42,44 @@ sub new {
             return undef;
         }
     }
+    $self->{'file'} = $cnstr->{'file'} if($cnstr->{'file'});
     $self->{'max_lines'}=$cnstr->{'max_lines'}||undef;
     $self->{'TR'} = new Template::Regex;
     $self->{'TR'}->load_template_file($cnstr->{'template'});
+    $self->{'irc'} = POE::Component::IRC->spawn(
+                                                 nick => 'vpnwatcher',
+                                                 ircname => 'VPN Connection watcher',
+                                                 server  => 'hercules',
+                                               ) or die "Oh noooo! $!";
     POE::Session->create(
-                          inline_states => {
-                                             _start => sub {
-                                                             $_[HEAP]{linecount}=0;
-                                                             $_[HEAP]{tailor} = POE::Wheel::FollowTail->new(
-                                                                                                             Filename => $cnstr->{'file'},
-                                                                                                             InputEvent => "got_log_line",
-                                                                                                             ResetEvent => "got_log_rollover",
-                                                                                                           );
-                                                           },
-                                           },
                           object_states => [
                                              $self => [ 
+                                                        '_start',
                                                         'got_log_line', 
                                                         'got_log_rollover',
                                                         'sketch_connection',
                                                         'send_sketch',
+                                                        '_default',
+                                                        'irc_001',
+                                                        'irc_public',
                                                       ],
                                            ],
     );
     return $self;
+}
+
+sub _start {
+    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    $_[HEAP]{linecount}=0;
+    $_[HEAP]{tailor} = POE::Wheel::FollowTail->new(
+                                                    Filename => $self->{'file'},
+                                                    InputEvent => "got_log_line",
+                                                    ResetEvent => "got_log_rollover",
+                                                  );
+    $self->{'irc'}->yield( register => 'all' );
+    $self->{'irc'}->yield( connect => { } );
+    return;
+
 }
 
 sub ip2n{
@@ -129,6 +144,50 @@ sub sketch_connection {
 sub got_log_rollover {
     my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     print STDERR "Log rolled over.\n"; 
+}
+
+sub irc_001 {
+     my $sender = $_[SENDER];
+
+     # Since this is an irc_* event, we can get the component's object by
+     # accessing the heap of the sender. Then we register and connect to the
+     # specified server.
+     my $irc = $sender->get_heap();
+
+     print "Connected to ", $irc->server_name(), "\n";
+
+     # we join our channels
+     $irc->yield( join => $_ ) for @channels;
+     return;
+}
+
+sub irc_public {
+     my ($sender, $who, $where, $what) = @_[SENDER, ARG0 .. ARG2];
+     my $nick = ( split /!/, $who )[0];
+     my $channel = $where->[0];
+
+     if ( my ($rot13) = $what =~ /^rot13 (.+)/ ) {
+         $rot13 =~ tr[a-zA-Z][n-za-mN-ZA-M];
+         $irc->yield( privmsg => $channel => "$nick: $rot13" );
+     }
+     return;
+}
+
+# We registered for all events, this will produce some debug info.
+sub _default {
+     my ($event, $args) = @_[ARG0 .. $#_];
+     my @output = ( "$event: " );
+
+     for my $arg (@$args) {
+         if ( ref $arg eq 'ARRAY' ) {
+             push( @output, '[' . join(', ', @$arg ) . ']' );
+         }
+         else {
+             push ( @output, "'$arg'" );
+         }
+     }
+     print join ' ', @output, "\n";
+     return;
 }
 
 1;
