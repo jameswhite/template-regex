@@ -78,6 +78,7 @@ sub _start {
                                                     Filename => $self->{'file'},
                                                     InputEvent => "got_log_line",
                                                     ResetEvent => "got_log_rollover",
+                                                    Seek => 0;
                                                   );
     $self->{'irc'}->yield( register => 'all' );
     $self->{'irc'}->yield( connect => { } );
