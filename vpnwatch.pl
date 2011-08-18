@@ -98,7 +98,7 @@ sub start_log {
                                                      Filename   => $self->{'file'},
                                                      InputEvent => "got_log_line",
                                                      ResetEvent => "got_log_rollover",
-                                                     SeekBack   => 20000,
+                                                     SeekBack   => 1000000, # this is octets, not lines
                                                      #Seek   => 0,
                                                    );
     return;
