@@ -157,7 +157,7 @@ sub sketch_connection {
         if($soekris < 10 ){ $soekris = "000$soekris"; }
         elsif($soekris < 100 ){ $soekris = "00$soekris"; }
         elsif($soekris < 1000 ){ $soekris = "0$soekris"; }
-        print "\n$line\n";
+        print "$match: $line\n";
         print "$date $time: $asa skrs$soekris $state.\n";
         $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$date $time: $asa skrs$soekris $state.");
     }
@@ -220,7 +220,7 @@ my $cisco  = Log::Tail::Reporter->new({
                                          'file'     => '/var/log/cisco/network.log',
                                          'template' => 'cisco-asa.yml',
                                          'server'   => 'irc',
-                                         'nick'     => 'vpnwatcher',
+                                         'nick'     => 'tyr',
                                          'ircname'  => 'VPN Watcher',
                                          'channel'  => '#bottest',
                                        });
