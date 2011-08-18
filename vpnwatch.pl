@@ -155,7 +155,7 @@ sub sketch_connection {
         if($soekris < 10 ){ $soekris = "000$soekris"; }
         elsif($soekris < 100 ){ $soekris = "00$soekris"; }
         elsif($soekris < 1000 ){ $soekris = "0$soekris"; }
-        print "$line\n";
+        print "\n$line\n";
         print "$date $time: $asa skrs$soekris $state.\n";
         $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$date $time: $asa skrs$soekris $state.");
     }else{
