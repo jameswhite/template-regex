@@ -158,6 +158,8 @@ sub sketch_connection {
         print "$line\n";
         print "$date $time: $asa skrs$soekris $state.\n";
         $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$date $time: $asa skrs$soekris $state.");
+    }else{
+        print ".";
     }
 }
 
