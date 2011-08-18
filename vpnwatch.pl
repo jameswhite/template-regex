@@ -97,7 +97,7 @@ sub start_log {
                                                      Filename   => $self->{'file'},
                                                      InputEvent => "got_log_line",
                                                      ResetEvent => "got_log_rollover",
-                                                     SeekBack   => 1000,
+                                                     SeekBack   => 10000,
                                                    );
     return;
 }
