@@ -65,6 +65,7 @@ sub new {
                                                         '_default',
                                                         'irc_001',
                                                         'irc_public',
+                                                        'start_log',
                                                       ],
                                            ],
     );
@@ -76,14 +77,19 @@ sub _start {
     $_[HEAP]{linecount}=0;
     $self->{'irc'}->yield( register => 'all' );
     $self->{'irc'}->yield( connect => { } );
-    $_[HEAP]{tailor} = POE::Wheel::FollowTail->new(
-                                                    Filename   => $self->{'file'},
-                                                    InputEvent => "got_log_line",
-                                                    ResetEvent => "got_log_rollover",
-                                                    Seek       => 0,
-                                                  );
+    $kernel->delay('start_log',20)
     return;
+}
 
+sub start_log {
+    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    $heap->{'tailor'} = POE::Wheel::FollowTail->new(
+                                                     Filename   => $self->{'file'},
+                                                     InputEvent => "got_log_line",
+                                                     ResetEvent => "got_log_rollover",
+                                                     Seek       => 0,
+                                                   );
+    return;
 }
 
 sub ip2n{
