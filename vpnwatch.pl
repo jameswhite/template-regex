@@ -80,7 +80,7 @@ sub _start {
     $self->{'irc'}->yield( register => 'all' );
     $self->{'irc'}->yield( connect => { } );
     $kernel->delay('start_log',5);
-    $kernel->delay('enable_output',60);
+    $kernel->delay('enable_output',120);
     return;
 }
 
@@ -98,7 +98,7 @@ sub start_log {
                                                      Filename   => $self->{'file'},
                                                      InputEvent => "got_log_line",
                                                      ResetEvent => "got_log_rollover",
-                                                     SeekBack   => 1000000, # this is octets, not lines
+                                                     SeekBack   => 1000000, # this is octets (bytes) not lines, it'll undoubtedly hit the middle of a record
                                                      #Seek   => 0,
                                                    );
     return;
