@@ -228,8 +228,8 @@ sub irc_public {
              $self->{'irc'}->yield( privmsg => $channel => "$nick: I've got no information on $soekris" ) if($self->{'output_enabled'} == 1);
          }
      }
-     if ( $what =~ /^!help$/ ) {
-             $self->{'irc'}->yield( privmsg => $channel => "!state <skrsNNNN>");
+     if ( $what =~ /^\s*$self->{'nick'}: help$/ ) {
+             $self->{'irc'}->yield( privmsg => $channel => "!state skrsNNNN : tells you a bit about the state of skrsNNNN");
      }
      return;
 }
@@ -260,8 +260,8 @@ my $cisco  = Log::Tail::Reporter->new({
                                          'server'   => 'irc',
                                          'nick'     => 'vpnwatch',
                                          'ircname'  => 'VPN Watcher',
-                                         #'channel'  => '#infrastructure',
-                                         'channel'  => '#bottest',
+                                         'channel'  => '#infrastructure',
+                                         #'channel'  => '#bottest',
                                        });
 POE::Kernel->run();
 exit;
