@@ -119,30 +119,29 @@ sub send_sketch {
 sub sketch_connection {
     my ($self, $kernel, $heap, $sender, $match, $patterns, $line, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my $start_net=$self->ip2n("10.100.1.0");
+    my $state='';
     if ($match eq 'cisco_asa.ipsec_route_add'){   # we want connection buildups through the firewalls
         my ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
-        $asa=~s/\..*//;
-        $time=~s/\..*//; # lose the milliseconds
-        my $soekris = (($self->ip2n($network) - $start_net)/4) + 1;
-        if($soekris < 10 ){ $soekris = "000$soekris"; }
-        elsif($soekris < 100 ){ $soekris = "00$soekris"; }
-        elsif($soekris < 1000 ){ $soekris = "0$soekris"; }
-        $self->{'irc'}->yield( privmsg => '#infrastructure' => "$date $time: $asa skrs$soekris connected.");
-        print "$line\n";
-        print "$date $time: $asa skrs$soekris connected.\n"
-
+    }elsif($match eq 'cisco_asa.ipsec_route_add_group'){   # we want connection buildups through the firewalls
+        my ($date, $time, $tz, $asa, $trash, $peer, $network, $netmask) = (@{ $patterns });
+        $state = 'connected';
     }elsif($match eq 'cisco_asa.ipsec_route_del'){   # we want connection buildups through the firewalls
         my ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
-        $asa=~s/\..*//;
-        $time=~s/\..*//; # lose the milliseconds
-        my $soekris = (($self->ip2n($network) - $start_net)/4) + 1;
-        if($soekris < 10 ){ $soekris = "000$soekris"; }
-        elsif($soekris < 100 ){ $soekris = "00$soekris"; }
-        elsif($soekris < 1000 ){ $soekris = "0$soekris"; }
-        $self->{'irc'}->yield( privmsg => '#infrastructure' => "$date $time: $asa skrs$soekris disconnected.");
-        print "$line\n";
-        print "$date $time: $asa skrs$soekris disconnected.\n"
+        $state='disconnected';
+    }elsif($match eq 'cisco_asa.ipsec_route_del_group'){   # we want connection buildups through the firewalls
+        my ($date, $time, $tz, $asa, $trash, $peer, $network, $netmask) = (@{ $patterns });
+        $state='disconnected';
     }
+
+    $asa=~s/\..*//;
+    $time=~s/\..*//; # lose the milliseconds
+    my $soekris = (($self->ip2n($network) - $start_net)/4) + 1;
+    if($soekris < 10 ){ $soekris = "000$soekris"; }
+    elsif($soekris < 100 ){ $soekris = "00$soekris"; }
+    elsif($soekris < 1000 ){ $soekris = "0$soekris"; }
+    print "$line\n";
+    print "$date $time: $asa skrs$soekris connected.\n"
+    $self->{'irc'}->yield( privmsg => '#infrastructure' => "$date $time: $asa skrs$soekris $state.");
 }
 
 sub got_log_rollover {
@@ -151,7 +150,7 @@ sub got_log_rollover {
 }
 
 sub irc_001 {
-     my $sender = $_[SENDER];
+    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
 
      # Since this is an irc_* event, we can get the component's object by
      # accessing the heap of the sender. Then we register and connect to the
@@ -167,7 +166,7 @@ sub irc_001 {
 }
 
 sub irc_public {
-     my ($sender, $who, $where, $what) = @_[SENDER, ARG0 .. ARG2];
+     my ($self, $kernel, $heap, $sender, $who, $where, $what, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
      my $nick = ( split /!/, $who )[0];
      my $channel = $where->[0];
 

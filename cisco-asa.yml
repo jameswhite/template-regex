@@ -115,8 +115,12 @@ log_tpl:
     - name: portmap_build
       regex: 'portmap translation creation failed for udp src [% IFACE_IP_PORT %] dst [% IFACE_IP_PORT %]'
     - name: ipsec_route_add
-      regex: 'Group = [% TUNNEL_GROUP %], IP = [% IP %], Adding static route for L2L peer coming in on a dynamic map. address: [% IP %], mask: [% IP %]'
+      regex: 'Group = IP = [% IP %], Adding static route for L2L peer coming in on a dynamic map. address: [% IP %], mask: [% IP %]'
     - name: ipsec_route_del
+      regex: 'Group = IP = [% IP %], Deleting static route for L2L peer that came in on a dynamic map. address: [% IP %], mask: [% IP %]' 
+    - name: ipsec_route_add_group
+      regex: 'Group = [% TUNNEL_GROUP %], IP = [% IP %], Adding static route for L2L peer coming in on a dynamic map. address: [% IP %], mask: [% IP %]'
+    - name: ipsec_route_del_group
       regex: 'Group = [% TUNNEL_GROUP %], IP = [% IP %], Deleting static route for L2L peer that came in on a dynamic map. address: [% IP %], mask: [% IP %]' 
     - name: ipsec_message
       regex: 'Group = [% TUNNEL_GROUP %], IP = [% IP %], [% IPSEC_STAGE %]'
