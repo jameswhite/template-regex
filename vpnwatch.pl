@@ -74,14 +74,14 @@ sub new {
 sub _start {
     my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     $_[HEAP]{linecount}=0;
+    $self->{'irc'}->yield( register => 'all' );
+    $self->{'irc'}->yield( connect => { } );
     $_[HEAP]{tailor} = POE::Wheel::FollowTail->new(
                                                     Filename   => $self->{'file'},
                                                     InputEvent => "got_log_line",
                                                     ResetEvent => "got_log_rollover",
                                                     Seek       => 0,
                                                   );
-    $self->{'irc'}->yield( register => 'all' );
-    $self->{'irc'}->yield( connect => { } );
     return;
 
 }
