@@ -80,7 +80,7 @@ sub _start {
     $self->{'irc'}->yield( register => 'all' );
     $self->{'irc'}->yield( connect => { } );
     $kernel->delay('start_log',5);
-    $kernel->delay('enable_output',20);
+    $kernel->delay('enable_output',30);
     return;
 }
 
@@ -88,7 +88,7 @@ sub enable_output {
     my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     print STDERR "Enabling Output.\n";
     $self->{'output_enabled'} = 1;
-    $self->{'irc'}->yield( privmsg => $self->{'channel'} => "*cough*") if($self->{'output_enabled'} == 1);
+    $self->{'irc'}->yield( privmsg => $self->{'channel'} => "ready.") if($self->{'output_enabled'} == 1);
 }
 
 sub start_log {
