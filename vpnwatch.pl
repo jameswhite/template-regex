@@ -36,7 +36,7 @@ sub new {
     my $self = {};
     my $cnstr = shift if @_;
     bless($self,$class);
-    foreach my $argument ('server', 'port', 'room', 'nick', 'ircname'){
+    foreach my $argument ('server', 'port', 'channel', 'nick', 'ircname'){
         $self->{$argument} = $cnstr->{$argument} if($cnstr->{$argument});
     }
     foreach my $arg ('file', 'template'){
@@ -210,7 +210,7 @@ my $cisco  = Log::Tail::Reporter->new({
                                          'template' => 'cisco-asa.yml',
                                          'server'   => 'irc',
                                          'port'     => '6667',
-                                         'room'     => '#bottest',
+                                         'channel'  => '#bottest',
                                        });
 POE::Kernel->run();
 exit;
