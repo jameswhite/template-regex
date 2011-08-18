@@ -199,7 +199,7 @@ sub irc_public {
      my $nick = ( split /!/, $who )[0];
      my $channel = $where->[0];
 
-     if ( my ($soekris) = $what =~ /^!state (skrs[0-9])/ ) {
+     if ( my ($soekris) = $what =~ /^!state (skrs[0-9]{4,4})/ ) {
          if($self->{'states'}->{$soekris}){
              $self->{'irc'}->yield( privmsg => $channel => "$soekris last $self->{'states'}->{$soekris}->{'current'} at  $self->{'states'}->{$soekris}->{'last'}; $soekris has changed states $self->{'states'}->{$soekris}->{'changes'} times since $self->{'states'}->{$soekris}->{'first'}. " );
          }else{
