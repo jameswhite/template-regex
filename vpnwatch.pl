@@ -151,7 +151,7 @@ sub sketch_connection {
     }
 
     if($state ne ''){
-        $asa=~s/\..*//;
+        $asa=~s/\..*// if($asa=~m/[a-zA-Z]/);
         $time=~s/\..*//; # lose the milliseconds
         my $soekris = (($self->ip2n($network) - $start_net)/4) + 1;
         if($soekris < 10 ){ $soekris = "000$soekris"; }
@@ -220,9 +220,9 @@ my $cisco  = Log::Tail::Reporter->new({
                                          'file'     => '/var/log/cisco/network.log',
                                          'template' => 'cisco-asa.yml',
                                          'server'   => 'irc',
-                                         'nick'     => 'tyr',
+                                         'nick'     => 'vpnwatch',
                                          'ircname'  => 'VPN Watcher',
-                                         'channel'  => '#bottest',
+                                         'channel'  => '#infrastructure',
                                        });
 POE::Kernel->run();
 exit;
