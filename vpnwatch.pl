@@ -36,7 +36,7 @@ sub new {
     my $self = {};
     my $cnstr = shift if @_;
     bless($self,$class);
-    for my $argument in ('server', 'port', 'room', 'nick', 'ircname'){
+    foreach my $argument ('server', 'port', 'room', 'nick', 'ircname'){
         $self->{$argument} = $cnstr->{$argument} if($cnstr->{$argument});
     }
     foreach my $arg ('file', 'template'){
