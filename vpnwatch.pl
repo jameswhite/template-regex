@@ -189,7 +189,7 @@ sub irc_public {
 
      if ( my ($rot13) = $what =~ /^rot13 (.+)/ ) {
          $rot13 =~ tr[a-zA-Z][n-za-mN-ZA-M];
-         $irc->yield( privmsg => $channel => "$nick: $rot13" );
+         $self->{'irc'}->yield( privmsg => $channel => "$nick: $rot13" );
      }
      return;
 }
