@@ -120,16 +120,17 @@ sub sketch_connection {
     my ($self, $kernel, $heap, $sender, $match, $patterns, $line, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my $start_net=$self->ip2n("10.100.1.0");
     my $state='';
+    my  ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
     if ($match eq 'cisco_asa.ipsec_route_add'){   # we want connection buildups through the firewalls
-        my ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
+        ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
     }elsif($match eq 'cisco_asa.ipsec_route_add_group'){   # we want connection buildups through the firewalls
-        my ($date, $time, $tz, $asa, $trash, $peer, $network, $netmask) = (@{ $patterns });
+        ($date, $time, $tz, $asa, $trash, $peer, $network, $netmask) = (@{ $patterns });
         $state = 'connected';
     }elsif($match eq 'cisco_asa.ipsec_route_del'){   # we want connection buildups through the firewalls
-        my ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
+        ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
         $state='disconnected';
     }elsif($match eq 'cisco_asa.ipsec_route_del_group'){   # we want connection buildups through the firewalls
-        my ($date, $time, $tz, $asa, $trash, $peer, $network, $netmask) = (@{ $patterns });
+        ($date, $time, $tz, $asa, $trash, $peer, $network, $netmask) = (@{ $patterns });
         $state='disconnected';
     }
 
@@ -181,7 +182,7 @@ sub irc_public {
 
 # We registered for all events, this will produce some debug info.
 sub _default {
-     my ($event, $args) = @_[ARG0 .. $#_];
+     my ($self, $kernel, $heap, $sender, $event, $args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
      my @output = ( "$event: " );
 
      for my $arg (@$args) {
