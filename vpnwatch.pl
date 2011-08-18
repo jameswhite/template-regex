@@ -80,7 +80,7 @@ sub _start {
     $self->{'irc'}->yield( register => 'all' );
     $self->{'irc'}->yield( connect => { } );
     $kernel->delay('start_log',5);
-    $kernel->delay('enable_output',120);
+    $kernel->delay('enable_output',180); # it takes about 3 minutes to go through the last 1MB of the log (SeekBack => 1000000)
     return;
 }
 
