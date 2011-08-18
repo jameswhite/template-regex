@@ -72,6 +72,14 @@ log_tpl:
  - name: cisco_asa
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] [% ASA_CODE %] '
    remainder: 
+    - name: ipsec_route_add
+      regex: 'IP = [% IP %], Adding static route for L2L peer coming in on a dynamic map. address: [% IP %], mask: [% IP %]'
+    - name: ipsec_route_del
+      regex: 'IP = [% IP %], Deleting static route for L2L peer that came in on a dynamic map. address: [% IP %], mask: [% IP %]' 
+    - name: ipsec_route_add_group
+      regex: 'Group = [% TUNNEL_GROUP %], IP = [% IP %], Adding static route for L2L peer coming in on a dynamic map. address: [% IP %], mask: [% IP %]'
+    - name: ipsec_route_del_group
+      regex: 'Group = [% TUNNEL_GROUP %], IP = [% IP %], Deleting static route for L2L peer that came in on a dynamic map. address: [% IP %], mask: [% IP %]' 
     - name: asymmetric_nat_rules
       regex: 'Asymmetric NAT rules matched for forward and reverse flows; Connection for [% PROTO %] src [% IFACE_IP_PORT %] dst [% IFACE_IP_PORT %] denied due to NAT reverse path failure'
     - name: asymmetric_nat_rules_icmp
@@ -114,14 +122,6 @@ log_tpl:
       regex: 'Teardown dynamic [% TRANSPORT %] translation from [% IFACE_IP_PORT %] to [% IFACE_IP_PORT %] duration [% DURATION %]'
     - name: portmap_build
       regex: 'portmap translation creation failed for udp src [% IFACE_IP_PORT %] dst [% IFACE_IP_PORT %]'
-    - name: ipsec_route_add
-      regex: 'IP = [% IP %], Adding static route for L2L peer coming in on a dynamic map. address: [% IP %], mask: [% IP %]'
-    - name: ipsec_route_del
-      regex: 'IP = [% IP %], Deleting static route for L2L peer that came in on a dynamic map. address: [% IP %], mask: [% IP %]' 
-    - name: ipsec_route_add_group
-      regex: 'Group = [% TUNNEL_GROUP %], IP = [% IP %], Adding static route for L2L peer coming in on a dynamic map. address: [% IP %], mask: [% IP %]'
-    - name: ipsec_route_del_group
-      regex: 'Group = [% TUNNEL_GROUP %], IP = [% IP %], Deleting static route for L2L peer that came in on a dynamic map. address: [% IP %], mask: [% IP %]' 
     - name: ipsec_message
       regex: 'Group = [% TUNNEL_GROUP %], IP = [% IP %], [% IPSEC_STAGE %]'
       remainder:
