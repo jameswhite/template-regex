@@ -154,9 +154,22 @@ sub sketch_connection {
         if($soekris < 10 ){ $soekris = "000$soekris"; }
         elsif($soekris < 100 ){ $soekris = "00$soekris"; }
         elsif($soekris < 1000 ){ $soekris = "0$soekris"; }
-        print "$match: $line\n";
+        #print "$match: $line\n";
         print "$date $time: $asa skrs$soekris $state.\n";
-        $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$date $time: $asa skrs$soekris $state.");
+
+        if($self->{'states'}->{"skrs$soekris"}->{'current'}){
+            if($self->{'states'}->{"skrs$soekris"}->{'current'} ne $state){
+                $self->{'states'}->{"skrs$soekris"}->{'current'} = $state;
+                $self->{'states'}->{"skrs$soekris"}->{'last'} = "$date $time";
+                $self->{'states'}->{"skrs$soekris"}->{'changes'}++;
+                $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$date $time: $asa skrs$soekris $state.");
+            }
+        }else{
+            $self->{'states'}->{"skrs$soekris"}->{'current'} = $state;
+            $self->{'states'}->{"skrs$soekris"}->{'first'} = "$date $time";
+            $self->{'states'}->{"skrs$soekris"}->{'changes'} = 0;
+            $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$date $time: $asa skrs$soekris $state.");
+        }
     }
 }
 
@@ -186,9 +199,12 @@ sub irc_public {
      my $nick = ( split /!/, $who )[0];
      my $channel = $where->[0];
 
-     if ( my ($rot13) = $what =~ /^rot13 (.+)/ ) {
-         $rot13 =~ tr[a-zA-Z][n-za-mN-ZA-M];
-         $self->{'irc'}->yield( privmsg => $channel => "$nick: $rot13" );
+     if ( my ($soekris) = $what =~ /^!state (skrs[0-9])/ ) {
+         if($self->{'states'}->{$soekris}){
+             $self->{'irc'}->yield( privmsg => $channel => "$soekris last $self->{'states'}->{$soekris}->{'current'} at  $self->{'states'}->{$soekris}->{'last'}; $soekris has changed states $self->{'states'}->{$soekris}->{'changes'} times since $self->{'states'}->{$soekris}->{'first'}. " );
+         }else{
+             $self->{'irc'}->yield( privmsg => $channel => "$nick: I've got no information on $soekris" );
+         }
      }
      return;
 }
@@ -214,12 +230,13 @@ sub _default {
 
 $|=1;
 my $cisco  = Log::Tail::Reporter->new({ 
-                                         'file'     => '/var/log/cisco/network.log',
+                                         'file'     => '/var/log/cisco/vpn_connect.log',
                                          'template' => 'cisco-asa.yml',
                                          'server'   => 'irc',
                                          'nick'     => 'vpnwatch',
                                          'ircname'  => 'VPN Watcher',
-                                         'channel'  => '#infrastructure',
+                                         #'channel'  => '#infrastructure',
+                                         'channel'  => '#bottest',
                                        });
 POE::Kernel->run();
 exit;
