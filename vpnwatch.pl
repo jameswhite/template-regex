@@ -128,6 +128,7 @@ sub sketch_connection {
         elsif($soekris < 100 ){ $soekris = "00$soekris"; }
         elsif($soekris < 1000 ){ $soekris = "0$soekris"; }
         $self->{'irc'}->yield( privmsg => '#infrastructure' => "$date $time: $asa skrs$soekris connected.");
+        print "$line\n";
         print "$date $time: $asa skrs$soekris connected.\n"
 
     }elsif($match eq 'cisco_asa.ipsec_route_del'){   # we want connection buildups through the firewalls
@@ -139,6 +140,7 @@ sub sketch_connection {
         elsif($soekris < 100 ){ $soekris = "00$soekris"; }
         elsif($soekris < 1000 ){ $soekris = "0$soekris"; }
         $self->{'irc'}->yield( privmsg => '#infrastructure' => "$date $time: $asa skrs$soekris disconnected.");
+        print "$line\n";
         print "$date $time: $asa skrs$soekris disconnected.\n"
     }
 }
