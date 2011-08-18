@@ -84,8 +84,9 @@ sub _start {
     return;
 }
 
-sub start_log {
+sub enable_output {
     my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    print STDERR "Enabling Output.\n";
     $self->{'output_enabled'} = 1;
 }
 
