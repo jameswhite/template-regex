@@ -92,6 +92,7 @@ sub enable_output {
 
 sub start_log {
     my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    print STDERR "Loading Log.\n";
     $heap->{'tailor'} = POE::Wheel::FollowTail->new(
                                                      Filename   => $self->{'file'},
                                                      InputEvent => "got_log_line",
