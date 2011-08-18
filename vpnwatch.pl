@@ -36,6 +36,9 @@ sub new {
     my $self = {};
     my $cnstr = shift if @_;
     bless($self,$class);
+    for $argument in ('server', 'port', 'room', 'nick', 'ircname'){
+        $self->{$argument} = $cnstr->{$argument} if($cnstr->{$argument});
+    }
     foreach my $arg ('file', 'template'){
         if(! defined($cnstr->{$arg})){
             print STDERR "Necessary parameter [ $arg ] not defined. Aborting object.\n";
@@ -47,9 +50,9 @@ sub new {
     $self->{'TR'} = new Template::Regex;
     $self->{'TR'}->load_template_file($cnstr->{'template'});
     $self->{'irc'} = POE::Component::IRC->spawn(
-                                                 nick => 'vpnwatcher',
-                                                 ircname => 'VPN Connection watcher',
-                                                 server  => 'hercules',
+                                                 nick => $self->{'nick'},
+                                                 ircname => $self->{'ircname'},
+                                                 server  => $self->{'server'},
                                                ) or die "Oh noooo! $!";
     POE::Session->create(
                           object_states => [
@@ -145,7 +148,7 @@ sub sketch_connection {
         elsif($soekris < 1000 ){ $soekris = "0$soekris"; }
         print "$line\n";
         print "$date $time: $asa skrs$soekris $state.\n";
-        $self->{'irc'}->yield( privmsg => '#bottest' => "$date $time: $asa skrs$soekris $state.");
+        $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$date $time: $asa skrs$soekris $state.");
     }
 }
 
@@ -165,8 +168,8 @@ sub irc_001 {
      print "Connected to ", $irc->server_name(), "\n";
 
      # we join our channels
-     $irc->yield( join => $_ ) for ('#infrastructure');
-     $irc->yield( privmsg => '#infrastructure' => "*cough*");
+     $irc->yield( join => $_ ) for ($self->{'channel'});
+     $irc->yield( privmsg => $self->{'channel'} => "*cough*");
      return;
 }
 
@@ -205,8 +208,9 @@ $|=1;
 my $cisco  = Log::Tail::Reporter->new({ 
                                          'file'     => '/var/log/cisco/network.log',
                                          'template' => 'cisco-asa.yml',
-                                         #'server' => '192.168.7.71:3737',
-                                         #'max_lines'    => 100,
+                                         'server'   => 'irc',
+                                         'port'     => '6667',
+                                         'room'     => '#bottest',
                                        });
 POE::Kernel->run();
 exit;
