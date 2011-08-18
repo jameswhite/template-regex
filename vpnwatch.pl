@@ -80,7 +80,7 @@ sub _start {
     $self->{'irc'}->yield( register => 'all' );
     $self->{'irc'}->yield( connect => { } );
     $kernel->delay('start_log',5);
-    $kernel->delay('enable_output',30);
+    $kernel->delay('enable_output',60);
     return;
 }
 
