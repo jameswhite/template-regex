@@ -88,6 +88,7 @@ sub enable_output {
     my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     print STDERR "Enabling Output.\n";
     $self->{'output_enabled'} = 1;
+    $self->{'irc'}->yield( privmsg => $self->{'channel'} => "*cough*") if($self->{'output_enabled'} == 1);
 }
 
 sub start_log {
