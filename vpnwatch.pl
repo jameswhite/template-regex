@@ -77,7 +77,7 @@ sub _start {
     $_[HEAP]{linecount}=0;
     $self->{'irc'}->yield( register => 'all' );
     $self->{'irc'}->yield( connect => { } );
-    $kernel->delay('start_log',20)
+    $kernel->delay('start_log',20);
     return;
 }
 
