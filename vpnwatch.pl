@@ -118,19 +118,21 @@ sub send_sketch {
 
 sub sketch_connection {
     my ($self, $kernel, $heap, $sender, $match, $patterns, $line, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+
     my $start_net=$self->ip2n("10.100.1.0");
     my $state='';
-    my  ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
+    my  ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask);
+
     if ($match eq 'cisco_asa.ipsec_route_add'){   # we want connection buildups through the firewalls
-        ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
-    }elsif($match eq 'cisco_asa.ipsec_route_add_group'){   # we want connection buildups through the firewalls
         ($date, $time, $tz, $asa, $trash, $peer, $network, $netmask) = (@{ $patterns });
+    }elsif($match eq 'cisco_asa.ipsec_route_add_group'){   # we want connection buildups through the firewalls
+        ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
         $state = 'connected';
     }elsif($match eq 'cisco_asa.ipsec_route_del'){   # we want connection buildups through the firewalls
-        ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
+        ($date, $time, $tz, $asa, $trash, $peer, $network, $netmask) = (@{ $patterns });
         $state='disconnected';
     }elsif($match eq 'cisco_asa.ipsec_route_del_group'){   # we want connection buildups through the firewalls
-        ($date, $time, $tz, $asa, $trash, $peer, $network, $netmask) = (@{ $patterns });
+        ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
         $state='disconnected';
     }
 
@@ -143,7 +145,7 @@ sub sketch_connection {
         elsif($soekris < 1000 ){ $soekris = "0$soekris"; }
         print "$line\n";
         print "$date $time: $asa skrs$soekris $state.\n";
-        $self->{'irc'}->yield( privmsg => '#infrastructure' => "$date $time: $asa skrs$soekris $state.");
+        $self->{'irc'}->yield( privmsg => '#bottest' => "$date $time: $asa skrs$soekris $state.");
     }
 }
 
