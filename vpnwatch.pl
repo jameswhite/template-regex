@@ -127,16 +127,25 @@ sub sketch_connection {
     my  ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask);
 
     if ($match eq 'cisco_asa.ipsec_route_add'){   # we want connection buildups through the firewalls
+
         ($date, $time, $tz, $asa, $trash, $peer, $network, $netmask) = (@{ $patterns });
+        $state = 'connected';
+
     }elsif($match eq 'cisco_asa.ipsec_route_add_group'){   # we want connection buildups through the firewalls
+
         ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
         $state = 'connected';
+
     }elsif($match eq 'cisco_asa.ipsec_route_del'){   # we want connection buildups through the firewalls
+
         ($date, $time, $tz, $asa, $trash, $peer, $network, $netmask) = (@{ $patterns });
         $state='disconnected';
+
     }elsif($match eq 'cisco_asa.ipsec_route_del_group'){   # we want connection buildups through the firewalls
+
         ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
         $state='disconnected';
+
     }
 
     if($state ne ''){
@@ -209,7 +218,8 @@ my $cisco  = Log::Tail::Reporter->new({
                                          'file'     => '/var/log/cisco/network.log',
                                          'template' => 'cisco-asa.yml',
                                          'server'   => 'irc',
-                                         'port'     => '6667',
+                                         'nick'     => 'vpnwatcher',
+                                         'ircname'  => 'VPN Watcher',
                                          'channel'  => '#bottest',
                                        });
 POE::Kernel->run();
