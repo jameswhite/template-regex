@@ -146,6 +146,8 @@ sub sketch_connection {
         ($date, $time, $tz, $asa, $trash, $group, $peer, $network, $netmask) = (@{ $patterns });
         $state='disconnected';
 
+    }else{
+        print "$match: $line\n";
     }
 
     if($state ne ''){
