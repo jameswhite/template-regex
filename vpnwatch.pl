@@ -98,8 +98,8 @@ sub start_log {
                                                      Filename   => $self->{'file'},
                                                      InputEvent => "got_log_line",
                                                      ResetEvent => "got_log_rollover",
-                                                     #SeekBack   => 10000,
-                                                     Seek   => 0,
+                                                     SeekBack   => 20000,
+                                                     #Seek   => 0,
                                                    );
     return;
 }
@@ -227,6 +227,9 @@ sub irc_public {
          }else{
              $self->{'irc'}->yield( privmsg => $channel => "$nick: I've got no information on $soekris" ) if($self->{'output_enabled'} == 1);
          }
+     }
+     if ( $what =~ /^!help$/ ) {
+             $self->{'irc'}->yield( privmsg => $channel => "!state <skrsNNNN>");
      }
      return;
 }
