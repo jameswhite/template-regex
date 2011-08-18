@@ -36,6 +36,7 @@ sub new {
     my $self = {};
     my $cnstr = shift if @_;
     bless($self,$class);
+    $self->{'output_enabled'} = 0;
     foreach my $argument ('server', 'port', 'channel', 'nick', 'ircname'){
         $self->{$argument} = $cnstr->{$argument} if($cnstr->{$argument});
     }
@@ -66,6 +67,7 @@ sub new {
                                                         'irc_001',
                                                         'irc_public',
                                                         'start_log',
+                                                        'enable_output',
                                                       ],
                                            ],
     );
@@ -78,7 +80,13 @@ sub _start {
     $self->{'irc'}->yield( register => 'all' );
     $self->{'irc'}->yield( connect => { } );
     $kernel->delay('start_log',5);
+    $kernel->delay('enable_output',20);
     return;
+}
+
+sub start_log {
+    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    $self->{'output_enabled'} = 1;
 }
 
 sub start_log {
@@ -87,7 +95,7 @@ sub start_log {
                                                      Filename   => $self->{'file'},
                                                      InputEvent => "got_log_line",
                                                      ResetEvent => "got_log_rollover",
-                                                     Seek       => 0,
+                                                     SeekBack   => 1000,
                                                    );
     return;
 }
@@ -162,20 +170,22 @@ sub sketch_connection {
         elsif($soekris < 100 ){ $soekris = "00$soekris"; }
         elsif($soekris < 1000 ){ $soekris = "0$soekris"; }
         #print "$match: $line\n";
-        print "$date $time: $asa skrs$soekris $state.\n";
+        print "$date $time: $asa skrs$soekris $state.\n" if($self->{'output_enabled'} == 1);
 
         if($self->{'states'}->{"skrs$soekris"}->{'current'}){
             if($self->{'states'}->{"skrs$soekris"}->{'current'} ne $state){
                 $self->{'states'}->{"skrs$soekris"}->{'current'} = $state;
                 $self->{'states'}->{"skrs$soekris"}->{'last'} = "$date $time";
+                $self->{'states'}->{"skrs$soekris"}->{'firewall'} = "$asa";
                 $self->{'states'}->{"skrs$soekris"}->{'changes'}++;
-                $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$date $time: $asa skrs$soekris $state.");
+                $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$date $time: $asa skrs$soekris $state.") if($self->{'output_enabled'} == 1);
             }
         }else{
             $self->{'states'}->{"skrs$soekris"}->{'current'} = $state;
             $self->{'states'}->{"skrs$soekris"}->{'first'} = "$date $time";
+            $self->{'states'}->{"skrs$soekris"}->{'firewall'} = "$asa";
             $self->{'states'}->{"skrs$soekris"}->{'changes'} = 0;
-            $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$date $time: $asa skrs$soekris $state.");
+            $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$date $time: $asa skrs$soekris $state.") if($self->{'output_enabled'} == 1);
         }
     }
 }
@@ -197,7 +207,7 @@ sub irc_001 {
 
      # we join our channels
      $irc->yield( join => $_ ) for ($self->{'channel'});
-     $irc->yield( privmsg => $self->{'channel'} => "*cough*");
+     $irc->yield( privmsg => $self->{'channel'} => "*cough*") if($self->{'output_enabled'} == 1);
      return;
 }
 
@@ -208,9 +218,10 @@ sub irc_public {
 
      if ( my ($soekris) = $what =~ /^!state (skrs[0-9]{4,4})\s*$/ ) {
          if($self->{'states'}->{$soekris}){
-             $self->{'irc'}->yield( privmsg => $channel => "$soekris last $self->{'states'}->{$soekris}->{'current'} at  $self->{'states'}->{$soekris}->{'last'}; $soekris has changed states $self->{'states'}->{$soekris}->{'changes'} times since $self->{'states'}->{$soekris}->{'first'}. " );
+             $self->{'irc'}->yield( privmsg => $channel => "$soekris last $self->{'states'}->{$soekris}->{'current'} $self->{'states'}->{$soekris}->{'firewall'} at $self->{'states'}->{$soekris}->{'last'}." ) if($self->{'output_enabled'} == 1);
+             $self->{'irc'}->yield( privmsg => $channel => "$soekris has changed states $self->{'states'}->{$soekris}->{'changes'} times since $self->{'states'}->{$soekris}->{'first'}. " ) if($self->{'output_enabled'} == 1);
          }else{
-             $self->{'irc'}->yield( privmsg => $channel => "$nick: I've got no information on $soekris" );
+             $self->{'irc'}->yield( privmsg => $channel => "$nick: I've got no information on $soekris" ) if($self->{'output_enabled'} == 1);
          }
      }
      return;
