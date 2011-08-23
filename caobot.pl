@@ -223,7 +223,7 @@ sub irc_public {
      my $channel = $where->[0];
      my $soekris=undef;
      print "$what\n";
-     if ( my ($device) = $what =~ /^\s*[Ww]here\s*is (\S+[0-9]+)\s*\?*$/ ){ 
+     if ( my ($device) = $what =~ /^\s*[Ww]here\s*is\s*(\S*[0-9]+)\s*\?*$/ ){ 
          $device=~s/^[Ss][Kk][Rr][Ss]//;
          $device=~s/^[Pp][Rr][Nn][Tt]//;
          $device=~s/^0*//;
