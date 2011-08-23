@@ -170,7 +170,7 @@ sub sketch_connection {
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
         if($heap->{'pending'}->{$args->[8]}){
             my $messages = '';
-            if($args->[9])=~m/failure/i){
+            if($args->[9]=~m/failure/i){
                 if($heap->{'pending'}->{$args->[8]}->{'messages'}){
                     $messages = join(',',@{ $heap->{'pending'}->{$args->[8]}->{'messages'} });
                 }
