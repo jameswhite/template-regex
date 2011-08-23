@@ -194,8 +194,8 @@ sub irc_public {
      my $nick = ( split /!/, $who )[0];
      my $channel = $where->[0];
      print "$what\n";
-     if ( my ($soekris) = $what =~ /^where is (([sp][kr][rn][tt])*0*i[0-9]+).*$/ ){ 
-         $self->{'irc'}->yield( privmsg => $channel => "parsed as: $1");
+     if ( my ($device) = $what =~ /^\s*where\s*is (\S+[0-9]+)\s*\?*$/ ){ 
+         $self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
      }
      return;
 }
