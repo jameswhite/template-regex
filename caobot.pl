@@ -134,7 +134,7 @@ sub event_timeout{
 sub send_sketch {
     my ($self, $kernel, $heap, $sender, $sketch, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     print "SKETCH: $sketch\n";
-    #$self->{'irc'}->yield( privmsg => $self->{'channel'} => "$sketch");
+    $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$sketch");
 }
 
 sub sketch_connection {
@@ -149,7 +149,7 @@ sub sketch_connection {
         $args->[3]=~s/\..*//g; $args->[3]=~tr/A-Z/a-z/;
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
-        $kernel->yield('send_sketch', "Job: $args->[10]: [ $args->[3] -> $args->[7] ]");
+        $kernel->yield('send_sketch', "Job: $args->[10]: $args->[7]");
         $heap->{'pending'}->{ $args->[10] }->{'host'} = $args->[7];
         $kernel->delay('event_timeout', 180, $args->[10],"job timed out");
     }elsif ($match eq 'windows_event.dualsys_work_thread_msg'){
