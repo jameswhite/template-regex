@@ -149,19 +149,34 @@ sub sketch_connection {
         print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.printer_jobid'){
         print Data::Dumper->Dump([$match,$args]);
-        $args->[3]=~s/\..*//g;
-        $args->[7]=~s/\..*//g;
+        $args->[3]=~s/\..*//g; $args->[3]=~tr/A-Z/a-z/;
+        $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
         $kernel->yield('send_sketch', "Job: $args->[10]: [ $args->[3] -> $args->[7] ]");
-        $heap->{'pending'}->{ $args->[10] } = 1;
+        $heap->{'pending'}->{ $args->[10] }->{'host'} = $args->[7];
         $kernel->delay('event_timeout', 180, $args->[10],"job timed out");
     }elsif ($match eq 'windows_event.dualsys_work_thread_msg'){
+        $args->[7]=~tr/A-Z/a-z/; $args->[9]=~tr/A-Z/a-z/;
+        foreach my $jobid (keys(%{  $heap->{'pending'} })){
+            if($heap->{'pending'}->{$jobid}->{'host'} eq $args->[7]){
+                push(@{ $heap->{'pending'}->{$jobid}->{'messages'} }, $args->[9]);
+            }
+        }
+        $heap->{'pending'}->{ $args->[10] }->{'host'} = $args->[7];
         print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.print_end'){
         print Data::Dumper->Dump([$match,$args]);
+        $args->[8]=~tr/A-Z/a-z/; $args->[9]=~tr/A-Z/a-z/;
+        next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
         if($heap->{'pending'}->{$args->[8]}){
+            my $messages = '';
+            if($args->[9])=~m/failure/i){
+                if($heap->{'pending'}->{$args->[8]}->{'messages'}){
+                    $messages = join(',',@{ $heap->{'pending'}->{$args->[8]}->{'messages'} });
+                }
+            }
             delete($heap->{'pending'}->{$args->[8]});
-            $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9]");
+            $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9] $messages");
         }
     }else{
         print STDERR "Unhandled: $match [$#{ $args }]\n";
