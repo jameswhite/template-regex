@@ -165,6 +165,7 @@ sub sketch_connection {
         if($heap->{'pending'}->{$args->[8]}){
             my $messages = '';
             if($args->[9]=~m/failure/i){
+print Data::Dumper->Dump([$heap->{'pending'},$heap->{'messages'}]);
                 if($heap->{'pending'}->{$args->[8]}->{'messages'}){
                     $messages = join(',',@{ $heap->{'messages'}->{ $heap->{'pending'}->{$args->[8]}->{'host'} }->{'messages'} });
                 }
