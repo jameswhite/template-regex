@@ -79,6 +79,7 @@ sub got_log_line {
                exit 0;
            }
        }
+       print STDERR "$output\n";
    }else{
        $heap->{'last'}='' unless( defined($heap->{'last'}));
        # remove line-after-line of repeated output
@@ -87,7 +88,6 @@ sub got_log_line {
            $heap->{'last'} = $result->{'name'};
        }
    }
-   print STDERR "$output\n";
 } 
 
 
