@@ -53,7 +53,6 @@ log_tpl:
        regex: '\[DualysPrinter work thread for printer .[% HOSTNAME %].\] [% ERRORLEVEL %] CardPrintService.Dualys3.CardPrintServiceImpl \[.null.\] - Job [% JOB_ID %] has a new status of FailedPrinting#015'
      - name: failed_command_buffer_submit
        regex: 'Failed to submit command buffer: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond [% IP %]:[% PORT %]#015#012System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond [% IP %]' 
-'
      - name: remainder
        regex: '[% ANYTHING %]'
 ################################################################################
