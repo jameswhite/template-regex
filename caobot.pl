@@ -148,7 +148,7 @@ sub sketch_connection {
     }elsif ($match eq 'windows_event.failed_command_buffer_submit'){
         print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.printer_jobid'){
-        print Data::Dumper->Dump([$match,$args]);
+        #print Data::Dumper->Dump([$match,$args]);
         $args->[3]=~s/\..*//g; $args->[3]=~tr/A-Z/a-z/;
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
@@ -164,7 +164,7 @@ sub sketch_connection {
         }
         print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.print_end'){
-        print Data::Dumper->Dump([$match,$args]);
+        #print Data::Dumper->Dump([$match,$args]);
         $args->[8]=~tr/A-Z/a-z/; $args->[9]=~tr/A-Z/a-z/;
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
         if($heap->{'pending'}->{$args->[8]}){
