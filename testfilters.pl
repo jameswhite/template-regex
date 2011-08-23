@@ -47,6 +47,7 @@ sub new {
                                                                                                              Filename => $cnstr->{'file'},
                                                                                                              InputEvent => "got_log_line",
                                                                                                              ResetEvent => "got_log_rollover",
+                                                                                                             SeekBack => 10000,
                                                                                                            );
                                                            },
                                            },
