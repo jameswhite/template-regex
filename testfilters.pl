@@ -118,7 +118,7 @@ sub got_log_rollover {
 $|=1;
 my $applications = Log::Tail::Reporter->new({ 
                                               'file'     => '/var/log/windows/application.log',
-                                              'template' => 'pfsense.yml',
+                                              'template' => 'windows.yml',
                                             });
 POE::Kernel->run();
 exit;
