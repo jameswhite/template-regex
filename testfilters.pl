@@ -93,9 +93,9 @@ sub got_log_line {
 
 sub event_timeout{
     my ($self, $kernel, $heap, $sender, $id, $message, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-    if($kernel->{'pending'}->{$id}){
+    if($heap->{'pending'}->{$id}){
         print "$id $message timed out\n"; 
-        delete ($kernel->{'pending'}->{$id});
+        delete ($heap->{'pending'}->{$id});
     }
 }
 
@@ -125,11 +125,14 @@ sub sketch_connection {
         $kernel->yield('send_sketch', "Job: $args->[10]: printing on $args->[7]");
         $heap->{'pending'}->{ $args->[10] } = 1;
         $kernel->delay('event_timeout',10,$args->[10],"job $args->[10] timed out");
+        print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.print_end'){
-        if($args->[8] eq 'Success'){
-            delete($heap->{'pending'}->{$args->[8]});
+        if($heap->{'pending'}->{$args->[8]}){
+            if($args->[8] eq 'Success'){
+                delete($heap->{'pending'}->{$args->[8]});
+            }
+            $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9]");
         }
-        $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9]");
     }elsif ($match eq 'windows_event.print_fail'){
         print Data::Dumper->Dump([$match,$args]);
     }else{
