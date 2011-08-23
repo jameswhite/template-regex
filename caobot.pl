@@ -145,8 +145,8 @@ sub sketch_connection {
     if($ignore == 1){
         # do nothing, we dont' care about these right now.
         print "";
-    }elsif ($match eq 'windows_event.failed_command_buffer_submit'){
-        print Data::Dumper->Dump([$match,$args]);
+#    }elsif ($match eq 'windows_event.failed_command_buffer_submit'){
+#        print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.printer_jobid'){
         $args->[3]=~s/\..*//g; $args->[3]=~tr/A-Z/a-z/;
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
