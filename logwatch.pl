@@ -36,7 +36,6 @@ sub new {
     my $self = {};
     my $cnstr = shift if @_;
     bless($self,$class);
-    $self->{'output_enabled'} = 0;
     foreach my $argument ('server', 'port', 'channel', 'nick', 'ircname'){
         $self->{$argument} = $cnstr->{$argument} if($cnstr->{$argument});
     }
@@ -67,7 +66,7 @@ sub new {
                                                         'irc_001',
                                                         'irc_public',
                                                         'start_log',
-                                                        'enable_output',
+                                                        'event_timeout',
                                                       ],
                                            ],
     );
