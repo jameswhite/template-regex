@@ -201,8 +201,8 @@ sub irc_public {
          $device=~s/^0*//;
          if($device=~m/[0-9]+/){
              if($device < 10){ $soekris="skrs000$device"; }
-             if($device < 100){ $soekris="skrs00$device"; }
-             if($device < 1000){ $soekris="skrs0$device"; }
+             elsif($device < 100){ $soekris="skrs00$device"; }
+             elsif($device < 1000){ $soekris="skrs0$device"; }
              $self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
          }
      }
