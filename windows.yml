@@ -37,15 +37,15 @@ regex_tpl:
 ################################################################################
 log_tpl:
  - name: windows_event
-   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] [% APPLICATION %]: [% WTIME %]\s*'
+   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] [% APPLICATION %]: [% DATE %] [% WTIME %]\s*'
  - name: date_time
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %]\s*'
    remainder:
      - name: host_application
        regex: '[% HOSTNAME %] [% APPLICATION %]:\s*'
        remainder:
-         - name: wtime
-           regex: '[% WTIME %]'
+         - name: date_time
+           regex: '[% DATE %] [% WTIME %]'
          - name: remainder
            regex: '[% ANYTHING %]'
      - name: remainder
