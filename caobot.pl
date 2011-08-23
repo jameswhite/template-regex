@@ -199,7 +199,7 @@ print STDERR "$distname\n";
         $self->{'irc'}->yield( privmsg, $replyto, "$soekris => $branch ($city)");
     } 
     unless ($found > 0){
-        $self->{'irc'}->yield( privmsg => $replyto => "$soekris not found.");
+        $self->{'irc'}->yield( privmsg => $replyto => "$soekris not found. (did you forget to put it in LDAP?)");
     }
 }
 
