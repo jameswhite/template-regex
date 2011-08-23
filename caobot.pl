@@ -189,7 +189,12 @@ sub printer_lookup{
     foreach $entry ($mesg->entries) { 
         $found ++;
         my $distname = $entry->dn; 
-        $self->{'irc'}->yield( privmsg, $replyto, "$soekris => $distname");
+        $distname=~s/,\s+/,/g;
+        my ($city, $branch);
+        if($distname =~m/cn=(.*),\s*ou=Systems,ou=(.*),*ou=Card@Once,$basedn/){
+            ($city,$branch) = ($1, $2);
+        }
+        $self->{'irc'}->yield( privmsg, $replyto, "$soekris => $branch ($city)");
     } 
     unless ($found > 0){
         $self->{'irc'}->yield( privmsg => $replyto => "$soekris not found.");
