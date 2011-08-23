@@ -43,6 +43,10 @@ log_tpl:
    remainder:
      - name: host_application
        regex: '[% HOSTNAME %] [% APPLICATION %]:\s*'
+         - name: wtime
+           regex: '[% WTIME %]'
+         - name: remainder
+           regex: '[% ANYTHING %]'
      - name: remainder
        regex: '[% ANYTHING %]'
    remainder: 
