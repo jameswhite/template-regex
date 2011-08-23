@@ -137,7 +137,7 @@ sub send_sketch {
 }
 
 sub sketch_connection {
-    my ($self, $kernel, $heap, $sender, $match, $patterns, $line, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my ($self, $kernel, $heap, $sender, $match, $args, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my @ignore = ( );
     my $ignore=0;
     foreach my $i (@ignore){ if($match =~m/$i/){ $ignore=1; } }
