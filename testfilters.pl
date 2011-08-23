@@ -119,7 +119,7 @@ sub sketch_connection {
         print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.printer_jobid'){
         $heap->{'pending'}->{ $args->[10] } = 1;
-        $kernel->delay('event_timeout',120,$args->[10])
+        $kernel->delay('event_timeout',120,$args->[10],"job $args->[10] timed out");
         print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.print_success'){
         print Data::Dumper->Dump([$match,$args]);
