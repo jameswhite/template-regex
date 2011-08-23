@@ -134,7 +134,7 @@ sub event_timeout{
 sub send_sketch {
     my ($self, $kernel, $heap, $sender, $sketch, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     print "SKETCH: $sketch\n";
-    $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$sketch");
+    #$self->{'irc'}->yield( privmsg => $self->{'channel'} => "$sketch");
 }
 
 sub sketch_connection {
@@ -145,8 +145,6 @@ sub sketch_connection {
     if($ignore == 1){
         # do nothing, we dont' care about these right now.
         print "";
-#    }elsif ($match eq 'windows_event.failed_command_buffer_submit'){
-#        print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.printer_jobid'){
         $args->[3]=~s/\..*//g; $args->[3]=~tr/A-Z/a-z/;
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
@@ -157,7 +155,7 @@ sub sketch_connection {
     }elsif ($match eq 'windows_event.dualsys_work_thread_msg'){
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         $args->[9]=~s/\..*//g; $args->[9]=~tr/A-Z/a-z/;
-        print "msg:  $args->[7]) .oO( $args->[9] )\n";
+        print "msg:  [$args->[7]] .oO( $args->[9] )\n";
         push(@{ $heap->{'messages'}->{$args->[7]} }, $args->[9]) unless(( $args->[9]=~m/^ok$/i) || ( $args->[9]=~m/^5,00 volts$/i));
     }elsif ($match eq 'windows_event.print_end'){
         $args->[8]=~tr/A-Z/a-z/; $args->[9]=~tr/A-Z/a-z/;
@@ -167,7 +165,7 @@ sub sketch_connection {
             if($args->[9]=~m/failure/i){
 print Data::Dumper->Dump([$heap->{'pending'},$heap->{'messages'}]);
                 if($heap->{'pending'}->{$args->[8]}->{'messages'}){
-                    $messages = join(',',@{ $heap->{'messages'}->{ $heap->{'pending'}->{$args->[8]}->{'host'} }->{'messages'} });
+                    $messages = join(',',@{ $heap->{'messages'}->{ $heap->{'pending'}->{$args->[8]}->{'host'} } });
                 }
                 delete($heap->{'pending'}->{$args->[8]});
                 $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9] ($messages)");
