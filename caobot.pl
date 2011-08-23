@@ -172,9 +172,15 @@ sub got_log_rollover {
 }
 
 sub printer_lookup{
-    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my ($self, $kernel, $heap, $sender, $soekris, $replyto, $who, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     use Net::LDAP;
-    print "ohai\n";
+    my $host = `hostname -f`;
+    my @parts = split(/\./,$hostname); 
+    my $hostname = shift(@parts);
+    my $domainname = join('.',@parts);
+    my $basedn = "dc="join(',dc=',@parts);
+    $ldap = Net::LDAP->new( "ldaps://ldap.$domainname" ) or warn "$@\n";
+    print "$soekris, $replyto, $who\n";
 }
 
 sub irc_001 {
@@ -206,7 +212,8 @@ sub irc_public {
              if($device < 10){ $soekris="skrs000$device"; }
              elsif($device < 100){ $soekris="skrs00$device"; }
              elsif($device < 1000){ $soekris="skrs0$device"; }
-             $self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
+             #$self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
+             $kernel->yield('printer_lookup',$soekris,$channel,$nick);
          }
      }
      return;
