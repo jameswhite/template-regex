@@ -47,7 +47,7 @@ sub new {
                                                                                                              Filename => $cnstr->{'file'},
                                                                                                              InputEvent => "got_log_line",
                                                                                                              ResetEvent => "got_log_rollover",
-                                                                                                             SeekBack => 10000,
+                                                                                                             Seek => 0,
                                                                                                            );
                                                            },
                                            },
@@ -104,7 +104,8 @@ sub event_timeout{
 #
 sub send_sketch {
     my ($self, $kernel, $heap, $sender, $sketch, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-    $kernel->post($self->{'client'},"put","[$sketch]"); 
+    print "SKETCH: $sketch\n";
+    #$kernel->post($self->{'client'},"put","[$sketch]"); 
 }
 
 ################################################################################
@@ -121,7 +122,7 @@ sub sketch_connection {
     }elsif ($match eq 'windows_event.failed_command_buffer_submit'){
         print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.printer_jobid'){
-        print "Job: $args->[10]: printing on $args->[7]\n";
+        $kernel->yield('send_sketch', "Job: $args->[10]: printing on $args->[7]");
         $heap->{'pending'}->{ $args->[10] } = 1;
         $kernel->delay('event_timeout',10,$args->[10],"job $args->[10] timed out");
         print Data::Dumper->Dump([$match,$args]);
@@ -129,7 +130,7 @@ sub sketch_connection {
         if($args->[8] eq 'Success'){
             delete($heap->{'pending'}->{$args->[8]});
         }
-        print "Job: $args->[8]: $args->[9] \n";
+        $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9]");
     }elsif ($match eq 'windows_event.print_fail'){
         print Data::Dumper->Dump([$match,$args]);
     }else{
