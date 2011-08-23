@@ -157,17 +157,10 @@ sub sketch_connection {
     }elsif ($match eq 'windows_event.dualsys_work_thread_msg'){
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         $args->[9]=~s/\..*//g; $args->[9]=~tr/A-Z/a-z/;
-
         foreach my $jobid (keys(%{  $heap->{'pending'} })){
-
-
-print Data::Dumper->Dump([$jobid,$args->[9],$heap->{'pending'}->{$jobid}->{'host'},$args->[7]]);
-
-
             if($heap->{'pending'}->{$jobid}->{'host'} eq $args->[7]){
-                push(@{ $heap->{'pending'}->{$jobid}->{'messages'} }, $args->[9]);
+                push(@{ $heap->{'pending'}->{$jobid}->{'messages'} }, $args->[9]) unless($args->[9]=~m/^ok$/i);
             }
-
         }
     }elsif ($match eq 'windows_event.print_end'){
         $args->[8]=~tr/A-Z/a-z/; $args->[9]=~tr/A-Z/a-z/;
@@ -178,9 +171,12 @@ print Data::Dumper->Dump([$jobid,$args->[9],$heap->{'pending'}->{$jobid}->{'host
                 if($heap->{'pending'}->{$args->[8]}->{'messages'}){
                     $messages = join(',',@{ $heap->{'pending'}->{$args->[8]}->{'messages'} });
                 }
+                delete($heap->{'pending'}->{$args->[8]});
+                $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9] ($messages)");
+            }else{
+                delete($heap->{'pending'}->{$args->[8]});
+                $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9]";
             }
-            delete($heap->{'pending'}->{$args->[8]});
-            $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9] ($messages)");
         }
     }else{
         print STDERR "Unhandled: $match [$#{ $args }]\n";
