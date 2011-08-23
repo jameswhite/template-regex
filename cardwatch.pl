@@ -158,7 +158,8 @@ sub sketch_connection {
             delete($heap->{'pending'}->{$args->[8]});
             $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9]");
         }else{
-            $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9] (after timeout?)");
+           # $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9] (after timeout?)");
+           print Data::Dumper->Dump([$match,$args]);
         }
     }else{
         print STDERR "Unhandled: $match [$#{ $args }]\n";
