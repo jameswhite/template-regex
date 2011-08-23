@@ -91,7 +91,7 @@ sub got_log_line {
    }
 } 
 
-sub event_timout{
+sub event_timeout{
     my ($self, $kernel, $heap, $sender, $id, $message, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     print "$id $message timed out\n" if($kernel->{'pending'}->{$id});
 }
