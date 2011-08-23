@@ -152,12 +152,13 @@ sub sketch_connection {
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
         $kernel->yield('send_sketch', "Job: $args->[10]: [ $args->[3] -> $args->[7] ]");
         $heap->{'pending'}->{ $args->[10] } = 1;
-        $kernel->delay('event_timeout', 120, $args->[10],"job timed out");
+        $kernel->delay('event_timeout', 180, $args->[10],"job timed out");
     }elsif ($match eq 'windows_event.print_end'){
-        # if it's not pending, we don't want to know
         if($heap->{'pending'}->{$args->[8]}){
             delete($heap->{'pending'}->{$args->[8]});
             $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9]");
+        }else{
+            $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9] (after timeout?)");
         }
     }else{
         print STDERR "Unhandled: $match [$#{ $args }]\n";
