@@ -66,9 +66,9 @@ sub new {
 #
 sub got_log_line {
    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-print STDERR "got_log_line\n";
    my $line = $args[0];
    my $result = $self->{'TR'}->parse_line($line);
+   print Data::Dumper->Dump([$result]);
    my $last = $#{ $result->{'patterns'} } - 1;
    my $output = $result->{'name'};
    if( $output =~ m/remainder$/ ){
@@ -90,13 +90,17 @@ print STDERR "got_log_line\n";
    print STDERR "$output\n";
 } 
 
+
+################################################################################
+# this routine is used to ship the notification somewhere
+#
 sub send_sketch {
     my ($self, $kernel, $heap, $sender, $sketch, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     $kernel->post($self->{'client'},"put","[$sketch]"); 
 }
 
 ################################################################################
-# here we take actions based on the 
+# here we take actions based on the tag.tag.tag and arguments that get returned
 #
 sub sketch_connection {
     my ($self, $kernel, $heap, $sender, $match, $args, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
