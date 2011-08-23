@@ -218,8 +218,8 @@ my $cisco  = Log::Tail::Reporter->new({
                                          'server'   => 'irc',
                                          'nick'     => 'cardwatch',
                                          'ircname'  => 'Card@Once Watcher',
-                                         #'channel'  => '#cao',
-                                         'channel'  => '#bottest',
+                                         'channel'  => '#cao',
+                                         #'channel'  => '#bottest',
                                        });
 POE::Kernel->run();
 exit;
