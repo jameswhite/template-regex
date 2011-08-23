@@ -61,7 +61,9 @@ sub new {
     );
     return $self;
 }
-
+################################################################################
+# here we shove the line through Template::Regex and convert it to the tag.tag.tag form
+#
 sub got_log_line {
    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
 print STDERR "got_log_line\n";
@@ -93,6 +95,9 @@ sub send_sketch {
     $kernel->post($self->{'client'},"put","[$sketch]"); 
 }
 
+################################################################################
+# here we take actions based on the 
+#
 sub sketch_connection {
     my ($self, $kernel, $heap, $sender, $match, $args, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my @ignore = ( );
@@ -117,7 +122,7 @@ sub got_log_rollover {
 
 $|=1;
 my $applications = Log::Tail::Reporter->new({ 
-                                              'file'     => '/var/log/windows/application.log',
+                                              'file'     => '/var/log/windows/applications.log',
                                               'template' => 'windows.yml',
                                             });
 POE::Kernel->run();
