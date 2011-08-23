@@ -196,6 +196,8 @@ sub irc_public {
      print "$what\n";
      if ( my ($device) = $what =~ /^\s*[Ww]here\s*is (\S+[0-9]+)\s*\?*$/ ){ 
          $device=~s/^[Ss][Kk][Rr][Ss]//;
+         $device=~s/^[Pp][Rr][Nn][Tt]//;
+         $device=~s/^0*//;
          $self->{'irc'}->yield( privmsg => $channel => "parsed as: $device");
      }
      return;
