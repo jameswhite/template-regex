@@ -179,7 +179,7 @@ sub printer_lookup{
     my $hostname = shift(@parts);
     my $domainname = join('.',@parts);
     my $basedn = "dc=".join(',dc=',@parts);
-    $ldap = Net::LDAP->new( "ldaps://ldap.$domainname" ) or warn "$@\n";
+    $ldap = Net::LDAP->new( "ldap://ldap.$domainname" ) or warn "$@\n";
     print "$soekris, $replyto, $who\n";
 }
 
