@@ -148,7 +148,6 @@ sub sketch_connection {
     }elsif ($match eq 'windows_event.failed_command_buffer_submit'){
         print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.printer_jobid'){
-        #print Data::Dumper->Dump([$match,$args]);
         $args->[3]=~s/\..*//g; $args->[3]=~tr/A-Z/a-z/;
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
@@ -156,11 +155,14 @@ sub sketch_connection {
         $heap->{'pending'}->{ $args->[10] }->{'host'} = $args->[7];
         $kernel->delay('event_timeout', 180, $args->[10],"job timed out");
     }elsif ($match eq 'windows_event.dualsys_work_thread_msg'){
-        $args->[7]=~tr/A-Z/a-z/; $args->[9]=~tr/A-Z/a-z/;
+        $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
+        $args->[9]=~s/\..*//g; $args->[9]=~tr/A-Z/a-z/;
 
         foreach my $jobid (keys(%{  $heap->{'pending'} })){
 
-print Data::Dumper->Dump([$jobid,$args->[9],$heap->{'pending'}->{$jobid},$args->[7]]);
+
+print Data::Dumper->Dump([$jobid,$args->[9],$heap->{'pending'}->{$jobid}->{'host'},$args->[7]]);
+
 
             if($heap->{'pending'}->{$jobid}->{'host'} eq $args->[7]){
                 push(@{ $heap->{'pending'}->{$jobid}->{'messages'} }, $args->[9]);
