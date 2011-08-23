@@ -194,6 +194,7 @@ sub printer_lookup{
 print STDERR "$distname\n";
         if($distname =~m/cn=(.*),\s*ou=Systems,ou=(.*),*ou=Card\@Once,$basedn/){
             ($city,$branch) = ($1, $2);
+            $city=~s/,$//;
         }
         $self->{'irc'}->yield( privmsg, $replyto, "$soekris => $branch ($city)");
     } 
