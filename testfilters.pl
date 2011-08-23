@@ -125,7 +125,6 @@ sub sketch_connection {
         $kernel->yield('send_sketch', "Job: $args->[10]: printing on $args->[7]");
         $heap->{'pending'}->{ $args->[10] } = 1;
         $kernel->delay('event_timeout',10,$args->[10],"job $args->[10] timed out");
-        print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.print_end'){
         if($args->[8] eq 'Success'){
             delete($heap->{'pending'}->{$args->[8]});
