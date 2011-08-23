@@ -64,7 +64,7 @@ sub new {
 
 sub got_log_line {
    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-print STDER "got_log_line\n";
+print STDERR "got_log_line\n";
    my $line = $args[0];
    my $result = $self->{'TR'}->parse_line($line);
    my $last = $#{ $result->{'patterns'} } - 1;
