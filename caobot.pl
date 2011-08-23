@@ -174,12 +174,15 @@ sub got_log_rollover {
 sub printer_lookup{
     my ($self, $kernel, $heap, $sender, $soekris, $replyto, $who, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     use Net::LDAP;
-    my $host = `hostname -f`;
-    my @parts = split(/\./,$hostname); 
+    my $fqdn = `hostname -f`;
+    my @parts = split(/\./,$fqdn); 
     my $hostname = shift(@parts);
     my $domainname = join('.',@parts);
     my $basedn = "dc=".join(',dc=',@parts);
     $ldap = Net::LDAP->new( "ldap://ldap.$domainname" ) or warn "$@\n";
+    $mesg = $ldap->bind;
+    $mesg = $ldap->search( base   => "ou=Card@Once,$basedn", filter => "(uniquemember=cn=$soekris*)");
+    foreach $entry ($mesg->entries) { $entry->dump; }
     print "$soekris, $replyto, $who\n";
 }
 
