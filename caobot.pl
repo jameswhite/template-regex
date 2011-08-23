@@ -162,7 +162,6 @@ sub sketch_connection {
                 push(@{ $heap->{'pending'}->{$jobid}->{'messages'} }, $args->[9]);
             }
         }
-        $heap->{'pending'}->{ $args->[10] }->{'host'} = $args->[7];
         print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.print_end'){
         print Data::Dumper->Dump([$match,$args]);
