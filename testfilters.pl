@@ -116,18 +116,19 @@ sub sketch_connection {
     my @ignore = ( );
     my $ignore=0;
     foreach my $i (@ignore){ if($match =~m/$i/){ $ignore=1; } }
-
-    if($ignore == 1){                                 # do nothing, we dont' care about these right now.
+    if($ignore == 1){                                                          
+        # do nothing, we dont' care about these right now.
         print "";
     }elsif ($match eq 'windows_event.failed_command_buffer_submit'){
         print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.printer_jobid'){
-        next ( $args->[3] =~ m/^arctic/); # ignore the lab
+        #next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
         $kernel->yield('send_sketch', "Job: $args->[10]: ($args->[3] printing to $args->[7])");
         $heap->{'pending'}->{ $args->[10] } = 1;
         $kernel->delay('event_timeout', 10, $args->[10],"job timed out");
     }elsif ($match eq 'windows_event.print_end'){
-        if($heap->{'pending'}->{$args->[8]}){
+        # if it's not pending, we don't want to know
+        if($heap->{'pending'}->{$args->[8]}){                                  
             if($args->[9] eq 'Success'){
                 delete($heap->{'pending'}->{$args->[8]});
             }
@@ -152,4 +153,3 @@ my $applications = Log::Tail::Reporter->new({
                                             });
 POE::Kernel->run();
 exit;
-
