@@ -179,9 +179,9 @@ sub printer_lookup{
     my $hostname = shift(@parts);
     my $domainname = join('.',@parts);
     my $basedn = "dc=".join(',dc=',@parts);
-    my $ldap = Net::LDAP->new( "ldaps://faraday.$domainname:636" ) or warn "$@\n";
+    my $ldap = Net::LDAP->new( "ldap.$domainname" ) or warn "$@\n";
     my $mesg = $ldap->bind;
-    print STDER "$mesg\n";
+    print STDER $mesg->error."\n" if $mesg->code;
     $mesg = $ldap->search( base   => "ou=Card@Once,$basedn", filter => "(uniquemember=cn=$soekris*)");
     foreach $entry ($mesg->entries) { $entry->dump; }
     print "$soekris, $replyto, $who\n";
