@@ -193,12 +193,18 @@ sub irc_public {
      my ($self, $kernel, $heap, $sender, $who, $where, $what, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
      my $nick = ( split /!/, $who )[0];
      my $channel = $where->[0];
+     my $soekris=undef;
      print "$what\n";
      if ( my ($device) = $what =~ /^\s*[Ww]here\s*is (\S+[0-9]+)\s*\?*$/ ){ 
          $device=~s/^[Ss][Kk][Rr][Ss]//;
          $device=~s/^[Pp][Rr][Nn][Tt]//;
          $device=~s/^0*//;
-         $self->{'irc'}->yield( privmsg => $channel => "parsed as: $device");
+         if($device=~m/[0-9]+/){
+             if($device < 10){ $soekris="skrs000$device"; }
+             if($device < 100){ $soekris="skrs00$device"; }
+             if($device < 1000){ $soekris="skrs0$device"; }
+             $self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
+         }
      }
      return;
 }
