@@ -252,7 +252,8 @@ sub _default {
 
 $|=1;
 my $cisco  = Log::Tail::Reporter->new({ 
-                                         'file'     => '/var/log/windows/applications.log',
+#                                         'file'     => '/var/log/windows/applications.log',
+                                         'file'     => '/var/log/windows/applications.log-2011082314-2011082315',
                                          'template' => 'windows.yml',
                                          'server'   => 'irc',
                                          'nick'     => 'caobot',
