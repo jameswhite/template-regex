@@ -121,8 +121,11 @@ sub sketch_connection {
         $heap->{'pending'}->{ $args->[10] } = 1;
         $kernel->delay('event_timeout',120,$args->[10],"job $args->[10] timed out");
         print Data::Dumper->Dump([$match,$args]);
-    }elsif ($match eq 'windows_event.print_success'){
-        print Data::Dumper->Dump([$match,$args]);
+    }elsif ($match eq 'windows_event.print_end'){
+        if($args->[8] eq 'Success'){
+            delete($heap->{'pending'}->{$args->[8]});
+        }
+            print "Job: $args->[8]: $args->[9] \n";
     }elsif ($match eq 'windows_event.print_fail'){
         print Data::Dumper->Dump([$match,$args]);
     }else{
