@@ -109,17 +109,17 @@ sub sketch_connection {
     foreach my $i (@ignore){ if($match =~m/$i/){ $ignore=1; } }
 
     if($ignore == 1){                                 # do nothing, we dont' care about these right now.
-        print STDERR "";
+        print "";
     }elsif ($match eq 'windows_event.failed_command_buffer_submit'){
-        print STDERR Data::Dumper->Dump([$match,$args]);
+        print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.printer_jobid'){
-        print STDERR Data::Dumper->Dump([$match,$args]);
+        print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.printer_success'){
-        print STDERR Data::Dumper->Dump([$match,$args]);
+        print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.printer_fail'){
-        print STDERR Data::Dumper->Dump([$match,$args]);
+        print Data::Dumper->Dump([$match,$args]);
     }else{
-        print STDERR "Unhandled: $match [$#{ $args }]\n"; 
+        print "Unhandled: $match [$#{ $args }]\n"; 
     }
 }
 
