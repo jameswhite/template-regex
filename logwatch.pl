@@ -132,7 +132,8 @@ sub event_timeout{
 
 sub send_sketch {
     my ($self, $kernel, $heap, $sender, $sketch, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-     print "SKETCH: $sketch\n";
+    print "SKETCH: $sketch\n";
+    $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$sketch");
 }
 
 sub sketch_connection {
