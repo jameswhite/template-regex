@@ -193,7 +193,9 @@ sub irc_public {
      my ($self, $kernel, $heap, $sender, $who, $where, $what, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
      my $nick = ( split /!/, $who )[0];
      my $channel = $where->[0];
-     #if ( my ($soekris) = $what =~ /^.*$/ ) { }
+     if ( my ($soekris) = $what =~ /^where is (([sp][kr][rn][tt])*0*i[0-9]+).*$/ ){ 
+         $self->{'irc'}->yield( privmsg => $channel => "parsed as: $1");
+     }
      return;
 }
 
@@ -221,10 +223,10 @@ my $cisco  = Log::Tail::Reporter->new({
                                          'file'     => '/var/log/windows/applications.log',
                                          'template' => 'windows.yml',
                                          'server'   => 'irc',
-                                         'nick'     => 'cardwatch',
+                                         'nick'     => 'caobot',
                                          'ircname'  => 'Card@Once Watcher',
-                                         'channel'  => '#cao',
-                                         #'channel'  => '#bottest',
+                                         #'channel'  => '#cao',
+                                         'channel'  => '#bottest',
                                        });
 POE::Kernel->run();
 exit;
