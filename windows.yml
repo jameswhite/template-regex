@@ -1,14 +1,4 @@
 ---
-################################################################################
-# Here is where we put the regular expressions for repeated tokens
-# I have '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' for an IP address, 
-# and just \S+ for others, but you can make them as specific or generic as you
-# like, these will be pasted in via Template::Toolkit where ever the [% IP %]
-# tag is found in the log templates, this makes what would be an impossible to
-# manage regular expression a managable string
-# Do not use parenthesis to return $1, $2, $3, etc in these or it will break
-# the module, as it does this for you based on [% TAGS %]
-################################################################################
 regex_tpl:
   HOSTNAME: '\S+'
   APPLICATION: '\S+'
@@ -19,22 +9,6 @@ regex_tpl:
   WTIME: '[0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]+'
   TZ_OFF: '[+\-][0-9]{2}:[0-9]{2}'
   ANYTHING: '.*'
-################################################################################
-# Here we have nested log substrings and their names, the logic being that 
-# you can match the first part of a line, and then iterate to match the 
-# remainder of the line. What you should get out of the function is the 
-# dot-delimited name of the path it took
-# ( e.g. cisco_asa.ipsec_message.constr_blank_hash ) a list of patterns matched
-# by each of the (expanded) templates
-# since cisco_ass.local_host_teardown "expands" to:
-# '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] [% ASA_CODE %] Teardown local-host [% IFACE_IP %] duration [% DURATION %]'
-# There would be a list of 7 elements of the 7 patterns matched by [% TAGS %]
-# if you need finer resolution into the tag, break it out into smaller tags
-# ( e.g. [% IP %] can become [% INT %]\.[% INT %]\.[% INT %]\.[% INT %] )
-#
-# The reaoning behind this is that you can triggre a function on cisco_asa.local_host_buildup,
-# and pass it the list of 6 patterns that matched as arguments 
-################################################################################
 log_tpl:
  - name: windows_event
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] [% APPLICATION %]: [% WTIME %]\s*'
