@@ -183,9 +183,13 @@ sub printer_lookup{
     my $ldap = Net::LDAP->new( "ldap.$domainname" ) or warn "$@\n";
     my $mesg = $ldap->bind;
     print STDERR $mesg->error."\n" if $mesg->code;
+
+    print STDERR "ou=Card\@Once,$basedn  (uniqueMember=cn=$soekris,ou=Hosts,$basedn)\n";
     $mesg = $ldap->search( base   => "ou=Card\@Once,$basedn", filter => "(uniqueMember=cn=$soekris,ou=Hosts,$basedn)", scope=> 'sub');
     print STDERR $mesg->error."\n" if $mesg->code;
+
     print STDERR ":: $#{ $mesg->entries }\n";
+
     foreach $entry ($mesg->entries) { 
         my $distname = $entry->dn; 
     }
