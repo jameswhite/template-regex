@@ -157,11 +157,13 @@ sub sketch_connection {
         $kernel->delay('event_timeout', 180, $args->[10],"job timed out");
     }elsif ($match eq 'windows_event.dualsys_work_thread_msg'){
         $args->[7]=~tr/A-Z/a-z/; $args->[9]=~tr/A-Z/a-z/;
+
         foreach my $jobid (keys(%{  $heap->{'pending'} })){
-print ".oO(".$jobid.")\n";
+print ".oO(".$jobid." ".$args->[9].")\n";
             if($heap->{'pending'}->{$jobid}->{'host'} eq $args->[7]){
                 push(@{ $heap->{'pending'}->{$jobid}->{'messages'} }, $args->[9]);
             }
+
         }
     }elsif ($match eq 'windows_event.print_end'){
         $args->[8]=~tr/A-Z/a-z/; $args->[9]=~tr/A-Z/a-z/;
