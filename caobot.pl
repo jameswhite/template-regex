@@ -67,6 +67,7 @@ sub new {
                                                         'irc_public',
                                                         'start_log',
                                                         'event_timeout',
+                                                        'printer_lookup',
                                                       ],
                                            ],
     );
@@ -155,14 +156,10 @@ sub sketch_connection {
         $heap->{'pending'}->{ $args->[10] } = 1;
         $kernel->delay('event_timeout', 180, $args->[10],"job timed out");
     }elsif ($match eq 'windows_event.print_end'){
+        print Data::Dumper->Dump([$match,$args]);
         if($heap->{'pending'}->{$args->[8]}){
             delete($heap->{'pending'}->{$args->[8]});
             $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9]");
-        }else{
-           # $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9] (after timeout?)");
-           # $args->[???]=~s/\..*//g;
-           # next if ( $args->[???] =~ m/^arctic/) ; # ignore the lab
-           print Data::Dumper->Dump([$match,$args]);
         }
     }else{
         print STDERR "Unhandled: $match [$#{ $args }]\n";
@@ -172,6 +169,12 @@ sub sketch_connection {
 sub got_log_rollover {
     my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     print STDERR "Log rolled over.\n"; 
+}
+
+sub printer_lookup{
+    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    use Net::LDAP;
+    print "ohai\n";
 }
 
 sub irc_001 {
