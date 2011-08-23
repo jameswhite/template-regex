@@ -185,7 +185,10 @@ sub printer_lookup{
     print STDERR $mesg->error."\n" if $mesg->code;
     $mesg = $ldap->search( base   => "ou=Card\@Once,$basedn", filter => "(uniqueMember=cn=$soekris,ou=Hosts,$basedn)");
     print STDERR $mesg->error."\n" if $mesg->code;
-    foreach $entry ($mesg->entries) { $entry->dump; }
+    print STDER ":: $#{ $mesg->entries }\n";
+    foreach $entry ($mesg->entries) { 
+        my $distname = $entry->dn; 
+    }
     print "$soekris, $replyto, $who\n";
 }
 
