@@ -179,6 +179,7 @@ sub sketch_connection {
             }
         }
     }else{
+        print Data::Dumper->Dump([$match,$args]);
         print STDERR "Unhandled: $match [$#{ $args }]\n";
     }
 }
