@@ -191,7 +191,7 @@ sub printer_lookup{
         my $distname = $entry->dn; 
         $distname=~s/,\s+/,/g;
         my ($city, $branch);
-print STDERR "FUCK\n";
+print STDERR "$distname\n";
         if($distname =~m/cn=(.*),\s*ou=Systems,ou=(.*),*ou=Card@Once,$basedn/){
             ($city,$branch) = ($1, $2);
         }
