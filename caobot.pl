@@ -155,6 +155,8 @@ sub sketch_connection {
         $kernel->yield('send_sketch', "Job: $args->[10]: [ $args->[3] -> $args->[7] ]");
         $heap->{'pending'}->{ $args->[10] } = 1;
         $kernel->delay('event_timeout', 180, $args->[10],"job timed out");
+    }elsif ($match eq 'windows_event.dualsys_work_thread_msg'){
+        print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.print_end'){
         print Data::Dumper->Dump([$match,$args]);
         if($heap->{'pending'}->{$args->[8]}){
