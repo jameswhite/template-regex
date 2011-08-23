@@ -147,7 +147,11 @@ sub sketch_connection {
     }elsif ($match eq 'windows_event.failed_command_buffer_submit'){
         print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.printer_jobid'){
+        $args->[3]=~s/\..*//g;
+        $args->[7]=~s/\..*//g;
+
         #next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
+
         $kernel->yield('send_sketch', "Job: $args->[10]: ($args->[3] printing to $args->[7])");
         $heap->{'pending'}->{ $args->[10] } = 1;
         $kernel->delay('event_timeout', 10, $args->[10],"job timed out");
