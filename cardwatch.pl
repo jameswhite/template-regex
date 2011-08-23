@@ -172,9 +172,34 @@ sub got_log_rollover {
 }
 
 sub printer_lookup{
-    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my ($self, $kernel, $heap, $sender, $soekris, $replyto, $who, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     use Net::LDAP;
-    print "ohai\n";
+    my $fqdn = `hostname -f`;
+    chomp($fqdn);
+    my @parts = split(/\./,$fqdn); 
+    my $hostname = shift(@parts);
+    my $domainname = join('.',@parts);
+    my $basedn = "dc=".join(',dc=',@parts);
+    my $ldap = Net::LDAP->new( "ldap.$domainname" ) or warn "$@\n";
+    my $mesg = $ldap->bind;
+    print STDERR $mesg->error."\n" if $mesg->code;
+    $mesg = $ldap->search( base   => "ou=Card\@Once,$basedn", filter => "(uniqueMember=cn=$soekris,ou=Hosts,$basedn)", scope=> 'sub');
+    print STDERR $mesg->error."\n" if $mesg->code;
+    my $found = 0;
+    foreach $entry ($mesg->entries) { 
+        $found ++;
+        my $distname = $entry->dn; 
+        $distname=~s/,\s+/,/g;
+        my ($city, $branch);
+        if($distname =~m/cn=(.*),\s*ou=Systems,ou=(.*),*ou=Card\@Once,$basedn/){
+            ($city,$branch) = ($1, $2);
+            $city=~s/,$//;
+        }
+        $self->{'irc'}->yield( privmsg, $replyto, "$soekris => $branch ($city)");
+    } 
+    unless ($found > 0){
+        $self->{'irc'}->yield( privmsg => $replyto => "$soekris not found. (did you forget to put it in LDAP ou=Card\@Once?)");
+    }
 }
 
 sub irc_001 {
@@ -198,7 +223,7 @@ sub irc_public {
      my $channel = $where->[0];
      my $soekris=undef;
      print "$what\n";
-     if ( my ($device) = $what =~ /^\s*[Ww]here\s*is (\S+[0-9]+)\s*\?*$/ ){ 
+     if ( my ($device) = $what =~ /^\s*[Ww]here\s*is\s*(\S*[0-9]+)\s*\?*$/ ){ 
          $device=~s/^[Ss][Kk][Rr][Ss]//;
          $device=~s/^[Pp][Rr][Nn][Tt]//;
          $device=~s/^0*//;
@@ -206,7 +231,8 @@ sub irc_public {
              if($device < 10){ $soekris="skrs000$device"; }
              elsif($device < 100){ $soekris="skrs00$device"; }
              elsif($device < 1000){ $soekris="skrs0$device"; }
-             $self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
+             #$self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
+             $kernel->yield('printer_lookup',$soekris,$channel,$nick);
          }
      }
      return;
@@ -236,6 +262,7 @@ my $cisco  = Log::Tail::Reporter->new({
                                          'file'     => '/var/log/windows/applications.log',
                                          'template' => 'windows.yml',
                                          'server'   => 'irc',
+                                         #'nick'     => 'caobot',
                                          'nick'     => 'cardwatch',
                                          'ircname'  => 'Card@Once Watcher',
                                          'channel'  => '#cao',
