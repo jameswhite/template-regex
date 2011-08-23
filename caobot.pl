@@ -155,23 +155,12 @@ sub sketch_connection {
     }elsif ($match eq 'windows_event.dualsys_work_thread_msg'){
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         $args->[9]=~s/\..*//g; $args->[9]=~tr/A-Z/a-z/;
-        print "msg:  [$args->[7]] .oO( $args->[9] )\n";
-        push(@{ $heap->{'messages'}->{$args->[7]} }, $args->[9]) unless(( $args->[9]=~m/^ok$/i) || ( $args->[9]=~m/^5,00 volts$/i));
+        $kernel->yield('send_sketch',"$args->[7]: $args->[9]") unless(( $args->[9]=~m/^ok$/i) || ( $args->[9]=~m/^5,00 volts$/i));
     }elsif ($match eq 'windows_event.print_end'){
         $args->[8]=~tr/A-Z/a-z/; $args->[9]=~tr/A-Z/a-z/;
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
         if($heap->{'pending'}->{$args->[8]}){
-            my $messages = '';
-            if($args->[9]=~m/failure/i){
-print Data::Dumper->Dump([$heap->{'pending'},$heap->{'messages'}]);
-                if($heap->{'pending'}->{$args->[8]}->{'messages'}){
-                    $messages = join(',',@{ $heap->{'messages'}->{ $heap->{'pending'}->{$args->[8]}->{'host'} } });
-                }
                 delete($heap->{'pending'}->{$args->[8]});
-                $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9] ($messages)");
-            }else{
-                delete($heap->{'messages'}->{ $heap->{'pending'}->{$args->[8]}->{'host'} }); # remove all prior host errors
-                delete($heap->{'pending'}->{$args->[8]});                                    # remvove the pending job
                 $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9]");
             }
         }
