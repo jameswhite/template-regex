@@ -175,6 +175,7 @@ sub printer_lookup{
     my ($self, $kernel, $heap, $sender, $soekris, $replyto, $who, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     use Net::LDAP;
     my $fqdn = `hostname -f`;
+    chomp($fqdn);
     my @parts = split(/\./,$fqdn); 
     my $hostname = shift(@parts);
     my $domainname = join('.',@parts);
