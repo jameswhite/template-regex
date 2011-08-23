@@ -122,13 +122,13 @@ sub sketch_connection {
     }elsif ($match eq 'windows_event.failed_command_buffer_submit'){
         print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.printer_jobid'){
-        next if( $args->[3] =~ m/^arctic/); # ignore the lab
+        next ( $args->[3] =~ m/^arctic/); # ignore the lab
         $kernel->yield('send_sketch', "Job: $args->[10]: printing on $args->[7]");
         $heap->{'pending'}->{ $args->[10] } = 1;
         $kernel->delay('event_timeout', 10, $args->[10],"job timed out");
     }elsif ($match eq 'windows_event.print_end'){
-        print Data::Dumper->Dump([$match,$args]);
         if($heap->{'pending'}->{$args->[8]}){
+            print Data::Dumper->Dump([$match,$args]);
             if($args->[8] eq 'Success'){
                 delete($heap->{'pending'}->{$args->[8]});
             }
