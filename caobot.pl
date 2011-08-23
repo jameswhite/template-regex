@@ -175,7 +175,7 @@ sub sketch_connection {
                 $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9] ($messages)");
             }else{
                 delete($heap->{'pending'}->{$args->[8]});
-                $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9]";
+                $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9]");
             }
         }
     }else{
