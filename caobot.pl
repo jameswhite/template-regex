@@ -231,7 +231,7 @@ sub irc_public {
              if($device < 10){ $soekris="skrs000$device"; }
              elsif($device < 100){ $soekris="skrs00$device"; }
              elsif($device < 1000){ $soekris="skrs0$device"; }
-             #$self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
+             $self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
              $kernel->yield('printer_lookup',$soekris,$channel,$nick);
          }
      }
