@@ -162,14 +162,12 @@ sub sketch_connection {
                 push(@{ $heap->{'pending'}->{$jobid}->{'messages'} }, $args->[9]);
             }
         }
-print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.print_end'){
-        #print Data::Dumper->Dump([$match,$args]);
         $args->[8]=~tr/A-Z/a-z/; $args->[9]=~tr/A-Z/a-z/;
+print Data::Dumper->Dump([$match,$args,$heap->{$args->[8]}]);
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
         if($heap->{'pending'}->{$args->[8]}){
             my $messages = '';
-print ".oO(".$args->[9].")\n";
             if($args->[9]=~m/failure/i){
                 if($heap->{'pending'}->{$args->[8]}->{'messages'}){
                     $messages = join(',',@{ $heap->{'pending'}->{$args->[8]}->{'messages'} });
