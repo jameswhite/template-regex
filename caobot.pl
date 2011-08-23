@@ -189,7 +189,7 @@ sub printer_lookup{
     foreach $entry ($mesg->entries) { 
         $found ++;
         my $distname = $entry->dn; 
-        $self->{'irc'}->yield( privmsg => $channel => "$soekris => $distname");
+        $self->{'irc'}->yield( privmsg, $channel, "$soekris => $distname");
     }
     $self->{'irc'}->yield( privmsg => $channel => "$soekris not found.") unless ($found > 0);
     print "$soekris, $replyto, $who\n";
