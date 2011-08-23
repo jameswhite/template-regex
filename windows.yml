@@ -18,6 +18,7 @@ regex_tpl:
   TIME: '[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{6}|[0-9]{2}:[0-9]{2}:[0-9]{2}'
   WTIME: '[0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]+'
   TZ_OFF: '[+\-][0-9]{2}:[0-9]{2}'
+  JOB_ID: '[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+'
   ANYTHING: '.*'
 ################################################################################
 # Here we have nested log substrings and their names, the logic being that 
@@ -41,6 +42,11 @@ log_tpl:
    remainder:
      - name: remainder
        regex: '[% ANYTHING %]'
+       remainder:
+         - name: remainder
+           regex: '[% ANYTHING %]'
+     - name: remainder
+       regex: '[% ANYTHING %]'
  - name: date_time
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %]\s*'
    remainder:
@@ -53,6 +59,8 @@ log_tpl:
            regex: '[% ANYTHING %]'
      - name: remainder
        regex: '[% ANYTHING %]'
+     - name: print_success
+       regex: '\[IoReceiver - System.Net.Sockets.NetworkStream\] DEBUG PrintSwitcherService.PrintSwitcherImpl \[.null.\] - Finished print job is [% JOB_ID %], status Success#015'
      - name: failed_command_buffer_submit
        regex: 'Failed to submit command buffer: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond [% IP %]:[% PORT %]#015#012System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond [% IP %]' 
      - name: remainder

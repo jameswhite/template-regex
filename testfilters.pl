@@ -79,7 +79,7 @@ sub got_log_line {
                exit 0;
            }
        }
-       print STDERR "$output\n";
+       #print STDERR "$output\n";
    }else{
        $heap->{'last'}='' unless( defined($heap->{'last'}));
        # remove line-after-line of repeated output
