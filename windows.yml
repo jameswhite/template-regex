@@ -38,6 +38,10 @@ regex_tpl:
 log_tpl:
  - name: windows_event
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] [% APPLICATION %]: [% WTIME %] '
+ - name: date_time
+   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] '
+ - name: windows_event
+   regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] [% APPLICATION %]: [% WTIME %] '
    remainder: 
     - name: failed_command_buffer_submit
       regex: 'Failed to submit command buffer: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond [% IP %]:[% PORT %]#015#012System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond [% IP %]' 
