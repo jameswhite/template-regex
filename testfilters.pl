@@ -129,9 +129,7 @@ sub sketch_connection {
     }elsif ($match eq 'windows_event.print_end'){
         # if it's not pending, we don't want to know
         if($heap->{'pending'}->{$args->[8]}){                                  
-            if($args->[9] eq 'Success'){
-                delete($heap->{'pending'}->{$args->[8]});
-            }
+            delete($heap->{'pending'}->{$args->[8]});
             $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9]");
         }
     }else{
