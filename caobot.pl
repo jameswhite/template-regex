@@ -158,13 +158,13 @@ sub sketch_connection {
     }elsif ($match eq 'windows_event.dualsys_work_thread_msg'){
         $args->[7]=~tr/A-Z/a-z/; $args->[9]=~tr/A-Z/a-z/;
         foreach my $jobid (keys(%{  $heap->{'pending'} })){
+print ".oO(".$jobid.")\n";
             if($heap->{'pending'}->{$jobid}->{'host'} eq $args->[7]){
                 push(@{ $heap->{'pending'}->{$jobid}->{'messages'} }, $args->[9]);
             }
         }
     }elsif ($match eq 'windows_event.print_end'){
         $args->[8]=~tr/A-Z/a-z/; $args->[9]=~tr/A-Z/a-z/;
-print Data::Dumper->Dump([$match,$args,$heap->{$args->[8]}]);
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
         if($heap->{'pending'}->{$args->[8]}){
             my $messages = '';
