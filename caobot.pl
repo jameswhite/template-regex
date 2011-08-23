@@ -159,7 +159,7 @@ sub sketch_connection {
         $args->[7]=~tr/A-Z/a-z/; $args->[9]=~tr/A-Z/a-z/;
 
         foreach my $jobid (keys(%{  $heap->{'pending'} })){
-print ".oO(".$jobid." ".$args->[9].")\n";
+print Data::Dumper->Dump([$jobid,$args->[9],$heap->{'pending'}->{$jobid}]);
             if($heap->{'pending'}->{$jobid}->{'host'} eq $args->[7]){
                 push(@{ $heap->{'pending'}->{$jobid}->{'messages'} }, $args->[9]);
             }
