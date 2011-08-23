@@ -155,6 +155,7 @@ sub sketch_connection {
         $heap->{'pending'}->{ $args->[10] }->{'host'} = $args->[7];
         $kernel->delay('event_timeout', 180, $args->[10],"job timed out");
     }elsif ($match eq 'windows_event.dualsys_work_thread_msg'){
+        print Data::Dumper->Dump([$match,$args]);
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         $args->[9]=~s/\..*//g; $args->[9]=~tr/A-Z/a-z/;
         foreach my $jobid (keys(%{  $heap->{'pending'} })){
@@ -180,7 +181,7 @@ sub sketch_connection {
         }
     }else{
         print Data::Dumper->Dump([$match,$args]);
-        print STDERR "Unhandled: $match [$#{ $args }]\n";
+        #print STDERR "Unhandled: $match [$#{ $args }]\n";
     }
 }
 
