@@ -50,10 +50,9 @@ log_tpl:
            regex: '[% ANYTHING %]'
      - name: remainder
        regex: '[% ANYTHING %]'
-   remainder: 
     - name: failed_command_buffer_submit
       regex: 'Failed to submit command buffer: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond [% IP %]:[% PORT %]#015#012System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond [% IP %]' 
-    - name: remainder
+    - name: anything
       regex: '[% ANYTHING %]'
- - name: remainder
+ - name: anything
    regex: '[% ANYTHING %]'
