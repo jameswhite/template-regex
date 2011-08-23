@@ -57,6 +57,7 @@ sub new {
                                                         'got_log_rollover',
                                                         'sketch_connection',
                                                         'send_sketch',
+                                                        'event_timeout',
                                                       ],
                                            ],
     );
@@ -90,6 +91,10 @@ sub got_log_line {
    }
 } 
 
+sub event_timout{
+    my ($self, $kernel, $heap, $sender, $id, $message, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    print "$id $message timed out\n" if($kernel->{'pending'}->{$id});
+}
 
 ################################################################################
 # this routine is used to ship the notification somewhere
@@ -113,10 +118,12 @@ sub sketch_connection {
     }elsif ($match eq 'windows_event.failed_command_buffer_submit'){
         print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.printer_jobid'){
+        $heap->{'pending'}->{ $args->[10] } = 1;
+        $kernel->delay('event_timeout',120,$args->[10])
         print Data::Dumper->Dump([$match,$args]);
-    }elsif ($match eq 'windows_event.printer_success'){
+    }elsif ($match eq 'windows_event.print_success'){
         print Data::Dumper->Dump([$match,$args]);
-    }elsif ($match eq 'windows_event.printer_fail'){
+    }elsif ($match eq 'windows_event.print_fail'){
         print Data::Dumper->Dump([$match,$args]);
     }else{
         print "Unhandled: $match [$#{ $args }]\n"; 
