@@ -20,7 +20,8 @@ regex_tpl:
   TZ_OFF: '[+\-][0-9]{2}:[0-9]{2}'
   JOB_ID: '[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+'
   STATUS: 'Success|Failure'
-  LEVEL: 'DEBUG|WARN|INFO|FATAL'
+  ERRORLEVEL: 'DEBUG|WARN|INFO|FATAL'
+  SERVICEMETHOD: '\S+'
   ANYTHING: '.*'
 ################################################################################
 # Here we have nested log substrings and their names, the logic being that 
@@ -42,29 +43,29 @@ log_tpl:
  - name: windows_event
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] [% APPLICATION %]: [% DATE %] [% WTIME %]\s*'
    remainder:
+     - name: printer_jobid
+       regex: '\[DualysPrinter work thread for printer .[% HOSTNAME %].\] [% ERRORLEVEL %] [% SERVICEMETHOD %] \[.null.\] - Job [% JOB_ID %] has a new status of Printing#015'
+     - name: print_success
+       regex: '\[IoReceiver - System.Net.Sockets.NetworkStream\] [% ERRORLEVEL %] PrintSwitcherService.PrintSwitcherImpl \[.null.\] - Finished print job is [% JOB_ID %], status [% STATUS %]#015'
+     - name: print_fail
+       regex: '\[DualysPrinter work thread for printer .[% HOSTNEMA%].\] [% ERRORLEVEL %] CardPrintService.Dualys3.CardPrintServiceImpl \[.null.\] - Job [% JOB_ID %] has a new status of FailedPrinting#015'
+     - name: failed_command_buffer_submit
+       regex: 'Failed to submit command buffer: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond [% IP %]:[% PORT %]#015#012System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond [% IP %]' 
      - name: remainder
        regex: '[% ANYTHING %]'
-       remainder:
-         - name: remainder
-           regex: '[% ANYTHING %]'
-     - name: remainder
-       regex: '[% ANYTHING %]'
- - name: date_time
+################################################################################
+ - name: windows_event
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %]\s*'
-   remainder:
      - name: host_application
        regex: '[% HOSTNAME %] [% APPLICATION %]:\s*'
        remainder:
          - name: date_time
            regex: '[% DATE %] [% WTIME %]'
+           remainder:
+             - name: remainder
+               regex: '[% ANYTHING %]'
          - name: remainder
            regex: '[% ANYTHING %]'
-     - name: printer_jobid
-       regex: '\[DualysPrinter work thread for printer .[% HOSTNAME %].\] [% ERRORLEVEL %] CardPrintService.Dualys3.CardPrintServiceImpl \[.null.\] - Job [% JOB_ID %] has a new status of Printing#015'
-     - name: print_success
-       regex: '\[IoReceiver - System.Net.Sockets.NetworkStream\] [% ERRORLEVEL %] PrintSwitcherService.PrintSwitcherImpl \[.null.\] - Finished print job is [% JOB_ID %], status [% STATUS %]#015'
-     - name: failed_command_buffer_submit
-       regex: 'Failed to submit command buffer: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond [% IP %]:[% PORT %]#015#012System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond [% IP %]' 
      - name: remainder
        regex: '[% ANYTHING %]'
  - name: remainder

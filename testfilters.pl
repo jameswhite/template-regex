@@ -111,7 +111,13 @@ sub sketch_connection {
     if($ignore == 1){                                 # do nothing, we dont' care about these right now.
         print STDERR "";
     }elsif ($match eq 'windows_event.failed_command_buffer_submit'){
-        print "################################################################################\n";
+        print STDERR Data::Dumper->Dump([$match,$args]);
+    }elsif ($match eq 'windows_event.printer_jobid'){
+        print STDERR Data::Dumper->Dump([$match,$args]);
+    }elsif ($match eq 'windows_event.printer_success'){
+        print STDERR Data::Dumper->Dump([$match,$args]);
+    }elsif ($match eq 'windows_event.printer_fail'){
+        print STDERR Data::Dumper->Dump([$match,$args]);
     }else{
         print STDERR "Unhandled: $match [$#{ $args }]\n"; 
     }
