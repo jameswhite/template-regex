@@ -67,6 +67,7 @@ sub new {
                                                         'irc_public',
                                                         'start_log',
                                                         'event_timeout',
+                                                        'printer_lookup',
                                                       ],
                                            ],
     );
@@ -144,34 +145,36 @@ sub sketch_connection {
     if($ignore == 1){
         # do nothing, we dont' care about these right now.
         print "";
-    }elsif ($match eq 'windows_event.failed_command_buffer_submit'){
-        print Data::Dumper->Dump([$match,$args]);
     }elsif ($match eq 'windows_event.printer_jobid'){
-        print Data::Dumper->Dump([$match,$args]);
-        $args->[3]=~s/\..*//g;
-        $args->[7]=~s/\..*//g;
+        $args->[3]=~s/\..*//g; $args->[3]=~tr/A-Z/a-z/;
+        $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
-        $kernel->yield('send_sketch', "Job: $args->[10]: [ $args->[3] -> $args->[7] ]");
-        $heap->{'pending'}->{ $args->[10] } = 1;
+        $kernel->yield('send_sketch', "Job: $args->[10]: $args->[7]");
+        $heap->{'pending'}->{ $args->[10] }->{'host'} = $args->[7];
         $kernel->delay('event_timeout', 180, $args->[10],"job timed out");
+    }elsif ($match eq 'windows_event.dualsys_work_thread_msg'){
+        $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
+        $args->[9]=~s/\..*//g; $args->[9]=~tr/A-Z/a-z/;
+        $kernel->yield('send_sketch',"$args->[7]: $args->[9]") unless(( $args->[9]=~m/^ok$/i) || ( $args->[9]=~m/^5,00 volts$/i));
     }elsif ($match eq 'windows_event.print_end'){
+        $args->[8]=~tr/A-Z/a-z/; $args->[9]=~tr/A-Z/a-z/;
+        next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
         if($heap->{'pending'}->{$args->[8]}){
-            delete($heap->{'pending'}->{$args->[8]});
-            $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9]");
-        }else{
-           # $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9] (after timeout?)");
-           # $args->[???]=~s/\..*//g;
-           # next if ( $args->[???] =~ m/^arctic/) ; # ignore the lab
-           print Data::Dumper->Dump([$match,$args]);
+                delete($heap->{'pending'}->{$args->[8]});
+                $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9]");
         }
-    }else{
-        print STDERR "Unhandled: $match [$#{ $args }]\n";
     }
 }
 
 sub got_log_rollover {
     my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     print STDERR "Log rolled over.\n"; 
+}
+
+sub printer_lookup{
+    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    use Net::LDAP;
+    print "ohai\n";
 }
 
 sub irc_001 {
@@ -193,7 +196,19 @@ sub irc_public {
      my ($self, $kernel, $heap, $sender, $who, $where, $what, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
      my $nick = ( split /!/, $who )[0];
      my $channel = $where->[0];
-     #if ( my ($soekris) = $what =~ /^.*$/ ) { }
+     my $soekris=undef;
+     print "$what\n";
+     if ( my ($device) = $what =~ /^\s*[Ww]here\s*is (\S+[0-9]+)\s*\?*$/ ){ 
+         $device=~s/^[Ss][Kk][Rr][Ss]//;
+         $device=~s/^[Pp][Rr][Nn][Tt]//;
+         $device=~s/^0*//;
+         if($device=~m/[0-9]+/){
+             if($device < 10){ $soekris="skrs000$device"; }
+             elsif($device < 100){ $soekris="skrs00$device"; }
+             elsif($device < 1000){ $soekris="skrs0$device"; }
+             $self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
+         }
+     }
      return;
 }
 

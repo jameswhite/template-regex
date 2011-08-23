@@ -90,7 +90,7 @@ sub start_log {
                                                      Filename   => $self->{'file'},
                                                      InputEvent => "got_log_line",
                                                      ResetEvent => "got_log_rollover",
-                                                     Seek   => 0,
+                                                     #Seek   => 0,
                                                    );
     return;
 }
@@ -233,8 +233,7 @@ sub _default {
 
 $|=1;
 my $cisco  = Log::Tail::Reporter->new({ 
-#                                         'file'     => '/var/log/windows/applications.log',
-                                         'file'     => '/var/log/windows/applications.log-2011082314-2011082315',
+                                         'file'     => '/var/log/windows/applications.log',
                                          'template' => 'windows.yml',
                                          'server'   => 'irc',
                                          'nick'     => 'caobot',
