@@ -149,6 +149,7 @@ sub sketch_connection {
         $args->[3]=~s/\..*//g; $args->[3]=~tr/A-Z/a-z/;
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
+        next if ( $args->[7] =~ m/^prnt0024/) ; # ignore the lab
         $kernel->yield('send_sketch', "Job: $args->[10]: $args->[7]");
         $heap->{'pending'}->{ $args->[10] }->{'host'} = $args->[7];
         $kernel->delay('event_timeout', 300, $args->[10],"job timed out");
@@ -262,11 +263,11 @@ my $cisco  = Log::Tail::Reporter->new({
                                          'file'     => '/var/log/windows/applications.log',
                                          'template' => 'windows.yml',
                                          'server'   => 'irc',
-                                         #'nick'     => 'caobot',
                                          'nick'     => 'cardwatch',
+                                        # 'nick'     => 'caobot',
                                          'ircname'  => 'Card@Once Watcher',
                                          'channel'  => '#cao',
-                                         #'channel'  => '#bottest',
+                                        # 'channel'  => '#bottest',
                                        });
 POE::Kernel->run();
 exit;

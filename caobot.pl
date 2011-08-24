@@ -149,6 +149,7 @@ sub sketch_connection {
         $args->[3]=~s/\..*//g; $args->[3]=~tr/A-Z/a-z/;
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
+        next if ( $args->[7] =~ m/^prnt0024/) ; # ignore the lab
         $kernel->yield('send_sketch', "Job: $args->[10]: $args->[7]");
         $heap->{'pending'}->{ $args->[10] }->{'host'} = $args->[7];
         $kernel->delay('event_timeout', 300, $args->[10],"job timed out");
@@ -183,7 +184,6 @@ sub printer_lookup{
     my $ldap = Net::LDAP->new( "ldap.$domainname" ) or warn "$@\n";
     my $mesg = $ldap->bind;
     print STDERR $mesg->error."\n" if $mesg->code;
-    print STDERR "searching ou=Card\@Once,$basedn for (uniqueMember=cn=$soekris,ou=Hosts,$basedn)\n";
     $mesg = $ldap->search( base   => "ou=Card\@Once,$basedn", filter => "(uniqueMember=cn=$soekris,ou=Hosts,$basedn)", scope=> 'sub');
     print STDERR $mesg->error."\n" if $mesg->code;
     my $found = 0;
