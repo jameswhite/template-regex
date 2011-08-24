@@ -149,17 +149,18 @@ sub sketch_connection {
         $args->[3]=~s/\..*//g; $args->[3]=~tr/A-Z/a-z/;
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
-        next if ( $args->[7] =~ m/^prnt0024/) ; # ignore the lab
+        next if ( $args->[7] =~ m/^prnt0024/) ; # ignore the qa printer
         $kernel->yield('send_sketch', "Job: $args->[10]: $args->[7]");
         $heap->{'pending'}->{ $args->[10] }->{'host'} = $args->[7];
         $kernel->delay('event_timeout', 300, $args->[10],"job timed out");
     }elsif ($match eq 'windows_event.dualsys_work_thread_msg'){
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         $args->[9]=~s/\..*//g; $args->[9]=~tr/A-Z/a-z/;
+        next if ( $args->[7] =~ m/^prnt0024/) ; # ignore the qa printer
         $kernel->yield('send_sketch',"$args->[7]: $args->[9]") unless(( $args->[9]=~m/^ok$/i) || ( $args->[9]=~m/^5,00 volts$/i));
     }elsif ($match eq 'windows_event.print_end'){
         $args->[8]=~tr/A-Z/a-z/; $args->[9]=~tr/A-Z/a-z/;
-        next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
+        # ignore things we're not waiting for:
         if($heap->{'pending'}->{$args->[8]}){
                 delete($heap->{'pending'}->{$args->[8]});
                 $kernel->yield('send_sketch', "Job: $args->[8]: $args->[9]");
@@ -263,11 +264,11 @@ my $cisco  = Log::Tail::Reporter->new({
                                          'file'     => '/var/log/windows/applications.log',
                                          'template' => 'windows.yml',
                                          'server'   => 'irc',
-                                         'nick'     => 'cardwatch',
-                                        # 'nick'     => 'caobot',
                                          'ircname'  => 'Card@Once Watcher',
+                                         'nick'     => 'cardwatch',
+                                         #'nick'     => 'caobot',
                                          'channel'  => '#cao',
-                                        # 'channel'  => '#bottest',
+                                         #'channel'  => '#bottest',
                                        });
 POE::Kernel->run();
 exit;
