@@ -151,7 +151,7 @@ sub sketch_connection {
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
         $kernel->yield('send_sketch', "Job: $args->[10]: $args->[7]");
         $heap->{'pending'}->{ $args->[10] }->{'host'} = $args->[7];
-        $kernel->delay('event_timeout', 180, $args->[10],"job timed out");
+        $kernel->delay('event_timeout', 300, $args->[10],"job timed out");
     }elsif ($match eq 'windows_event.dualsys_work_thread_msg'){
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         $args->[9]=~s/\..*//g; $args->[9]=~tr/A-Z/a-z/;
