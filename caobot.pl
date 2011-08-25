@@ -26,6 +26,7 @@ use YAML;
 use Template::Regex;
 use POE::Filter::Stream;
 use POE qw(Component::IRC);
+use LWP::Simple;
 
 
 # Net::Infrastructure is what we use to match 
@@ -152,7 +153,7 @@ sub sketch_connection {
         next if ( $args->[7] =~ m/^prnt0024/) ; # ignore the qa printer
         $kernel->yield('send_sketch', "Job: $args->[10]: $args->[7]");
         $heap->{'pending'}->{ $args->[10] }->{'host'} = $args->[7];
-        $kernel->delay('event_timeout', 300, $args->[10],"job timed out");
+        $kernel->delay('event_timeout', 600, $args->[10],"job timed out");
     }elsif ($match eq 'windows_event.dualsys_work_thread_msg'){
         $args->[3]=~s/\..*//g; $args->[3]=~tr/A-Z/a-z/;
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
@@ -222,24 +223,35 @@ sub irc_001 {
 }
 
 sub irc_public {
-     my ($self, $kernel, $heap, $sender, $who, $where, $what, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-     my $nick = ( split /!/, $who )[0];
-     my $channel = $where->[0];
-     my $soekris=undef;
-     print "$what\n";
-     if ( my ($device) = $what =~ /^\s*[Ww]here\s*is\s*(\S*[0-9]+)\s*\?*$/ ){ 
-         $device=~s/^[Ss][Kk][Rr][Ss]//;
-         $device=~s/^[Pp][Rr][Nn][Tt]//;
-         $device=~s/^0*//;
-         if($device=~m/[0-9]+/){
-             if($device < 10){ $soekris="skrs000$device"; }
-             elsif($device < 100){ $soekris="skrs00$device"; }
-             elsif($device < 1000){ $soekris="skrs0$device"; }
-             #$self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
-             $kernel->yield('printer_lookup',$soekris,$channel,$nick);
-         }
-     }
-     return;
+    my ($self, $kernel, $heap, $sender, $who, $where, $what, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my $nick = ( split /!/, $who )[0];
+    my $channel = $where->[0];
+    my $soekris=undef;
+    my $fqdn = `hostname -f`;
+    chomp($fqdn);
+    my @parts = split(/\./,$fqdn);
+    my $hostname = shift(@parts);
+    my $domainname = join('.',@parts);
+
+    print "$what\n";
+    if ( my ($device) = $what =~ /^\s*[Ww]here\s*is\s*(\S*[0-9]+)\s*\?*$/ ){ 
+        $device=~s/^[Ss][Kk][Rr][Ss]//;
+        $device=~s/^[Pp][Rr][Nn][Tt]//;
+        $device=~s/^0*//;
+        if($device=~m/[0-9]+/){
+            if($device < 10){ $soekris="skrs000$device"; }
+            elsif($device < 100){ $soekris="skrs00$device"; }
+            elsif($device < 1000){ $soekris="skrs0$device"; }
+            #$self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
+            $kernel->yield('printer_lookup',$soekris,$channel,$nick);
+        }
+    
+    }elsif ( $what =~ /^\s*!*report/ ){ 
+        $content = get("http://mina.dev.$domain:9090/caoPrinterStatus/");
+        $self->{'irc'}->yield( privmsg => $channel => "$content");
+    
+    }
+    return;
 }
 
 # We registered for all events, this will produce some debug info.
