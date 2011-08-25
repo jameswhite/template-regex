@@ -183,6 +183,7 @@ sub lookup_printer{
     my $soekris = shift if @_;
     print STDERR "-=[$soekris]=-\n";
     return undef unless $soekris;
+    print STDERR "-=[$soekris]=-\n";
     my $fqdn = `hostname -f`;
     chomp($fqdn);
     my @parts = split(/\./,$fqdn);
