@@ -193,9 +193,9 @@ sub lookup_printer{
     print STDERR $mesg->error."\n" if $mesg->code;
     print STDERR "searching: ou=Card\@Once,$basedn for (uniqueMember=cn=$soekris,ou=Hosts,$basedn)\n";
     $mesg = $ldap->search( base   => "ou=Card\@Once,$basedn", filter => "(uniqueMember=cn=$soekris,ou=Hosts,$basedn)", scope=> 'sub');
+    print STDERR Data::Dumper->Dump([$mesg]);
     print STDERR $mesg->error."\n" if $mesg->code;
     my $found = 0;
-print STDERR Data::Dumper->Dump([$mesg->entries]);
     foreach $entry ($mesg->entries) {
         $found ++;
         my $distname = $entry->dn;
