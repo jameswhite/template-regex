@@ -215,6 +215,7 @@ sub lookup_printer{
 sub printer_lookup{
     my ($self, $kernel, $heap, $sender, $soekris, $replyto, $who, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my $description = $self->lookup_printer($soekris);
+    print STDERR "-=[$description]=-\n";
     if($description){
         $self->{'irc'}->yield( privmsg => $replyto => "$soekris => $description");
     }else{
