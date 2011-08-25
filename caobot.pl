@@ -192,12 +192,11 @@ sub lookup_printer{
     my $mesg = $ldap->bind;
     print STDERR $mesg->error."\n" if $mesg->code;
     $mesg = $ldap->search( base   => "ou=Card\@Once,$basedn", filter => "(uniqueMember=cn=$soekris,ou=Hosts,$basedn)", scope=> 'sub');
-    print STDERR $mesg->error."\n" if $mesg->code;
+    print STDERR $mesg->error."\n";# if $mesg->code;
     my $found = 0;
     foreach $entry ($mesg->entries) {
         $found ++;
         my $distname = $entry->dn;
-        print STDERR "-=[$distname]=-\n";
         $distname=~s/,\s+/,/g;
         my ($city, $branch);
         if($distname =~m/cn=(.*),\s*ou=Systems,ou=(.*),*ou=Card\@Once,$basedn/){
