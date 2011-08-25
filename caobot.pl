@@ -266,13 +266,22 @@ sub irc_public {
         my $json = JSON->new->allow_nonref;
         my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/") );
         foreach my $item (@{ $struct }){
-            my $name=$item->{'PrinterName'};
-            $name=~s/\..*//;
-            $name=~tr/A-Z/a-z/;
-            my $location=$self->lookup_printer($name);
+            my $device=$item->{'PrinterName'};
+            $device=~s/\..*//;
+            $device=~tr/A-Z/a-z/;
+            $device=~s/^[Ss][Kk][Rr][Ss]//;
+            $device=~s/^[Pp][Rr][Nn][Tt]//;
+            $device=~s/^0*//;
+            my $soekris='';
+            if($device=~m/[0-9]+/){
+                if($device < 10){ $soekris="skrs000$device"; }
+                elsif($device < 100){ $soekris="skrs00$device"; }
+                elsif($device < 1000){ $soekris="skrs0$device"; }
+            }
+            my $location=$self->lookup_printer($soekris);
             my $total = ($item->{'GoodJobs'} + $item->{'BadJobs'});
             my $percentage = int(10000*($item->{'GoodJobs'}/$total))/100;
-print STDERR "[$item->{'GoodJobs'}/$total] $location ($percentage%)\n";
+print STDERR "[$item->{'GoodJobs'}/$total] $location ($percentage%)\n" if(defined($location));
         }
         #$self->{'irc'}->yield( privmsg => $channel => "$content");
     
