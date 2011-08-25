@@ -181,9 +181,7 @@ sub got_log_rollover {
 sub lookup_printer{
     my $self = shift;
     my $soekris = shift if @_;
-    print STDERR "-=[$soekris]=-\n";
     return undef unless defined($soekris);
-    print STDERR "-=[$soekris]=-\n";
     my $fqdn = `hostname -f`;
     chomp($fqdn);
     my @parts = split(/\./,$fqdn);
@@ -193,6 +191,7 @@ sub lookup_printer{
     my $ldap = Net::LDAP->new( "ldap.$domainname" ) or warn "$@\n";
     my $mesg = $ldap->bind;
     print STDERR $mesg->error."\n" if $mesg->code;
+    print STDERR "-=[$soekris, $basedn, $domainname]=-\n";
     $mesg = $ldap->search( base   => "ou=Card\@Once,$basedn", filter => "(uniqueMember=cn=$soekris,ou=Hosts,$basedn)", scope=> 'sub');
     print STDERR $mesg->error."\n" if $mesg->code;
     my $found = 0;
