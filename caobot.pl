@@ -181,6 +181,7 @@ sub got_log_rollover {
 sub lookup_printer{
     my $self = shift;
     my $soekris = shift if @_;
+    print STDERR "-=[$soekris]=-\n";
     return undef unless $soekris;
     my $fqdn = `hostname -f`;
     chomp($fqdn);
