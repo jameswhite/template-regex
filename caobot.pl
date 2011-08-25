@@ -251,8 +251,13 @@ sub irc_public {
         print STDERR "http://mina.dev.$domainname:9090/caoPrinterStatus/\n";
         my $json = JSON->new->allow_nonref;
         my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/") );
-print STDERR Data::Dumper->Dump([$struct]);
-        $self->{'irc'}->yield( privmsg => $channel => "$content");
+        foreach my $item (@{ $struct }){
+            my $name=$item->{'PrinterName'};
+            $name=~s/\..*//;
+            $name=~tr/A-Z/a-z/;
+print STDERR "$name: $item->{'GoodJobs'} $item->{'BadJobs'}\n";
+        }
+        #$self->{'irc'}->yield( privmsg => $channel => "$content");
     
     }
     return;
