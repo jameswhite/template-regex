@@ -262,7 +262,6 @@ sub irc_public {
         }
     
     }elsif ( $what =~ /^\s*!*report/ ){ 
-        print STDERR "http://mina.dev.$domainname:9090/caoPrinterStatus/\n";
         my $json = JSON->new->allow_nonref;
         my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/") );
         foreach my $item (@{ $struct }){
@@ -281,9 +280,8 @@ sub irc_public {
             my $location=$self->lookup_printer($soekris);
             my $total = ($item->{'GoodJobs'} + $item->{'BadJobs'});
             my $percentage = int(10000*($item->{'GoodJobs'}/$total))/100;
-print STDERR "[$item->{'GoodJobs'}/$total] $location ($percentage%)\n" if(defined($location));
         }
-        #$self->{'irc'}->yield( privmsg => $channel => "$content");
+        $self->{'irc'}->yield( privmsg => $channel => "[$item->{'GoodJobs'}/$total] $location ($percentage%)\n") if(defined($location));
     
     }
     return;
