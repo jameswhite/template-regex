@@ -182,7 +182,7 @@ sub lookup_printer{
     my $self = shift;
     my $soekris = shift if @_;
     print STDERR "-=[$soekris]=-\n";
-    return undef unless $soekris;
+    return undef unless defined($soekris);
     print STDERR "-=[$soekris]=-\n";
     my $fqdn = `hostname -f`;
     chomp($fqdn);
