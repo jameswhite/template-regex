@@ -28,6 +28,7 @@ use POE::Filter::Stream;
 use POE qw(Component::IRC);
 use LWP::Simple;
 use JSON;
+use Net::LDAP;
 
 
 # Net::Infrastructure is what we use to match 
@@ -177,12 +178,13 @@ sub got_log_rollover {
     print STDERR "Log rolled over.\n"; 
 }
 
-sub printer_lookup{
-    my ($self, $kernel, $heap, $sender, $soekris, $replyto, $who, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-    use Net::LDAP;
+sub lookup_printer{
+    my $self = shift;
+    my $soekris = shift if @_;
+    return undef unless $soekris;
     my $fqdn = `hostname -f`;
     chomp($fqdn);
-    my @parts = split(/\./,$fqdn); 
+    my @parts = split(/\./,$fqdn);
     my $hostname = shift(@parts);
     my $domainname = join('.',@parts);
     my $basedn = "dc=".join(',dc=',@parts);
@@ -192,18 +194,30 @@ sub printer_lookup{
     $mesg = $ldap->search( base   => "ou=Card\@Once,$basedn", filter => "(uniqueMember=cn=$soekris,ou=Hosts,$basedn)", scope=> 'sub');
     print STDERR $mesg->error."\n" if $mesg->code;
     my $found = 0;
-    foreach $entry ($mesg->entries) { 
+    foreach $entry ($mesg->entries) {
         $found ++;
-        my $distname = $entry->dn; 
+        my $distname = $entry->dn;
         $distname=~s/,\s+/,/g;
         my ($city, $branch);
         if($distname =~m/cn=(.*),\s*ou=Systems,ou=(.*),*ou=Card\@Once,$basedn/){
             ($city,$branch) = ($1, $2);
             $city=~s/,$//;
         }
-        $self->{'irc'}->yield( privmsg, $replyto, "$soekris => $branch ($city)");
-    } 
+        return "$branch ($city)";
+    }
     unless ($found > 0){
+        return undef;
+    }
+
+    
+}
+
+sub printer_lookup{
+    my ($self, $kernel, $heap, $sender, $soekris, $replyto, $who, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my $description = $self->lookup_printer($soekris);
+    if($description){
+        $self->{'irc'}->yield( privmsg => $replyto => "$soekris => $description");
+    }else{
         $self->{'irc'}->yield( privmsg => $replyto => "$soekris not found. (did you forget to put it in LDAP ou=Card\@Once?)");
     }
 }
