@@ -27,6 +27,7 @@ use Template::Regex;
 use POE::Filter::Stream;
 use POE qw(Component::IRC);
 use LWP::Simple;
+use JSON;
 
 
 # Net::Infrastructure is what we use to match 
