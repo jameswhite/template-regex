@@ -154,6 +154,7 @@ sub sketch_connection {
         $heap->{'pending'}->{ $args->[10] }->{'host'} = $args->[7];
         $kernel->delay('event_timeout', 300, $args->[10],"job timed out");
     }elsif ($match eq 'windows_event.dualsys_work_thread_msg'){
+        $args->[3]=~s/\..*//g; $args->[3]=~tr/A-Z/a-z/;
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         $args->[9]=~s/\..*//g; $args->[9]=~tr/A-Z/a-z/;
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
@@ -266,9 +267,9 @@ my $cisco  = Log::Tail::Reporter->new({
                                          'template' => 'windows.yml',
                                          'server'   => 'irc',
                                          'ircname'  => 'Card@Once Watcher',
-                                         #'nick'     => 'cardwatch',
+#                                         'nick'     => 'cardwatch',
                                          'nick'     => 'caobot',
-                                         #'channel'  => '#cao',
+#                                         'channel'  => '#cao',
                                          'channel'  => '#bottest',
                                        });
 POE::Kernel->run();
