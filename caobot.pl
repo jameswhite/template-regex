@@ -191,9 +191,7 @@ sub lookup_printer{
     my $ldap = Net::LDAP->new( "ldap.$domainname" ) or warn "$@\n";
     my $mesg = $ldap->bind;
     print STDERR $mesg->error."\n" if $mesg->code;
-    print STDERR "searching: ou=Card\@Once,$basedn for (uniqueMember=cn=$soekris,ou=Hosts,$basedn)\n";
     $mesg = $ldap->search( base   => "ou=Card\@Once,$basedn", filter => "(uniqueMember=cn=$soekris,ou=Hosts,$basedn)", scope=> 'sub');
-    print STDERR Data::Dumper->Dump([$mesg]);
     print STDERR $mesg->error."\n" if $mesg->code;
     my $found = 0;
     foreach $entry ($mesg->entries) {
@@ -217,7 +215,6 @@ sub lookup_printer{
 sub printer_lookup{
     my ($self, $kernel, $heap, $sender, $soekris, $replyto, $who, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my $description = $self->lookup_printer($soekris);
-    print STDERR "-=[$description]=-\n";
     if($description){
         $self->{'irc'}->yield( privmsg => $replyto => "$soekris => $description");
     }else{
@@ -272,9 +269,10 @@ sub irc_public {
             my $name=$item->{'PrinterName'};
             $name=~s/\..*//;
             $name=~tr/A-Z/a-z/;
+            my $location=$self->lookup_printer($name);
             my $total = ($item->{'GoodJobs'} + $item->{'BadJobs'});
             my $percentage = int(10000*($item->{'GoodJobs'}/$total))/100;
-print STDERR "[$item->{'GoodJobs'}/$total] $name ($percentage%)\n";
+print STDERR "[$item->{'GoodJobs'}/$total] $location ($percentage%)\n";
         }
         #$self->{'irc'}->yield( privmsg => $channel => "$content");
     
