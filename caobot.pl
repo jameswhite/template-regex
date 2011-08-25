@@ -247,8 +247,8 @@ sub irc_public {
         }
     
     }elsif ( $what =~ /^\s*!*report/ ){ 
-        print STDERR "http://mina.dev.$domain:9090/caoPrinterStatus/\n";
-        my $content = get("http://mina.dev.$domain:9090/caoPrinterStatus/");
+        print STDERR "http://mina.dev.$domainname:9090/caoPrinterStatus/\n";
+        my $content = get("http://mina.dev.$domainname:9090/caoPrinterStatus/");
 print STDERR "$content\n";
         $self->{'irc'}->yield( privmsg => $channel => "$content");
     
