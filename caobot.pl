@@ -265,6 +265,7 @@ sub irc_public {
         my $json = JSON->new->allow_nonref;
         my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/") );
         $self->{'irc'}->yield( privmsg => $channel => "[Success/Total] Summary");
+        $self->{'irc'}->yield( privmsg => $channel => "--------------------");
         foreach my $item (@{ $struct }){
             my $device=$item->{'PrinterName'};
             $device=~s/\..*//;
@@ -283,6 +284,7 @@ sub irc_public {
             my $percentage = int(10000*($item->{'GoodJobs'}/$total))/100;
             $self->{'irc'}->yield( privmsg => $channel => "[$item->{'GoodJobs'}/$total] $location ($percentage%)\n") if(defined($location));
         }
+        $self->{'irc'}->yield( privmsg => $channel => "--------------------");
     
     }
     return;
