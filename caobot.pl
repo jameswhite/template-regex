@@ -156,6 +156,7 @@ sub sketch_connection {
     }elsif ($match eq 'windows_event.dualsys_work_thread_msg'){
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         $args->[9]=~s/\..*//g; $args->[9]=~tr/A-Z/a-z/;
+        next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
         next if ( $args->[7] =~ m/^prnt0024/) ; # ignore the qa printer
         $kernel->yield('send_sketch',"$args->[7]: $args->[9]") unless(( $args->[9]=~m/^ok$/i) || ( $args->[9]=~m/^5,00 volts$/i));
     }elsif ($match eq 'windows_event.print_end'){
