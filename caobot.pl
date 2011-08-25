@@ -255,7 +255,9 @@ sub irc_public {
             my $name=$item->{'PrinterName'};
             $name=~s/\..*//;
             $name=~tr/A-Z/a-z/;
-print STDERR "$name: ".$item->{'GoodJobs'}."/". $item->{'GoodJobs'}+$item->{'BadJobs'}."(".$item->{'GoodJobs'}/($item->{'GoodJobs'}+$item->{'BadJobs'})."%)\n";
+            my $total = ($item->{'GoodJobs'} + $item->{'BadJobs'});
+            my $percentage = 100*($item->{'GoodJobs'}/$total);
+print STDERR "$name: [$item->{'GoodJobs'}/$total] ($percentage%)\n";
         }
         #$self->{'irc'}->yield( privmsg => $channel => "$content");
     
