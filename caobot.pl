@@ -255,7 +255,7 @@ sub irc_public {
             my $name=$item->{'PrinterName'};
             $name=~s/\..*//;
             $name=~tr/A-Z/a-z/;
-print STDERR "$name: $item->{'GoodJobs'} $item->{'BadJobs'}\n";
+print STDERR "$name: ".$item->{'GoodJobs'}."/". $item->{'GoodJobs'}+$item->{'BadJobs'}."(".$item->{'GoodJobs'}/($item->{'GoodJobs'}+$item->{'BadJobs'})."%)\n";
         }
         #$self->{'irc'}->yield( privmsg => $channel => "$content");
     
