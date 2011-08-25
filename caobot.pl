@@ -249,7 +249,8 @@ sub irc_public {
     
     }elsif ( $what =~ /^\s*!*report/ ){ 
         print STDERR "http://mina.dev.$domainname:9090/caoPrinterStatus/\n";
-        my $content = get("http://mina.dev.$domainname:9090/caoPrinterStatus/");
+        my $json = JSON->new->allow_nonref;
+        my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/") );
 print STDERR "$content\n";
         $self->{'irc'}->yield( privmsg => $channel => "$content");
     
