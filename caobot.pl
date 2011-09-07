@@ -289,7 +289,7 @@ sub irc_public {
         my $job = $1;
         if($job=~m/[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+/){
             my $json = JSON->new->allow_nonref;
-            my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/job/$1") );
+            my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/job/$job") );
             $self->{'irc'}->yield( privmsg => $channel => "$struct");
         }
     }
