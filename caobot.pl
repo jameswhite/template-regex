@@ -285,7 +285,7 @@ sub irc_public {
             $self->{'irc'}->yield( privmsg => $channel => "[$item->{'GoodJobs'}/$total] $location ($percentage%)\n") if(defined($location));
         }
         $self->{'irc'}->yield( privmsg => $channel => "------------------------------");
-    }elsif ( $what =~ /^\s*!*job\s*status\s+(\S+)/ || $what =~ /[Ww]hat\s*[i']s\s+the\s+status\s+of\s+job\s+(\S+)\s*\?*\s*/ ){ 
+    }elsif ( $what =~ /^\s*!*job\s*status\s+(\S+)/ || $what =~ /[Ww]hat\s*[(i|wa)']s\s+the\s+status\s+of\s+job\s+(\S+)\s*\?*\s*/ ){ 
         my $job = $1;
         if($job=~m/[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+/){
             my $json = JSON->new->allow_nonref;
