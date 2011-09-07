@@ -286,6 +286,8 @@ sub irc_public {
         }
         $self->{'irc'}->yield( privmsg => $channel => "------------------------------");
     
+    }elsif ( $what =~ /^\s*!*jobstatus\s+(\S+)\s*$/ ){ 
+        my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/") );
     }
     return;
 }

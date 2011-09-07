@@ -152,7 +152,7 @@ sub process_token {
     if($process == 1){
         if(!$self->{'inf'}->allowed("$token")){
             # $self->{'inf'}->close_to("$token");
-            print STDERR "DENY $token\n";
+            print STDERR "$token\n";
         }
     }
 }

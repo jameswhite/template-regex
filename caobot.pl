@@ -285,7 +285,13 @@ sub irc_public {
             $self->{'irc'}->yield( privmsg => $channel => "[$item->{'GoodJobs'}/$total] $location ($percentage%)\n") if(defined($location));
         }
         $self->{'irc'}->yield( privmsg => $channel => "------------------------------");
-    
+    }elsif ( $what =~ /^\s*!*job\s*status\s+(\S+)/ ){ 
+        my $job = $1;
+        if($job=~m/[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+/){
+            my $json = JSON->new->allow_nonref;
+            my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/job/$1") );
+            $self->{'irc'}->yield( privmsg => $channel => "$struct");
+        }
     }
     return;
 }
