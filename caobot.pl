@@ -163,7 +163,7 @@ sub sketch_connection {
         next if ( $args->[7] =~ m/^prnt0024/) ; # ignore the qa printer
         $kernel->yield('send_sketch', "Job: $args->[10]: $args->[7]");
         $heap->{'pending'}->{ $args->[10] }->{'host'} = $args->[7];
-        $kernel->delay('event_timeout', 600, $args->[10],"job timed out");
+        $kernel->delay('event_timeout', 180, $args->[10],"job timed out");
     }elsif ($match eq 'windows_event.dualsys_work_thread_msg'){
         $args->[3]=~s/\..*//g; $args->[3]=~tr/A-Z/a-z/;
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
