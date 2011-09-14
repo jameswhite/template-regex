@@ -136,7 +136,7 @@ sub event_timeout{
             my $json = JSON->new->allow_nonref;
             my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/job/$job") );
             $struct=~tr/A-Z/a-z/;
-            $self->{'irc'}->yield( privmsg => $channel => "$id: $struct");
+            $self->{'irc'}->yield( privmsg => $channel => "Job: $id: $struct");
         }
         delete ($heap->{'pending'}->{$id});
     }
