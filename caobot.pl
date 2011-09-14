@@ -295,7 +295,7 @@ sub irc_public {
         $self->{'irc'}->yield( privmsg => $channel => "------------------------------");
     }elsif ( $what =~ /^\s*!*job\s*(status)\s+(\S+)/ || $what =~ /[Ww]hat\s*(wa|i|')s\s+the\s+status\s+of\s+job\s+(\S+)\s*\?*\s*/ ){ 
         my $job = $2;
-        $job=~/A-Z/a-z/;
+        $job=~tr/A-Z/a-z/;
         if($job=~m/[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+/){
             my $json = JSON->new->allow_nonref;
             my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/job/$job") );
