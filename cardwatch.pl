@@ -134,7 +134,10 @@ sub event_timeout{
         $job=~tr/A-Z/a-z/;
         if($job=~m/[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+/){
             my $json = JSON->new->allow_nonref;
-            my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/job/$job") );
+            my $struct = '';
+            eval {
+              $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/job/$job") );
+            };
             $struct=~tr/A-Z/a-z/;
             $self->{'irc'}->yield( privmsg => $channel => "Job: $id: $struct");
         }
