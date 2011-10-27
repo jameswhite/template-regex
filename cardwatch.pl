@@ -281,6 +281,7 @@ sub irc_public {
         if($@){
             $self->{'irc'}->yield( privmsg => $channel => "http://mina.dev.$domainname:9090/caoPrinterStatus/");
             $self->{'irc'}->yield( privmsg => $channel => "$@");
+            $self->{'irc'}->yield( privmsg => $channel => "aleclanter: ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ???");
             return undef;
         }
         $self->{'irc'}->yield( privmsg => $channel => "[Success/Total] Summary");
