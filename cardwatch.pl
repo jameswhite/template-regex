@@ -274,7 +274,10 @@ sub irc_public {
     
     }elsif ( $what =~ /^\s*!*report/ ){ 
         my $json = JSON->new->allow_nonref;
-        my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/") );
+        my $struct = '';
+        eval {
+              $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/") );
+        };
         $self->{'irc'}->yield( privmsg => $channel => "[Success/Total] Summary");
         $self->{'irc'}->yield( privmsg => $channel => "------------------------------");
         foreach my $item (@{ $struct }){
@@ -301,7 +304,10 @@ sub irc_public {
         $job=~tr/A-Z/a-z/;
         if($job=~m/[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+/){
             my $json = JSON->new->allow_nonref;
-            my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/job/$job") );
+            my $struct = '';
+            eval {
+                $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/job/$job") );
+            };
             $self->{'irc'}->yield( privmsg => $channel => "$struct");
         }
     }
