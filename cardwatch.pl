@@ -278,6 +278,7 @@ sub irc_public {
         eval {
               $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/") );
         };
+        print STDERR $@ if $@; 
         $self->{'irc'}->yield( privmsg => $channel => "[Success/Total] Summary");
         $self->{'irc'}->yield( privmsg => $channel => "------------------------------");
         foreach my $item (@{ $struct }){
