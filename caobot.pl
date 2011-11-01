@@ -249,6 +249,7 @@ sub lookup_location{
     print STDERR $mesg->error."\n" if $mesg->code;
     my $found = 0;
     foreach $entry ($mesg->entries) {
+        print STDERR $entry->dump()."\n";
         $found ++;
         my $dname = $entry->dn;
         $dname=~s/,\s+/,/g;
