@@ -272,6 +272,8 @@ sub irc_public {
             $kernel->yield('printer_lookup',$soekris,$channel,$nick);
         }
     }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){ 
+        my $search = $3;
+        $search=~s/[\.\?]$//;
         print "Initiate search for: $3\n";
     }elsif ( $what =~ /^\s*!*report/ ){ 
         my $json = JSON->new->allow_nonref;
