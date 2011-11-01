@@ -71,6 +71,7 @@ sub new {
                                                         'start_log',
                                                         'event_timeout',
                                                         'printer_lookup',
+                                                        'location_lookup',
                                                       ],
                                            ],
     );
@@ -219,8 +220,6 @@ sub lookup_printer{
     unless ($found > 0){
         return undef;
     }
-
-    
 }
 
 sub printer_lookup{
@@ -230,6 +229,59 @@ sub printer_lookup{
         $self->{'irc'}->yield( privmsg => $replyto => "$soekris => $description");
     }else{
         $self->{'irc'}->yield( privmsg => $replyto => "$soekris not found. (did you forget to put it in LDAP ou=Card\@Once?)");
+    }
+}
+
+sub lookup_location{
+    my $self = shift;
+    my $location = shift if @_;
+    return undef unless defined($location);
+    my $fqdn = `hostname -f`;
+    chomp($fqdn);
+    my @parts = split(/\./,$fqdn);
+    my $hostname = shift(@parts);
+    my $domainname = join('.',@parts);
+    my $basedn = "dc=".join(',dc=',@parts);
+    my $ldap = Net::LDAP->new( "ldap.$domainname" ) or warn "$@\n";
+    my $mesg = $ldap->bind;
+    print STDERR $mesg->error."\n" if $mesg->code;
+    $mesg = $ldap->search( base   => "ou=Card\@Once,$basedn", filter => "(&(uniqueMember=cn=skrs*)(cn=*$location*))", scope=> 'sub');
+    print STDERR $mesg->error."\n" if $mesg->code;
+    my $found = 0;
+    my $printers = [];
+    foreach $entry ($mesg->entries) {
+        my $distname = $entry->dn;
+        $distname=~s/,\s+/,/g;
+        my ($city, $branch);
+        if($distname =~m/cn=(.*),\s*ou=Systems,ou=(.*),*ou=Card\@Once,$basedn/){
+            ($city,$branch) = ($1, $2);
+            $city=~s/,$//;
+        }
+        foreach my $member ( $entry->get_value( 'uniqueMember' ) ){
+            $member=~s/^cn=//; # just the printer
+            $member=~s/,.*//;
+            push (@{ $printers },"$city, $branch => $member");
+        }
+        $found ++;
+        my $dname = $entry->dn;
+        $dname=~s/,\s+/,/g;
+        my ($city, $branch);
+    }
+    unless ($found > 0){
+        return undef;
+    }
+    return $printers;
+}
+
+sub location_lookup{
+    my ($self, $kernel, $heap, $sender, $location, $replyto, $who, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my $devices = $self->lookup_location($location);
+    if($devices){
+        foreach my $skrs (@{ $devices }){
+            $self->{'irc'}->yield( privmsg => $replyto => "$skrs");
+        }
+    }else{
+        $self->{'irc'}->yield( privmsg => $replyto => "$location not found. (did you forget to put it in LDAP ou=Card\@Once?)");
     }
 }
 
@@ -271,19 +323,14 @@ sub irc_public {
             #$self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
             $kernel->yield('printer_lookup',$soekris,$channel,$nick);
         }
-    
+    }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){ 
+        my $search = $3;
+        $search=~s/\s*\?\s*$//; # remove trailing question marks
+        print "Initiate search for: $search\n";
+        $kernel->yield('location_lookup',$search,$channel,$nick);
     }elsif ( $what =~ /^\s*!*report/ ){ 
         my $json = JSON->new->allow_nonref;
-        my $struct = '';
-        eval {
-              $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/") );
-        };
-        if($@){
-            $self->{'irc'}->yield( privmsg => $channel => "http://mina.dev.$domainname:9090/caoPrinterStatus/");
-            $self->{'irc'}->yield( privmsg => $channel => "$@");
-            $self->{'irc'}->yield( privmsg => $channel => "aleclanter: ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ???");
-            return undef;
-        }
+        my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/") );
         $self->{'irc'}->yield( privmsg => $channel => "[Success/Total] Summary");
         $self->{'irc'}->yield( privmsg => $channel => "------------------------------");
         foreach my $item (@{ $struct }){
@@ -310,10 +357,7 @@ sub irc_public {
         $job=~tr/A-Z/a-z/;
         if($job=~m/[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+/){
             my $json = JSON->new->allow_nonref;
-            my $struct = '';
-            eval {
-                $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/job/$job") );
-            };
+            my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/job/$job") );
             $self->{'irc'}->yield( privmsg => $channel => "$struct");
         }
     }

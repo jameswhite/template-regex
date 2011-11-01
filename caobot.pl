@@ -258,7 +258,7 @@ sub lookup_location{
             $city=~s/,$//;
         }
         foreach my $member ( $entry->get_value( 'uniqueMember' ) ){
-            $member=~s/^cn=//;
+            $member=~s/^cn=//; # just the printer
             $member=~s/,.*//;
             push (@{ $printers },"$city, $branch => $member");
         }
