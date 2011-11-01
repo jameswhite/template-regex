@@ -251,7 +251,7 @@ sub lookup_location{
     my $printers = [];
     foreach $entry ($mesg->entries) {
         print STDERR $entry->dump()."\n";
-        foreach my $member ( $entry->get_value( 'uniqueMember' ){
+        foreach my $member ( $entry->get_value( 'uniqueMember' ) ){
             push (@{ $printers },$member);
         }
         $found ++;
