@@ -71,6 +71,7 @@ sub new {
                                                         'start_log',
                                                         'event_timeout',
                                                         'printer_lookup',
+                                                        'location_lookup',
                                                       ],
                                            ],
     );
@@ -219,8 +220,6 @@ sub lookup_printer{
     unless ($found > 0){
         return undef;
     }
-
-    
 }
 
 sub printer_lookup{
@@ -230,6 +229,48 @@ sub printer_lookup{
         $self->{'irc'}->yield( privmsg => $replyto => "$soekris => $description");
     }else{
         $self->{'irc'}->yield( privmsg => $replyto => "$soekris not found. (did you forget to put it in LDAP ou=Card\@Once?)");
+    }
+}
+
+sub lookup_location{
+    my $self = shift;
+    my $location = shift if @_;
+    return undef unless defined($location);
+    my $fqdn = `hostname -f`;
+    chomp($fqdn);
+    my @parts = split(/\./,$fqdn);
+    my $hostname = shift(@parts);
+    my $domainname = join('.',@parts);
+    my $basedn = "dc=".join(',dc=',@parts);
+    my $ldap = Net::LDAP->new( "ldap.$domainname" ) or warn "$@\n";
+    my $mesg = $ldap->bind;
+    print STDERR $mesg->error."\n" if $mesg->code;
+    $mesg = $ldap->search( base   => "ou=Card\@Once,$basedn", filter => "(&(uniqueMember=cn=skrs*)(cn=*$location*))", scope=> 'sub');
+    print STDERR $mesg->error."\n" if $mesg->code;
+    my $found = 0;
+    foreach $entry ($mesg->entries) {
+        $found ++;
+        my $dname = $entry->dn;
+        $dname=~s/,\s+/,/g;
+        my ($city, $branch);
+        #if($distname =~m/cn=(.*),\s*ou=Systems,ou=(.*),*ou=Card\@Once,$basedn/){
+        #    ($city,$branch) = ($1, $2);
+        #    $city=~s/,$//;
+        #}
+        return "Ummmm....";
+    }
+    unless ($found > 0){
+        return undef;
+    }
+}
+
+sub location_lookup{
+    my ($self, $kernel, $heap, $sender, $location, $replyto, $who, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my $soekris = $self->lookup_location($location);
+    if($description){
+        $self->{'irc'}->yield( privmsg => $replyto => "$location => $soekris");
+    }else{
+        $self->{'irc'}->yield( privmsg => $replyto => "$location not found. (did you forget to put it in LDAP ou=Card\@Once?)");
     }
 }
 
@@ -275,6 +316,7 @@ sub irc_public {
         my $search = $3;
         $search=~s/\s*\?\s*$//; # remove trailing question marks
         print "Initiate search for: $search\n";
+        $kernel->yield('location_lookup',$search,$channel,$nick);
     }elsif ( $what =~ /^\s*!*report/ ){ 
         my $json = JSON->new->allow_nonref;
         my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/") );
