@@ -248,28 +248,28 @@ sub lookup_location{
     $mesg = $ldap->search( base   => "ou=Card\@Once,$basedn", filter => "(&(uniqueMember=cn=skrs*)(cn=*$location*))", scope=> 'sub');
     print STDERR $mesg->error."\n" if $mesg->code;
     my $found = 0;
+    my $printers = [];
     foreach $entry ($mesg->entries) {
         print STDERR $entry->dump()."\n";
+        push (@{ $printers },$entry->get_value( 'uniqueMember' ));
         $found ++;
         my $dname = $entry->dn;
         $dname=~s/,\s+/,/g;
         my ($city, $branch);
-        #if($distname =~m/cn=(.*),\s*ou=Systems,ou=(.*),*ou=Card\@Once,$basedn/){
-        #    ($city,$branch) = ($1, $2);
-        #    $city=~s/,$//;
-        #}
-        return "Ummmm....";
     }
     unless ($found > 0){
         return undef;
     }
+    return $printers;
 }
 
 sub location_lookup{
     my ($self, $kernel, $heap, $sender, $location, $replyto, $who, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-    my $soekris = $self->lookup_location($location);
-    if($description){
-        $self->{'irc'}->yield( privmsg => $replyto => "$location => $soekris");
+    my $devices = $self->lookup_location($location);
+    if($devices){
+        foreach my $skrs (@{ $devices }){
+            $self->{'irc'}->yield( privmsg => $replyto => "$location => $skrs");
+        }
     }else{
         $self->{'irc'}->yield( privmsg => $replyto => "$location not found. (did you forget to put it in LDAP ou=Card\@Once?)");
     }
