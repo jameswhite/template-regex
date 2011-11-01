@@ -273,8 +273,8 @@ sub irc_public {
         }
     }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){ 
         my $search = $3;
-        $search=~s/[\.\?]$//;
-        print "Initiate search for: $3\n";
+        $search=~s/\s*\?\s*$//; # remove trailing question marks
+        print "Initiate search for: $search\n";
     }elsif ( $what =~ /^\s*!*report/ ){ 
         my $json = JSON->new->allow_nonref;
         my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/") );
