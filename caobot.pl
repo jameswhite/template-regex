@@ -250,9 +250,15 @@ sub lookup_location{
     my $found = 0;
     my $printers = [];
     foreach $entry ($mesg->entries) {
-        print STDERR $entry->dump()."\n";
+        my $distname = $entry->dn;
+        $distname=~s/,\s+/,/g;
+        my ($city, $branch);
+        if($distname =~m/cn=(.*),\s*ou=Systems,ou=(.*),*ou=Card\@Once,$basedn/){
+            ($city,$branch) = ($1, $2);
+            $city=~s/,$//;
+        }
         foreach my $member ( $entry->get_value( 'uniqueMember' ) ){
-            push (@{ $printers },$member);
+            push (@{ $printers },"$city, $branch => $member");
         }
         $found ++;
         my $dname = $entry->dn;
@@ -270,7 +276,7 @@ sub location_lookup{
     my $devices = $self->lookup_location($location);
     if($devices){
         foreach my $skrs (@{ $devices }){
-            $self->{'irc'}->yield( privmsg => $replyto => "$location => $skrs");
+            $self->{'irc'}->yield( privmsg => $replyto => "$skrs");
         }
     }else{
         $self->{'irc'}->yield( privmsg => $replyto => "$location not found. (did you forget to put it in LDAP ou=Card\@Once?)");
