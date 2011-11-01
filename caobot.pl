@@ -271,7 +271,8 @@ sub irc_public {
             #$self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
             $kernel->yield('printer_lookup',$soekris,$channel,$nick);
         }
-    
+    }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){ 
+        print "Initiate search for: $3\n";
     }elsif ( $what =~ /^\s*!*report/ ){ 
         my $json = JSON->new->allow_nonref;
         my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/") );
