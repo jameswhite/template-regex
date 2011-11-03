@@ -172,6 +172,7 @@ sub sketch_connection {
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
         next if ( $args->[7] =~ m/^prnt0024/) ; # ignore the qa printer
+        $kernel->yield('send_sketch', "Job: $args->[10]: $args->[7]");
     }elsif ($match eq 'windows_event.printer_jobid'){
         $args->[3]=~s/\..*//g; $args->[3]=~tr/A-Z/a-z/;
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
