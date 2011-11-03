@@ -339,6 +339,7 @@ sub irc_public {
         }else{
             $sanitized_device='skrs';
         }
+print Data::Dumper->Dump([{'sanitized_device_1' => $sanitized_device}]);
         my $number=0;
         if($number = $device=~m/([0-9]+)/){
             if($number < 10){ $number="000$device"; }
@@ -346,7 +347,7 @@ sub irc_public {
             elsif($number < 1000){ $number="0$number"; }
         }
         $sanitized_device.=$number;
-print Data::Dumper->Dump([{'sanitized_device' => $sanitized_device}]);
+print Data::Dumper->Dump([{'sanitized_device_2' => $sanitized_device}]);
         $kernel->yield('spawn', ["rtatiem","$sanitized_device"]);
     }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){ 
         my $search = $3;
