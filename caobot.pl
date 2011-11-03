@@ -90,7 +90,6 @@ sub _start {
     $self->{'irc'}->yield( register => 'all' );
     $self->{'irc'}->yield( connect => { } );
     $kernel->delay('start_log',5);
-    $kernel->delay('spawn', 1, ["rtatiem","skrs0019"]);
     return;
 }
 
@@ -330,6 +329,8 @@ sub irc_public {
             #$self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
             $kernel->yield('printer_lookup',$soekris,$channel,$nick);
         }
+    }elsif ( my ($device) = $what =~ /^\s*[Ii]s\s*(\S*[0-9]+)\s*up\s*\?*$/ ){ 
+        $kernel->yield('spawn', 1, ["rtatiem",$1]);
     }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){ 
         my $search = $3;
         $search=~s/\s*\?\s*$//; # remove trailing question marks
@@ -389,7 +390,7 @@ sub _default {
 }
 
 sub spawn{
-    my ($self, $kernel, $heap, $sender, $program) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my ($self, $kernel, $heap, $sender, $program, $reply_event) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my $child = POE::Wheel::Run->new(
                                       Program      => $program,
                                       StdoutEvent  => "on_child_stdout",
@@ -405,10 +406,10 @@ sub spawn{
     # Signal events include the process ID.
     $_[HEAP]{children_by_pid}{$child->PID} = $child;
 
-    print(
-      "Child pid ", $child->PID,
-      " started as wheel ", $child->ID, ".\n"
-    );
+    # Save who whil get the reply
+    $_[HEAP]{reply_to}{$child->ID} = $reply_event;
+
+    print("Child pid ", $child->PID, " started as wheel ", $child->ID, ".\n");
 }
 
 sub on_child_stdout {
