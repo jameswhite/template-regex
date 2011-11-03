@@ -419,7 +419,8 @@ sub on_child_stdout {
     my ($self, $kernel, $heap, $sender, $stdout_line, $wheel_id) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my $child = $_[HEAP]{children_by_wid}{$wheel_id};
     print "pid ", $child->PID, " STDOUT: $stdout_line\n";
-    $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$stdout_line")
+    print Data::Dumper->Dump([ $self->{'channel'} , "$stdout_line" ]);
+    $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$stdout_line")  unless( $stdout_line =~m/^\s+$/ ) ;
 }
 
 # Wheel event, including the wheel's ID.
