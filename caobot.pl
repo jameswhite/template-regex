@@ -330,10 +330,22 @@ sub irc_public {
             $kernel->yield('printer_lookup',$soekris,$channel,$nick);
         }
     }elsif ( my ($device) = $what =~ /^\s*[Ii]s\s*(\S*[0-9]+)\s*up\s*\?*$/ ){ 
-        #
         # Sanitize $device FIXME
-        #
-        $kernel->yield('spawn', ["rtatiem","$device"]);
+        $device=~s/\s*//; 
+        $device=~tr/A-Z/a-z/; 
+        my $sanitized_device='';
+        if($device=~m/prnt/){
+            $sanitized_device='prnt';
+        }else{
+            $sanitized_device='skrs';
+        }
+        if(my $number = $device=~m/([0-9]+)/){
+            if($number < 10){ $number="000$device"; }
+            elsif($number < 100){ $number="00$number"; }
+            elsif($number < 1000){ $number="0$number"; }
+        }
+        $sanitized_device.=$number;
+        $kernel->yield('spawn', ["rtatiem","$sanitized_device"]);
     }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){ 
         my $search = $3;
         $search=~s/\s*\?\s*$//; # remove trailing question marks
