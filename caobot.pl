@@ -72,6 +72,11 @@ sub new {
                                                         'event_timeout',
                                                         'printer_lookup',
                                                         'location_lookup',
+                                                        'spawn',
+                                                        'got_child_stdout',
+                                                        'got_child_stderr',
+                                                        'got_child_close',
+                                                        'got_child_signal',
                                                       ],
                                            ],
     );
@@ -84,6 +89,7 @@ sub _start {
     $self->{'irc'}->yield( register => 'all' );
     $self->{'irc'}->yield( connect => { } );
     $kernel->delay('start_log',5);
+    $kernel->delay('spawn', [ "/bin/ls", "-1", "/" ]);
     return;
 }
 
@@ -379,6 +385,69 @@ sub _default {
      }
      print join ' ', @output, "\n";
      return;
+}
+
+sub spawn{
+    my ($self, $kernel, $heap, $sender, $program) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my $child = POE::Wheel::Run->new(
+                                      Program      => $program,
+                                      StdoutEvent  => "got_child_stdout",
+                                      StderrEvent  => "got_child_stderr",
+                                      CloseEvent   => "got_child_close",
+                                    );
+
+    $_[KERNEL]->sig_child($child->PID, "got_child_signal");
+
+    # Wheel events include the wheel's ID.
+    $_[HEAP]{children_by_wid}{$child->ID} = $child;
+
+    # Signal events include the process ID.
+    $_[HEAP]{children_by_pid}{$child->PID} = $child;
+
+    print(
+      "Child pid ", $child->PID,
+      " started as wheel ", $child->ID, ".\n"
+    );
+  }
+}
+
+sub on_child_stdout {
+    my ($self, $kernel, $heap, $sender, $stdout_line, $wheel_id) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my $child = $_[HEAP]{children_by_wid}{$wheel_id};
+    print "pid ", $child->PID, " STDOUT: $stdout_line\n";
+}
+
+# Wheel event, including the wheel's ID.
+sub on_child_stderr {
+    my ($self, $kernel, $heap, $sender, $stderr_line, $wheel_id) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my $child = $_[HEAP]{children_by_wid}{$wheel_id};
+    print "pid ", $child->PID, " STDERR: $stderr_line\n";
+}
+
+# Wheel event, including the wheel's ID.
+sub on_child_close {
+    my ($self, $kernel, $heap, $sender, $wheel_id) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my $child = delete $_[HEAP]{children_by_wid}{$wheel_id};
+
+    # May have been reaped by on_child_signal().
+    unless (defined $child) {
+      print "wid $wheel_id closed all pipes.\n";
+      return;
+    }
+
+    print "pid ", $child->PID, " closed all pipes.\n";
+    delete $_[HEAP]{children_by_pid}{$child->PID};
+}
+
+sub on_child_signal {
+    my ($self, $kernel, $heap, $sender, $wheel_id) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    print "pid $_[ARG1] exited with status $_[ARG2].\n";
+    my $child = delete $_[HEAP]{children_by_pid}{$_[ARG1]};
+
+    # May have been reaped by on_child_close().
+    return unless defined $child;
+
+    delete $_[HEAP]{children_by_wid}{$child->ID};
 }
 
 1;
