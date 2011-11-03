@@ -89,7 +89,7 @@ sub _start {
     $self->{'irc'}->yield( register => 'all' );
     $self->{'irc'}->yield( connect => { } );
     $kernel->delay('start_log',5);
-    $kernel->delay('spawn', [ "/bin/ls", "-1", "/" ]);
+    $kernel->delay('spawn', 1, [ "/bin/ls", "-1", "/" ]);
     return;
 }
 
