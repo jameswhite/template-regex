@@ -330,7 +330,10 @@ sub irc_public {
             $kernel->yield('printer_lookup',$soekris,$channel,$nick);
         }
     }elsif ( my ($device) = $what =~ /^\s*[Ii]s\s*(\S*[0-9]+)\s*up\s*\?*$/ ){ 
-        $kernel->yield('spawn', ["/usr/local/bin/rtatiem","$device"]);
+        #
+        # Sanitize $device FIXME
+        #
+        $kernel->yield('spawn', ["/usr/local/bin/rtatiem",'$device'],[$sender->ID,$where,$who]);
     }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){ 
         my $search = $3;
         $search=~s/\s*\?\s*$//; # remove trailing question marks
@@ -416,6 +419,7 @@ sub on_child_stdout {
     my ($self, $kernel, $heap, $sender, $stdout_line, $wheel_id) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my $child = $_[HEAP]{children_by_wid}{$wheel_id};
     print "pid ", $child->PID, " STDOUT: $stdout_line\n";
+    print STDERR Data::Dumper->Dump([ $_[HEAP]{reply_to}{$wheel_id} ]);
 }
 
 # Wheel event, including the wheel's ID.
