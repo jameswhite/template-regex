@@ -340,6 +340,7 @@ sub irc_public {
             $sanitized_device='skrs';
         }
 print Data::Dumper->Dump([{'sanitized_device_1' => $sanitized_device}]);
+print STDERR "device: $device\n";
         if($number = $device=~m/([0-9]+)/){
 print STDERR "NUMBER: $number\n";
             if($number < 10){ $number="000$number"; }
