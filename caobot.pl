@@ -329,7 +329,7 @@ sub irc_public {
             #$self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
             $kernel->yield('printer_lookup',$soekris,$channel,$nick);
         }
-    }elsif (( my ($device) = $what =~ /^\s*[Ii]s\s*(\S*[0-9]+)\s*up\s*\?*$/ ) || ( my ($device) = $what =~ /^\s*ping\s*(\S*[0-9]+)\s*$/ )){ 
+    }elsif ( my ($device) = $what =~ /^\s*[Ii]s\s*(\S*[0-9]+)\s*up\s*\?*$/ ){ 
         # Sanitize $device FIXME
         $device=~s/\s*//; 
         $device=~tr/A-Z/a-z/; 
@@ -342,11 +342,13 @@ sub irc_public {
         $device=~s/^[Ss][Kk][Rr][Ss]//;
         $device=~s/^[Pp][Rr][Nn][Tt]//;
         $device=~s/^0*//;
+print STDERR "device: $device\n";
         if($device=~m/.*([0-9]+)/){
             if($device < 10){ $device=$sanitized_device.'000'.$device; }
             elsif($device < 100){ $device=$sanitized_device.'00'.$device; }
             elsif($device < 1000){ $device=$sanitized_device.'0'.$device; }
         }
+print Data::Dumper->Dump([{'sanitized_device_2' => $device}]);
         $kernel->yield('spawn', ["rtatiem","$device"]);
     }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){ 
         my $search = $3;
