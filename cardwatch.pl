@@ -25,6 +25,7 @@ use POE qw(Wheel::FollowTail);
 use YAML;
 use Template::Regex;
 use POE::Filter::Stream;
+use POE::Wheel::Run;
 use POE qw(Component::IRC);
 use LWP::Simple;
 use JSON;
@@ -72,6 +73,11 @@ sub new {
                                                         'event_timeout',
                                                         'printer_lookup',
                                                         'location_lookup',
+                                                        'spawn',
+                                                        'on_child_stdout',
+                                                        'on_child_stderr',
+                                                        'on_child_close',
+                                                        'on_child_signal',
                                                       ],
                                            ],
     );
@@ -323,6 +329,45 @@ sub irc_public {
             #$self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
             $kernel->yield('printer_lookup',$soekris,$channel,$nick);
         }
+    }elsif ( my ($device) = $what =~ /^\s*[Ii]s\s*(\S*[0-9]+)\s*up\s*\?*$/ ){ 
+        # Sanitize $device FIXME
+        $device=~s/\s*//; 
+        $device=~tr/A-Z/a-z/; 
+        my $sanitized_device='';
+        if($device=~m/prnt/){
+            $sanitized_device='prnt';
+        }else{
+            $sanitized_device='skrs';
+        }
+        $device=~s/^[Ss][Kk][Rr][Ss]//;
+        $device=~s/^[Pp][Rr][Nn][Tt]//;
+        $device=~s/^0*//;
+        if($device=~m/.*([0-9]+)/){
+            if($device < 10){ $device=$sanitized_device.'000'.$device; }
+            elsif($device < 100){ $device=$sanitized_device.'00'.$device; }
+            elsif($device < 1000){ $device=$sanitized_device.'0'.$device; }
+        }
+        $kernel->yield('spawn', ["rtatiem","$device"]);
+    }elsif ( my ($device) = $what =~ /^\s*ping\s*(\S*[0-9]+)\s*$/ ){ 
+        # Sanitize $device FIXME
+        $device=~s/\s*//; 
+        $device=~tr/A-Z/a-z/; 
+        my $sanitized_device='';
+        if($device=~m/prnt/){
+            $sanitized_device='prnt';
+        }else{
+            $sanitized_device='skrs';
+        }
+        $device=~s/^[Ss][Kk][Rr][Ss]//;
+        $device=~s/^[Pp][Rr][Nn][Tt]//;
+        $device=~s/^0*//;
+        if($device=~m/.*([0-9]+)/){
+            if($device < 10){ $device=$sanitized_device.'000'.$device; }
+            elsif($device < 100){ $device=$sanitized_device.'00'.$device; }
+            elsif($device < 1000){ $device=$sanitized_device.'0'.$device; }
+        }
+        $kernel->yield('spawn', ["rtatiem","$device"]);
+
     }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){ 
         my $search = $3;
         $search=~s/\s*\?\s*$//; # remove trailing question marks
@@ -381,6 +426,73 @@ sub _default {
      return;
 }
 
+sub spawn{
+    my ($self, $kernel, $heap, $sender, $program, $reply_event) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my $child = POE::Wheel::Run->new(
+                                      Program      => $program,
+                                      StdoutEvent  => "on_child_stdout",
+                                      StderrEvent  => "on_child_stderr",
+                                      CloseEvent   => "on_child_close",
+                                    );
+
+    $_[KERNEL]->sig_child($child->PID, "on_child_signal");
+
+    # Wheel events include the wheel's ID.
+    $_[HEAP]{children_by_wid}{$child->ID} = $child;
+
+    # Signal events include the process ID.
+    $_[HEAP]{children_by_pid}{$child->PID} = $child;
+
+    # Save who whil get the reply
+    $_[HEAP]{device}{$child->ID} = $program->[1];
+
+    print("Child pid ", $child->PID, " started as wheel ", $child->ID, ".\n");
+}
+
+sub on_child_stdout {
+    my ($self, $kernel, $heap, $sender, $stdout_line, $wheel_id) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my $child = $_[HEAP]{children_by_wid}{$wheel_id};
+
+    print "pid ", $child->PID, " STDOUT: $stdout_line\n";
+    my $device =  $_[HEAP]{device}{$wheel_id};
+    $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$device => $stdout_line") unless( $stdout_line =~m/^\s*$/ ) ;
+}
+
+# Wheel event, including the wheel's ID.
+sub on_child_stderr {
+    my ($self, $kernel, $heap, $sender, $stderr_line, $wheel_id) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my $child = $_[HEAP]{children_by_wid}{$wheel_id};
+    print "pid ", $child->PID, " STDERR: $stderr_line\n";
+}
+
+# Wheel event, including the wheel's ID.
+sub on_child_close {
+    my ($self, $kernel, $heap, $sender, $wheel_id) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my $child = delete $_[HEAP]{children_by_wid}{$wheel_id};
+    delete $_[HEAP]{device}{$wheel_id};
+
+    # May have been reaped by on_child_signal().
+    unless (defined $child) {
+      print "wid $wheel_id closed all pipes.\n";
+      return;
+    }
+
+    print "pid ", $child->PID, " closed all pipes.\n";
+    delete $_[HEAP]{children_by_pid}{$child->PID};
+}
+
+sub on_child_signal {
+    my ($self, $kernel, $heap, $sender, $wheel_id) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    print "pid $_[ARG1] exited with status $_[ARG2].\n";
+    my $child = delete $_[HEAP]{children_by_pid}{$_[ARG1]};
+
+    # May have been reaped by on_child_close().
+    return unless defined $child;
+
+    delete $_[HEAP]{children_by_wid}{$child->ID};
+    delete $_[HEAP]{device}{$wheel_id};
+}
+
 1;
 
 $|=1;
@@ -390,9 +502,9 @@ my $cisco  = Log::Tail::Reporter->new({
                                          'server'   => 'irc',
                                          'ircname'  => 'Card@Once Watcher',
                                          'nick'     => 'cardwatch',
-#                                         'nick'     => 'caobot',
+ #                                        'nick'     => 'caobot',
                                          'channel'  => '#cao',
-#                                         'channel'  => '#bottest',
+ #                                        'channel'  => '#bottest',
                                        });
 POE::Kernel->run();
 exit;
