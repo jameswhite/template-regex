@@ -408,7 +408,6 @@ sub spawn{
       "Child pid ", $child->PID,
       " started as wheel ", $child->ID, ".\n"
     );
-  }
 }
 
 sub on_child_stdout {
