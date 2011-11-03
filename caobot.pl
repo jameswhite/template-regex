@@ -339,20 +339,17 @@ sub irc_public {
         }else{
             $sanitized_device='skrs';
         }
-print Data::Dumper->Dump([{'sanitized_device_1' => $sanitized_device}]);
         $device=~s/^[Ss][Kk][Rr][Ss]//;
         $device=~s/^[Pp][Rr][Nn][Tt]//;
         $device=~s/^0*//;
 print STDERR "device: $device\n";
-        if($number = $device=~m/.*([0-9]+)/){
-print STDERR "NUMBER: $number\n";
-            if($number < 10){ $number="000$number"; }
-            elsif($number < 100){ $number="00$number"; }
-            elsif($number < 1000){ $number="0$number"; }
+        if($device=~m/.*([0-9]+)/){
+            if($device < 10){ $device=$sanitized_device.$device; }
+            elsif($device < 100){ $device=$sanitized_device.$device; }
+            elsif($device < 1000){ $device=$sanitized_device.$device; }
         }
-        $sanitized_device.=$number;
-print Data::Dumper->Dump([{'sanitized_device_2' => $sanitized_device}]);
-        $kernel->yield('spawn', ["rtatiem","$sanitized_device"]);
+print Data::Dumper->Dump([{'sanitized_device_2' => $device}]);
+        $kernel->yield('spawn', ["rtatiem","$device"]);
     }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){ 
         my $search = $3;
         $search=~s/\s*\?\s*$//; # remove trailing question marks
