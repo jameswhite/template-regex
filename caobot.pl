@@ -422,7 +422,7 @@ sub spawn{
     $_[HEAP]{children_by_pid}{$child->PID} = $child;
 
     # Save who whil get the reply
-    $_[HEAP]{reply_to}{$child->ID} = $reply_event;
+    $_[HEAP]{device}{$child->ID} = $program->[1];
 
     print("Child pid ", $child->PID, " started as wheel ", $child->ID, ".\n");
 }
@@ -432,7 +432,8 @@ sub on_child_stdout {
     my $child = $_[HEAP]{children_by_wid}{$wheel_id};
 
     print "pid ", $child->PID, " STDOUT: $stdout_line\n";
-    $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$stdout_line") unless( $stdout_line =~m/^\s*$/ ) ;
+    my $device =  $_[HEAP]{device}{$wheel_id};
+    $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$device => $stdout_line") unless( $stdout_line =~m/^\s*$/ ) ;
 }
 
 # Wheel event, including the wheel's ID.
@@ -446,7 +447,7 @@ sub on_child_stderr {
 sub on_child_close {
     my ($self, $kernel, $heap, $sender, $wheel_id) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my $child = delete $_[HEAP]{children_by_wid}{$wheel_id};
-    delete $_[HEAP]{reply_to}{$wheel_id};
+    delete $_[HEAP]{device}{$wheel_id};
 
     # May have been reaped by on_child_signal().
     unless (defined $child) {
@@ -467,7 +468,7 @@ sub on_child_signal {
     return unless defined $child;
 
     delete $_[HEAP]{children_by_wid}{$child->ID};
-    delete $_[HEAP]{reply_to}{$wheel_id};
+    delete $_[HEAP]{device}{$wheel_id};
 }
 
 1;
