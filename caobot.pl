@@ -333,7 +333,7 @@ sub irc_public {
         #
         # Sanitize $device FIXME
         #
-        $kernel->yield('spawn', ["rtatiem",'$device']);
+        $kernel->yield('spawn', ["rtatiem","$device"]);
     }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){ 
         my $search = $3;
         $search=~s/\s*\?\s*$//; # remove trailing question marks
@@ -418,8 +418,8 @@ sub spawn{
 sub on_child_stdout {
     my ($self, $kernel, $heap, $sender, $stdout_line, $wheel_id) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my $child = $_[HEAP]{children_by_wid}{$wheel_id};
+
     print "pid ", $child->PID, " STDOUT: $stdout_line\n";
-    print Data::Dumper->Dump([ $self->{'channel'} , "$stdout_line" ]);
     $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$stdout_line") unless( $stdout_line =~m/^\s*$/ ) ;
 }
 
