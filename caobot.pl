@@ -25,6 +25,7 @@ use POE qw(Wheel::FollowTail);
 use YAML;
 use Template::Regex;
 use POE::Filter::Stream;
+use POE::Wheel::Run;
 use POE qw(Component::IRC);
 use LWP::Simple;
 use JSON;
