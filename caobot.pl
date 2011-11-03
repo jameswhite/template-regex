@@ -340,9 +340,8 @@ sub irc_public {
             $sanitized_device='skrs';
         }
 print Data::Dumper->Dump([{'sanitized_device_1' => $sanitized_device}]);
-        my $number=0;
         if($number = $device=~m/([0-9]+)/){
-            if($number < 10){ $number="000$device"; }
+            if($number < 10){ $number="000$number"; }
             elsif($number < 100){ $number="00$number"; }
             elsif($number < 1000){ $number="0$number"; }
         }
