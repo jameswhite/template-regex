@@ -167,11 +167,11 @@ sub sketch_connection {
         # do nothing, we dont' care about these right now.
         print "";
     }elsif ($match eq 'windows_event.printer_jobstatus'){
+        print STDERR Data::Dumper->Dump([$args]);
         $args->[3]=~s/\..*//g; $args->[3]=~tr/A-Z/a-z/;
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
         next if ( $args->[3] =~ m/^arctic/) ; # ignore the lab
         next if ( $args->[7] =~ m/^prnt0024/) ; # ignore the qa printer
-        print STDERR Data::Dumper->Dump([$args]);
     }elsif ($match eq 'windows_event.printer_jobid'){
         $args->[3]=~s/\..*//g; $args->[3]=~tr/A-Z/a-z/;
         $args->[7]=~s/\..*//g; $args->[7]=~tr/A-Z/a-z/;
