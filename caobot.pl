@@ -330,7 +330,7 @@ sub irc_public {
             $kernel->yield('printer_lookup',$soekris,$channel,$nick);
         }
     }elsif ( my ($device) = $what =~ /^\s*[Ii]s\s*(\S*[0-9]+)\s*up\s*\?*$/ ){ 
-        $kernel->yield('spawn', 1, ["rtatiem",$1]);
+        $kernel->yield('spawn', 1, ["/usr/local/bin/rtatiem","$device"]);
     }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){ 
         my $search = $3;
         $search=~s/\s*\?\s*$//; # remove trailing question marks
