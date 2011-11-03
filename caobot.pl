@@ -339,7 +339,8 @@ sub irc_public {
         }else{
             $sanitized_device='skrs';
         }
-        if(my $number = $device=~m/([0-9]+)/){
+        my $number=0;
+        if($number = $device=~m/([0-9]+)/){
             if($number < 10){ $number="000$device"; }
             elsif($number < 100){ $number="00$number"; }
             elsif($number < 1000){ $number="0$number"; }
