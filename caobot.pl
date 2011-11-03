@@ -333,7 +333,7 @@ sub irc_public {
         #
         # Sanitize $device FIXME
         #
-        $kernel->yield('spawn', ["/usr/local/bin/rtatiem",'$device'],[$sender->ID,$where,$who]);
+        $kernel->yield('spawn', ["/usr/local/bin/rtatiem",'$device'],[$sender->ID, $where, $who]);
     }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){ 
         my $search = $3;
         $search=~s/\s*\?\s*$//; # remove trailing question marks
@@ -419,7 +419,7 @@ sub on_child_stdout {
     my ($self, $kernel, $heap, $sender, $stdout_line, $wheel_id) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my $child = $_[HEAP]{children_by_wid}{$wheel_id};
     print "pid ", $child->PID, " STDOUT: $stdout_line\n";
-    print STDERR Data::Dumper->Dump([ $_[HEAP]{reply_to}{$wheel_id} ]);
+    $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$stdout_line")
 }
 
 # Wheel event, including the wheel's ID.
@@ -433,6 +433,7 @@ sub on_child_stderr {
 sub on_child_close {
     my ($self, $kernel, $heap, $sender, $wheel_id) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my $child = delete $_[HEAP]{children_by_wid}{$wheel_id};
+    delete $_[HEAP]{reply_to}{$wheel_id};
 
     # May have been reaped by on_child_signal().
     unless (defined $child) {
@@ -453,6 +454,7 @@ sub on_child_signal {
     return unless defined $child;
 
     delete $_[HEAP]{children_by_wid}{$child->ID};
+    delete $_[HEAP]{reply_to}{$wheel_id};
 }
 
 1;
