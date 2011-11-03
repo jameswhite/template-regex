@@ -73,10 +73,10 @@ sub new {
                                                         'printer_lookup',
                                                         'location_lookup',
                                                         'spawn',
-                                                        'got_child_stdout',
-                                                        'got_child_stderr',
-                                                        'got_child_close',
-                                                        'got_child_signal',
+                                                        'on_child_stdout',
+                                                        'on_child_stderr',
+                                                        'on_child_close',
+                                                        'on_child_signal',
                                                       ],
                                            ],
     );
@@ -391,12 +391,12 @@ sub spawn{
     my ($self, $kernel, $heap, $sender, $program) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my $child = POE::Wheel::Run->new(
                                       Program      => $program,
-                                      StdoutEvent  => "got_child_stdout",
-                                      StderrEvent  => "got_child_stderr",
-                                      CloseEvent   => "got_child_close",
+                                      StdoutEvent  => "on_child_stdout",
+                                      StderrEvent  => "on_child_stderr",
+                                      CloseEvent   => "on_child_close",
                                     );
 
-    $_[KERNEL]->sig_child($child->PID, "got_child_signal");
+    $_[KERNEL]->sig_child($child->PID, "on_child_signal");
 
     # Wheel events include the wheel's ID.
     $_[HEAP]{children_by_wid}{$child->ID} = $child;
