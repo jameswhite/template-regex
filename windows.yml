@@ -20,6 +20,7 @@ regex_tpl:
   TZ_OFF: '[+\-][0-9]{2}:[0-9]{2}'
   JOB_ID: '[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+'
   STATUS: 'Success|Failure'
+  SOMESTATUS: '\S+'
   ERRORLEVEL: 'DEBUG|WARN|INFO|FATAL'
   SERVICEMETHOD: '\S+'
   ANYTHING: '.*'
@@ -43,6 +44,8 @@ log_tpl:
  - name: windows_event
    regex: '[% DATE %]T[% TIME %][% TZ_OFF %] [% HOSTNAME %] [% APPLICATION %]: [% DATE %] [% WTIME %]\s*'
    remainder:
+     - name: printer_jobstatus
+       regex: '\[DualysPrinter work thread for printer .[% HOSTNAME %].\] [% ERRORLEVEL %] [% SERVICEMETHOD %] \[.null.\] - The status for job [% JOB_ID %] has been updated to [% SOMESTATUS %]#015'
      - name: printer_jobid
        regex: '\[DualysPrinter work thread for printer .[% HOSTNAME %].\] [% ERRORLEVEL %] [% SERVICEMETHOD %] \[.null.\] - Job [% JOB_ID %] has a new status of Printing#015'
      - name: print_end
