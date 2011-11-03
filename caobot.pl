@@ -350,6 +350,28 @@ print STDERR "device: $device\n";
         }
 print Data::Dumper->Dump([{'sanitized_device_2' => $device}]);
         $kernel->yield('spawn', ["rtatiem","$device"]);
+    }elsif ( my ($device) = $what =~ /^\s*ping\s*(\S*[0-9]+)\s*$/ ){ 
+        # Sanitize $device FIXME
+        $device=~s/\s*//; 
+        $device=~tr/A-Z/a-z/; 
+        my $sanitized_device='';
+        if($device=~m/prnt/){
+            $sanitized_device='prnt';
+        }else{
+            $sanitized_device='skrs';
+        }
+        $device=~s/^[Ss][Kk][Rr][Ss]//;
+        $device=~s/^[Pp][Rr][Nn][Tt]//;
+        $device=~s/^0*//;
+print STDERR "device: $device\n";
+        if($device=~m/.*([0-9]+)/){
+            if($device < 10){ $device=$sanitized_device.'000'.$device; }
+            elsif($device < 100){ $device=$sanitized_device.'00'.$device; }
+            elsif($device < 1000){ $device=$sanitized_device.'0'.$device; }
+        }
+print Data::Dumper->Dump([{'sanitized_device_2' => $device}]);
+        $kernel->yield('spawn', ["rtatiem","$device"]);
+
     }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){ 
         my $search = $3;
         $search=~s/\s*\?\s*$//; # remove trailing question marks
