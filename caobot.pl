@@ -333,7 +333,7 @@ sub irc_public {
         #
         # Sanitize $device FIXME
         #
-        print STDERR Data::Dumper->Dump(["rtatiem",'$device']);
+        print STDERR Data::Dumper->Dump(["rtatiem",$device]);
         $kernel->yield('spawn', ["rtatiem",'$device'],[$sender->ID, $where, $who]);
     }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){ 
         my $search = $3;
