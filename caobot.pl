@@ -385,7 +385,10 @@ sub irc_public {
         $kernel->yield('location_lookup',$search,$channel,$nick);
     }elsif ( $what =~ /^\s*!*report/ ){ 
         my $json = JSON->new->allow_nonref;
-        my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/") );
+        my $struct;
+        eval {
+               $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/") );
+        };
         $self->{'irc'}->yield( privmsg => $channel => "[Success/Total] Summary");
         $self->{'irc'}->yield( privmsg => $channel => "------------------------------");
         foreach my $item (@{ $struct }){
