@@ -145,6 +145,12 @@ sub event_timeout{
             eval {
               $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/job/$job") );
             };
+            if($@){
+                $self->{'irc'}->yield( privmsg => $channel => "$@");
+                $self->{'irc'}->yield( privmsg => $channel => "(while fetching http://mina.dev.$domainname:9090/caoPrinterStatus/job/$job)");
+                $self->{'irc'}->yield( privmsg => $channel => "^^^^^^^^^^^^^^^^^^^^ aleclanter?");
+                return;
+            }
             $struct=~tr/A-Z/a-z/;
             $self->{'irc'}->yield( privmsg => $channel => "Job: $id: $struct");
         }
@@ -391,6 +397,8 @@ sub irc_public {
         };
         if($@){
             $self->{'irc'}->yield( privmsg => $channel => "$@");
+            $self->{'irc'}->yield( privmsg => $channel => "(while fetching http://mina.dev.$domainname:9090/caoPrinterStatus/)");
+            $self->{'irc'}->yield( privmsg => $channel => "^^^^^^^^^^^^^^^^^^^^ aleclanter?");
             return;
         }
         $self->{'irc'}->yield( privmsg => $channel => "[Success/Total] Summary");
