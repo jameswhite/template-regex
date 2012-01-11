@@ -122,12 +122,13 @@ sub got_log_line {
    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
    my $line = $args[0];
    if($line=~m/rule (617|939|1067|1195|2222)/){
-       $ignore=0;
+       my $ignore=0;
        foreach my $regex (@{ $self->{'ignore'} }){
            if($line=~m/$regex/){ $ignore=1; }
-           unless($ignore == 1){ 
-               $kernel->yield("say",$line);
-           }
+           print "/$regex/ $line\n";
+           #unless($ignore == 1){ 
+           #    $kernel->yield("say",$line);
+           #}
        }
    }
 } 
@@ -142,7 +143,6 @@ sub got_log_rollover {
 ################################################################################
 sub say {
     my ($self, $kernel, $heap, $sender, $comment, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-    print "SAY: $comment\n";
     $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$comment");
 }
 
