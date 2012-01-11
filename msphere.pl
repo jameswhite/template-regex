@@ -144,7 +144,8 @@ sub got_log_rollover {
 ################################################################################
 sub say {
     my ($self, $kernel, $heap, $sender, $comment, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-    $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$comment");
+    print STDERR "$comment\n";
+    #$self->{'irc'}->yield( privmsg => $self->{'channel'} => "$comment");
 }
 
 sub irc_001 {
