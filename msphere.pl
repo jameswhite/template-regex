@@ -45,6 +45,11 @@ sub new {
             return undef;
         }
     }
+    if($cnstr->{'ignore'}){
+        if(-f "$cnstr->{'ignore'}"){
+            $self->{'ignore'} = YAML::LoadFile($cnstr->{'ignore'}); # should be a yaml list list of regexes
+        }
+    }
     $self->{'file'} = $cnstr->{'file'} if($cnstr->{'file'});
     $self->{'max_lines'}=$cnstr->{'max_lines'}||undef;
     $self->{'TR'} = new Template::Regex;
@@ -117,7 +122,13 @@ sub got_log_line {
    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
    my $line = $args[0];
    if($line=~m/rule (617|939|1067|1195|2222)/){
-        $kernel->yield("say",$line);
+       $ignore=0;
+       foreach my $regex (@{ $self->{'ignore'} }){
+           if($line=~m/$regex/){ $ignore=1; }
+           unless($ignore == 1){ 
+               $kernel->yield("say",$line);
+           }
+       }
    }
 } 
 
@@ -256,6 +267,7 @@ $|=1;
 my $cisco  = Log::Tail::Reporter->new({ 
                                          'file'     => '/var/log/pfsense/pfsense.log',
                                          'template' => 'pfsense.yml',
+                                         'ignore'    => '/tmp/ignore.yml',
                                          'server'   => 'irc',
                                          'ircname'  => 'Magneto Sphere',
                                          'nick'     => 'msphere',
