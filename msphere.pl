@@ -126,11 +126,10 @@ sub got_log_line {
        foreach my $regex (@{ $self->{'ignore'} }){
            if($line=~m/$regex/){ 
                $ignore=1; 
-               print "/$regex/ $line\n";
            }
-           #unless($ignore == 1){ 
-           #    $kernel->yield("say",$line);
-           #}
+       }
+       unless($ignore == 1){ 
+           $kernel->yield("say",$line);
        }
    }
 } 
