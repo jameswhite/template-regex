@@ -124,8 +124,10 @@ sub got_log_line {
    if($line=~m/rule (617|939|1067|1195|2222)/){
        my $ignore=0;
        foreach my $regex (@{ $self->{'ignore'} }){
-           if($line=~m/$regex/){ $ignore=1; }
-           print "/$regex/ $line\n";
+           if($line=~m/$regex/){ 
+               $ignore=1; 
+               print "/$regex/ $line\n";
+           }
            #unless($ignore == 1){ 
            #    $kernel->yield("say",$line);
            #}
