@@ -170,10 +170,12 @@ sub irc_public {
     if ( my ($device) = $what =~ /ls/ ){ 
         my $output='';
         foreach my $exception (@{ $self->{'ignore'} }){
-            $output.="$exception|";
+            $output.="$exception";
             if(length($output) > 80){
                 $kernel->yield("say", "(".$output.")");
                 $output='';
+            }else{
+                $output.="|";
             }
         }
     }
