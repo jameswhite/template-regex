@@ -171,7 +171,7 @@ sub irc_public {
         my $output='';
         foreach my $exception (@{ $self->{'ignore'} }){
             $output.="$exception";
-            if(length($output) > 80){
+            if(length($output) > 200){
                 $kernel->yield("say", "(".$output.")");
                 $output='';
             }else{
