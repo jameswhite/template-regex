@@ -47,7 +47,7 @@ sub new {
     }
     if($cnstr->{'ignore'}){
         if(-f "$cnstr->{'ignore'}"){
-            $self->{'ignorefile'} = "$cnstr->{'ignore'}");
+            $self->{'ignorefile'} = "$cnstr->{'ignore'}";
             $self->{'ignore'} = YAML::LoadFile($self->{'ignorefile'}); # should be a yaml list list of regexes
         }
     }
