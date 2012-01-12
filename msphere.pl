@@ -194,6 +194,13 @@ sub irc_public {
             $kernel->yield("say", "/$pattern/ ignored.");
             print STDERR Data::Dumper->Dump([$heap->{'ignore'}]);
         }
+    }elsif( my ($rmpattern) = $what =~ /unignore\s+\/(.*)\// ){ 
+        my @newignorelist;
+        my @ignorelist = @{ $heap->{'ignore'} };
+        while(my $item = shif (@ignorelist){
+            push(@newignorelist,$item) unless($item eq $rmpattern);
+        }
+        $heap->{'ignore'} = @newignorelist;
     }
     return $self;
 }
