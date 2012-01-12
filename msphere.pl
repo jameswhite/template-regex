@@ -202,7 +202,7 @@ sub irc_public {
         while(my $item = shift (@ignorelist)){
             print STDERR "inspecting [$rmpattern] eq [$item]\n";
             if($item eq $rmpattern){
-                $kernel->yield("say", "/$rmpattern/ ignored.");
+                $kernel->yield("say", "/$rmpattern/ removed from ignore list.");
             }else{
                 push(@newignorelist,$item) unless($item eq $rmpattern);
             }
