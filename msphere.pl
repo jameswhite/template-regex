@@ -180,6 +180,7 @@ sub irc_public {
                 $output.="|";
             }
         }
+        chop($output); # lose the last pipe
         $kernel->yield("say", "(".$output.")");
     }elsif( my ($pattern) = $what =~ /ignore\s+\/(.*)\// ){ 
         my $have=0;    
