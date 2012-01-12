@@ -167,8 +167,8 @@ sub irc_public {
     my $hostname = shift(@parts);
     my $domainname = join('.',@parts);
     print "$what\n";
-    if ( my ($device) = $what =~ /(.*)/ ){ 
-        $kernel->yield("say", $what);
+    if ( my ($device) = $what =~ /ls/ ){ 
+        $kernel->yield("say", "(".join("|",@{ $self->{'ignore'} }).")";
     }
     return;
 }
