@@ -195,6 +195,7 @@ sub irc_public {
             print STDERR Data::Dumper->Dump([$heap->{'ignore'}]);
         }
     }elsif( my ($rmpattern) = $what =~ /unignore\s+\/(.*)\// ){ 
+        print STDERR "...\n";
         my @newignorelist;
         my @ignorelist = @{ $heap->{'ignore'} };
         print STDERR Data::Dumper->Dump([@ignorelist]);
