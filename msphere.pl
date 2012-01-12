@@ -47,7 +47,8 @@ sub new {
     }
     if($cnstr->{'ignore'}){
         if(-f "$cnstr->{'ignore'}"){
-            $self->{'ignore'} = YAML::LoadFile($cnstr->{'ignore'}); # should be a yaml list list of regexes
+            $self->{'ignorefile'} = "$cnstr->{'ignore'}");
+            $self->{'ignore'} = YAML::LoadFile($self->{'ignorefile'}); # should be a yaml list list of regexes
         }
     }
     $self->{'file'} = $cnstr->{'file'} if($cnstr->{'file'});
@@ -169,7 +170,6 @@ sub irc_public {
     my $domainname = join('.',@parts);
     print "$what\n";
     if ( my ($device) = $what =~ /ls/ ){ 
-        print STDERR Data::Dumper->Dump([$heap->{'ignore'}]);
         my $output='';
         foreach my $exception (@{ $heap->{'ignore'} }){
             $output.="$exception";
@@ -192,13 +192,12 @@ sub irc_public {
         if($have == 0){
             push(@{ $heap->{'ignore'} },$pattern);
             $kernel->yield("say", "/$pattern/ ignored.");
-            print STDERR Data::Dumper->Dump([$heap->{'ignore'}]);
         }
+        YAML::DumpFile($self->{'ignorefile'},@{ $heap->{'ignore'} });
     }elsif( my ($rmpattern) = $what =~ /^\s*!*unignore\s+\/(.*)\// ){ 
         print STDERR "...\n";
         my @newignorelist;
         my @ignorelist = @{ $heap->{'ignore'} };
-        print STDERR Data::Dumper->Dump([@ignorelist]);
         while(my $item = shift (@ignorelist)){
             print STDERR "inspecting [$rmpattern] eq [$item]\n";
             if($item eq $rmpattern){
@@ -208,6 +207,7 @@ sub irc_public {
             }
         }
         @{ $heap->{'ignore'} } = @newignorelist;
+        YAML::DumpFile($self->{'ignorefile'},@{ $heap->{'ignore'} });
     }
     return $self;
 }
