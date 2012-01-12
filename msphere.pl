@@ -132,7 +132,8 @@ sub got_log_line {
        }
        unless($ignore == 1){ 
            my $data=$self->{'TR'}->parse_line($line);
-           print STDERR "$data->{'name'}\n";
+           $heap->{'counters'}->{ $data->{'name'} } = unless $heap->{'counters'}->{ $data->{'name'} };
+           $heap->{'counters'}->{ $data->{'name'} }++;
            #$kernel->yield("say",$line);
        }
    }
@@ -140,7 +141,10 @@ sub got_log_line {
 
 sub got_log_rollover {
     my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-    $self->{'irc'}->yield( privmsg => $self->{'channel'} => "Log rolled over.");
+    foreach my $key (sort(keys(%{  $heap->{'counters'} }))){
+        $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$key: $heap->{'counters'}->{$key}" );
+        $heap->{'counters'}->{$key}=0;
+    }
 }
 
 ################################################################################
@@ -210,6 +214,8 @@ sub irc_public {
         }
         @{ $heap->{'ignore'} } = @newignorelist;
         YAML::DumpFile($self->{'ignorefile'},@{ $heap->{'ignore'} });
+    }elsif( my ($rmpattern) = $what =~ /^\s*!*roll\s*over/ ){ 
+        $kernel->yield("got_log_rollover");
     }
     return $self;
 }
