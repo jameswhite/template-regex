@@ -178,6 +178,15 @@ sub irc_public {
                 $output.="|";
             }
         }
+    }elsif( my ($device) = $what =~ /ignore\s+\/(.*)\// ){ 
+        my $omit=$1;
+        my $have=0;    
+        foreach my $exception (@{ $self->{'ignore'} }){
+            if($omit eq $exception){
+                $have=1;    
+            }
+        }
+        push(@{ $self->{'ignore'} },$omit) unless($have == 1);
     }
     return;
 }
