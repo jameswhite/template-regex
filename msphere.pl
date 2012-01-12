@@ -169,6 +169,7 @@ sub irc_public {
     my $domainname = join('.',@parts);
     print "$what\n";
     if ( my ($device) = $what =~ /ls/ ){ 
+        print STDERR Data::Dumper->Dump([$heap->{'ignore'}]);
         my $output='';
         foreach my $exception (@{ $heap->{'ignore'} }){
             $output.="$exception";
