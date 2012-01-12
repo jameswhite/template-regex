@@ -201,6 +201,7 @@ sub irc_public {
             push(@newignorelist,$item) unless($item eq $rmpattern);
         }
         $heap->{'ignore'} = @newignorelist;
+        print STDERR Data::Dumper->Dump([$heap->{'ignore'}]);
     }
     return $self;
 }
