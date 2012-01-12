@@ -168,7 +168,14 @@ sub irc_public {
     my $domainname = join('.',@parts);
     print "$what\n";
     if ( my ($device) = $what =~ /ls/ ){ 
-        $kernel->yield("say", "(".join("|",@{ $self->{'ignore'} }).")");
+        my $output='';
+        foreach my $exception (@{ $self->{'ignore'} }){
+            $output.="$exception|";
+            if(length($output) > 80){
+                $kernel->yield("say", "(".chop($output).")")
+                $output='';
+            }
+        }
     }
     return;
 }
