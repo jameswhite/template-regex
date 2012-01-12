@@ -191,7 +191,7 @@ sub irc_public {
             $kernel->yield("say", "/$omit/ ignored.");
         }
     }
-    return;
+    return $self;
 }
 
 # We registered for all events, this will produce some debug info.
