@@ -180,6 +180,7 @@ sub irc_public {
                 $output.="|";
             }
         }
+        $kernel->yield("say", "(".$output.")");
     }elsif( my ($pattern) = $what =~ /ignore\s+\/(.*)\// ){ 
         my $have=0;    
         foreach my $exception (@{ $heap->{'ignore'} }){
