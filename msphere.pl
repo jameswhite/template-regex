@@ -197,6 +197,7 @@ sub irc_public {
     }elsif( my ($rmpattern) = $what =~ /unignore\s+\/(.*)\// ){ 
         my @newignorelist;
         my @ignorelist = @{ $heap->{'ignore'} };
+        print STDERR Data::Dumper->Dump([@ignorelist]);
         while(my $item = shift (@ignorelist)){
             print STDERR "inspecting [$rmpattern] eq [$item]\n";
             if($item eq $rmpattern){
