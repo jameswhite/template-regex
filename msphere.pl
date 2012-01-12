@@ -207,7 +207,7 @@ sub irc_public {
                 push(@newignorelist,$item) unless($item eq $rmpattern);
             }
         }
-        $heap->{'ignore'} = @newignorelist;
+        @{ $heap->{'ignore'} } = @newignorelist;
     }
     return $self;
 }
