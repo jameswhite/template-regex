@@ -84,6 +84,7 @@ sub new {
 sub _start {
     my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     $_[HEAP]{linecount}=0;
+    $_[HEAP]{ignore} = $self->{'ignore'};
     $self->{'irc'}->yield( register => 'all' );
     $self->{'irc'}->yield( connect => { } );
     $kernel->delay('start_log',5);
@@ -123,7 +124,7 @@ sub got_log_line {
    my $line = $args[0];
    if($line=~m/rule (617|939|1067|1195|2222)/){
        my $ignore=0;
-       foreach my $regex (@{ $self->{'ignore'} }){
+       foreach my $regex (@{ $heap->{'ignore'} }){
            if($line=~m/$regex/){ 
                $ignore=1; 
            }
@@ -181,13 +182,13 @@ sub irc_public {
     }elsif( my ($device) = $what =~ /ignore\s+\/(.*)\// ){ 
         my $omit=$1;
         my $have=0;    
-        foreach my $exception (@{ $self->{'ignore'} }){
+        foreach my $exception (@{ $heap->{'ignore'} }){
             if($omit eq $exception){
                 $have=1;    
             }
         }
         unless($have == 1){
-            push(@{ $self->{'ignore'} },$omit);
+            push(@{ $heap->{'ignore'} },$omit);
             $kernel->yield("say", "/$omit/ ignored.");
         }
     }
