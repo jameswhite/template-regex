@@ -132,7 +132,7 @@ sub got_log_line {
        }
        unless($ignore == 1){ 
            my $data=$self->{'TR'}->parse_line($line);
-           $heap->{'counters'}->{ $data->{'name'} } = unless $heap->{'counters'}->{ $data->{'name'} };
+           $heap->{'counters'}->{ $data->{'name'} } unless $heap->{'counters'}->{ $data->{'name'} };
            $heap->{'counters'}->{ $data->{'name'} }++;
            #$kernel->yield("say",$line);
        }
