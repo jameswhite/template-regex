@@ -186,7 +186,10 @@ sub irc_public {
                 $have=1;    
             }
         }
-        push(@{ $self->{'ignore'} },$omit) unless($have == 1);
+        unless($have == 1){
+            push(@{ $self->{'ignore'} },$omit);
+            $kernel->yield("say", "/$omit/ ignored.");
+        }
     }
     return;
 }
