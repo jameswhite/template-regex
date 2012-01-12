@@ -182,7 +182,7 @@ sub irc_public {
         }
         chop($output); # lose the last pipe
         $kernel->yield("say", "(".$output.")");
-    }elsif( my ($pattern) = $what =~ /ignore\s+\/(.*)\// ){ 
+    }elsif( my ($pattern) = $what =~ /^\s*!*ignore\s+\/(.*)\// ){ 
         my $have=0;    
         foreach my $exception (@{ $heap->{'ignore'} }){
             if($pattern eq $exception){
@@ -194,7 +194,7 @@ sub irc_public {
             $kernel->yield("say", "/$pattern/ ignored.");
             print STDERR Data::Dumper->Dump([$heap->{'ignore'}]);
         }
-    }elsif( my ($rmpattern) = $what =~ /unignore\s+\/(.*)\// ){ 
+    }elsif( my ($rmpattern) = $what =~ /^\s*!*unignore\s+\/(.*)\// ){ 
         print STDERR "...\n";
         my @newignorelist;
         my @ignorelist = @{ $heap->{'ignore'} };
