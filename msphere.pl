@@ -186,9 +186,10 @@ sub irc_public {
                 $have=1;    
             }
         }
-        unless($have == 1){
+        if($have == 0){
             push(@{ $heap->{'ignore'} },$pattern);
             $kernel->yield("say", "/$pattern/ ignored.");
+            print STDERR Data::Dumper->Dump([$heap->{'ignore'}]);
         }
     }
     return $self;
