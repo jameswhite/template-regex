@@ -131,7 +131,9 @@ sub got_log_line {
            }
        }
        unless($ignore == 1){ 
-           $kernel->yield("say",$line);
+           my $data=$self->{'TR'}->parse_line($line);
+           print STDERR "$data->{'name'}\n";
+           #$kernel->yield("say",$line);
        }
    }
 } 
