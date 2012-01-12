@@ -179,17 +179,16 @@ sub irc_public {
                 $output.="|";
             }
         }
-    }elsif( my ($device) = $what =~ /ignore\s+\/(.*)\// ){ 
-        my $omit=$1;
+    }elsif( my ($pattern) = $what =~ /ignore\s+\/(.*)\// ){ 
         my $have=0;    
         foreach my $exception (@{ $heap->{'ignore'} }){
-            if($omit eq $exception){
+            if($pattern eq $exception){
                 $have=1;    
             }
         }
         unless($have == 1){
-            push(@{ $heap->{'ignore'} },$omit);
-            $kernel->yield("say", "/$omit/ ignored.");
+            push(@{ $heap->{'ignore'} },$pattern);
+            $kernel->yield("say", "/$pattern/ ignored.");
         }
     }
     return $self;
