@@ -197,7 +197,7 @@ sub irc_public {
     }elsif( my ($rmpattern) = $what =~ /unignore\s+\/(.*)\// ){ 
         my @newignorelist;
         my @ignorelist = @{ $heap->{'ignore'} };
-        while(my $item = shif (@ignorelist){
+        while(my $item = shift (@ignorelist){
             push(@newignorelist,$item) unless($item eq $rmpattern);
         }
         $heap->{'ignore'} = @newignorelist;
