@@ -198,7 +198,11 @@ sub irc_public {
         my @newignorelist;
         my @ignorelist = @{ $heap->{'ignore'} };
         while(my $item = shift (@ignorelist)){
-            push(@newignorelist,$item) unless($item eq $rmpattern);
+            if($item eq $rmpattern){
+                $kernel->yield("say", "/$rmpattern/ ignored.");
+            }else{
+                push(@newignorelist,$item) unless($item eq $rmpattern);
+            }
         }
         $heap->{'ignore'} = @newignorelist;
         print STDERR Data::Dumper->Dump([$heap->{'ignore'}]);
