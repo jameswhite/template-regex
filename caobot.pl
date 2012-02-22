@@ -452,7 +452,7 @@ sub irc_public {
         print STDERR "Looking up address for http://mina.dev.eftdomain.net:9090/caoPrinterStatus/site/$site_name\n";
         my $struct;
         eval {
-            $struct = $json->decode( get("http://mina.dev.eftdomain.net:9090/caoPrinterStatus/site/$site_name" )
+            $struct = $json->decode( get("http://mina.dev.eftdomain.net:9090/caoPrinterStatus/site/$site_name" ) );
         };
         if($@){
             $self->{'irc'}->yield( privmsg => $channel => "$@");
