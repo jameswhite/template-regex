@@ -400,12 +400,12 @@ sub irc_public {
         $self->{'irc'}->yield( privmsg => $where => "looking...");
         $kernel->yield('spawn', ["firmware","$device"]);
 
-    }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){ 
+    }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){
         my $search = $3;
         $search=~s/\s*\?\s*$//; # remove trailing question marks
         print "Initiate search for: $search\n";
         $kernel->yield('location_lookup',$search,$channel,$nick);
-    }elsif ( $what =~ /^\s*!*report/ ){ 
+    }elsif ( $what =~ /^\s*!*report/ ){
         my $json = JSON->new->allow_nonref;
         my $struct;
         eval {
@@ -438,7 +438,7 @@ sub irc_public {
             $self->{'irc'}->yield( privmsg => $channel => "[$item->{'GoodJobs'}/$total] $location ($percentage%)\n") if(defined($location));
         }
         $self->{'irc'}->yield( privmsg => $channel => "------------------------------");
-    }elsif ( $what =~ /^\s*!*job\s*(status)\s+(\S+)/ || $what =~ /[Ww]hat\s*(wa|i|')s\s+the\s+status\s+of\s+job\s+(\S+)\s*\?*\s*/ ){ 
+    }elsif ( $what =~ /^\s*!*job\s*(status)\s+(\S+)/ || $what =~ /[Ww]hat\s*(wa|i|')s\s+the\s+status\s+of\s+job\s+(\S+)\s*\?*\s*/ ){
         my $job = $2;
         $job=~tr/A-Z/a-z/;
         if($job=~m/[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+/){
@@ -446,6 +446,14 @@ sub irc_public {
             my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/job/$job") );
             $self->{'irc'}->yield( privmsg => $channel => "$struct");
         }
+    }elsif ( $what =~ /^\s*!*address\s+(.*)/){
+        my $site_name=$1;
+        $site_name=~s/ /%20/g;
+        my $struct;
+        eval {
+            $struct = $json->decode( get("http://mina.dev.eftdomain.net:9090/caoPrinterStatus/site/$site_name" )
+        };
+        print STDERR Data::Dumper->Dump([$struct]);
     }
     return;
 }
