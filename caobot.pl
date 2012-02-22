@@ -476,7 +476,7 @@ sub irc_public {
                 $geodata = $json->decode( get("http://maps.googleapis.com/maps/api/geocode/json?address=$geolookup&sensor=false"));
             };
             if($geodata->{'status'} eq 'OK'){
-                print STDERR Data::Dumper->Dump([$geodata->{'results'}->{'geometry'}]) 
+                print STDERR Data::Dumper->Dump([$geodata->{'results'}]) 
             }else{
                 print STDERR "$geodata->{'status'}\n";
             }
