@@ -458,12 +458,25 @@ sub irc_public {
             $self->{'irc'}->yield( privmsg => $channel => "$@");
         }else{
             my $address = $struct->{'Address1'};
+            my $geolookup = $struct->{'Address1'};
+
             $address .= " ".$struct->{'Address2'} if(defined($struct->{'Address2'}));
+            $geolookup .= "+".$struct->{'Address2'} if(defined($struct->{'Address2'}));
+
             $address .= " ".$struct->{'City'};
+            $geolookup .= "+".$struct->{'City'};
+
             $address .= ", ".$struct->{'State'};
+            $geolookup .= "+".$struct->{'State'};
+
             $address .= " ".$struct->{'Zip'};
+            $geolookup .= "+".$struct->{'Zip'};
+            my $geodata;
+            eval {
+                $geodata = $json->decode( get("http://maps.googleapis.com/maps/api/geocode/json?$geolookup&sensor=false"));
+            };
+            print STDERR Data::Dumper->Dump([$geodata]);
             $self->{'irc'}->yield( privmsg => $channel => "$address");
-            print STDERR Data::Dumper->Dump([$struct]);
         }
     }else{
         print STDERR "Unrecognized line\n";
