@@ -475,7 +475,11 @@ sub irc_public {
             eval {
                 $geodata = $json->decode( get("http://maps.googleapis.com/maps/api/geocode/json?address=$geolookup&sensor=false"));
             };
-            print STDERR Data::Dumper->Dump([$geodata->{'geometry'}->{'location'}]) if($geodata->{'status'} eq 'OK');
+            if($geodata->{'status'} eq 'OK'){
+                print STDERR Data::Dumper->Dump([$geodata->{'geometry'}]) 
+            }else{
+                print STDERR "$geodata->{'status'}\n";
+            }
             $self->{'irc'}->yield( privmsg => $channel => "$address");
         }
     }else{
