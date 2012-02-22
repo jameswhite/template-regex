@@ -449,6 +449,7 @@ sub irc_public {
     }elsif ( $what =~ /^\s*\!*address\s+(.*)/){
         my $site_name=$1;
         $site_name=~s/ /\%20/g;
+        $site_name=~s/\//\%2F/g;
         my $json = JSON->new->allow_nonref;
         my $struct;
         eval {
@@ -456,7 +457,7 @@ sub irc_public {
         };
         if($@){
             print STDERR "$@\n";
-            $self->{'irc'}->yield( privmsg => $channel => "Lookup Failed. Check that your spelling is *exactly* what's in the database for the branch.");
+            $self->{'irc'}->yield( privmsg => $channel => "Lookup Failed. Check that your spelling is *exactly* what's in the database for the branch. Hint: the 'where' command returns Bank ");
         }else{
             my $address = $struct->{'Address1'};
             my $geolookup = $struct->{'Address1'};
