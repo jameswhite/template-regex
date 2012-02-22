@@ -455,7 +455,8 @@ sub irc_public {
             $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/site/$site_name"));
         };
         if($@){
-            $self->{'irc'}->yield( privmsg => $channel => "$@");
+            print STDERR "$@\n";
+            $self->{'irc'}->yield( privmsg => $channel => "Lookup Failed. Check that your spelling is *exactly* what's in the database for the branch.");
         }else{
             my $address = $struct->{'Address1'};
             my $geolookup = $struct->{'Address1'};
