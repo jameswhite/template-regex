@@ -222,7 +222,7 @@ sub lookup_printer{
     my $domainname = join('.',@parts);
     my $basedn = "dc=".join(',dc=',@parts);
     my $ldap = Net::LDAP->new( "ldap.$domainname" ) or warn "$@\n";
-    my $mesg = $ldap->bind;
+    $mesg = $ldap->bind;
     print STDERR $mesg->error."\n" if $mesg->code;
     $mesg = $ldap->search( base   => "ou=Card\@Once,$basedn", filter => "(uniqueMember=cn=$soekris,ou=Hosts,$basedn)", scope=> 'sub');
     print STDERR $mesg->error."\n" if $mesg->code;
@@ -446,7 +446,7 @@ sub irc_public {
             my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/job/$job") );
             $self->{'irc'}->yield( privmsg => $channel => "$struct");
         }
-    }elsif ( $what =~ /^\s*!*address\s+(.*)/){
+    }elsif ( $what =~ /^\s*\!*address\s+(.*)/){
         my $site_name=$1;
         $site_name=~s/ /%20/g;
         print STDERR "Looking up address for http://mina.dev.eftdomain.net:9090/caoPrinterStatus/site/$site_name\n";
