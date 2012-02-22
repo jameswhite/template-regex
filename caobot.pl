@@ -473,7 +473,7 @@ sub irc_public {
             $geolookup .= "+".$struct->{'Zip'};
             my $geodata;
             eval {
-                $geodata = $json->decode( get("http://maps.googleapis.com/maps/api/geocode/json?$geolookup&sensor=false"));
+                $geodata = $json->decode( get("http://maps.googleapis.com/maps/api/geocode/json?address=$geolookup&sensor=false"));
             };
             print STDERR Data::Dumper->Dump([$geodata]);
             $self->{'irc'}->yield( privmsg => $channel => "$address");
