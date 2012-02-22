@@ -556,10 +556,10 @@ my $cisco  = Log::Tail::Reporter->new({
                                          'template' => 'windows.yml',
                                          'server'   => 'irc',
                                          'ircname'  => 'Card@Once Watcher',
-                                         'nick'     => 'cardwatch',
-#                                         'nick'     => 'caobot',
-                                         'channel'  => '#cao',
-#                                         'channel'  => '#bottest',
+#                                         'nick'     => 'cardwatch',
+                                         'nick'     => 'caobot',
+#                                         'channel'  => '#cao',
+                                         'channel'  => '#bottest',
                                        });
 POE::Kernel->run();
 exit;
