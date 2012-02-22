@@ -452,7 +452,7 @@ sub irc_public {
         my $json = JSON->new->allow_nonref;
         my $struct;
         eval {
-            $struct = $json->decode( get("http://mina.dev.eftdomain.net:9090/caoPrinterStatus/site/$site_name"));
+            $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/site/$site_name"));
         };
         if($@){
             $self->{'irc'}->yield( privmsg => $channel => "$@");
