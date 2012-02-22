@@ -449,6 +449,7 @@ sub irc_public {
     }elsif ( $what =~ /^\s*!*address\s+(.*)/){
         my $site_name=$1;
         $site_name=~s/ /%20/g;
+        print STDERR "Looking up address for http://mina.dev.eftdomain.net:9090/caoPrinterStatus/site/$site_name\n";
         my $struct;
         eval {
             $struct = $json->decode( get("http://mina.dev.eftdomain.net:9090/caoPrinterStatus/site/$site_name" )
