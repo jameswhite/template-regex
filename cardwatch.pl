@@ -453,6 +453,9 @@ sub irc_public {
         eval {
             $struct = $json->decode( get("http://mina.dev.eftdomain.net:9090/caoPrinterStatus/site/$site_name" )
         };
+        if($@){
+            $self->{'irc'}->yield( privmsg => $channel => "$@");
+        }
         print STDERR Data::Dumper->Dump([$struct]);
     }
     return;
