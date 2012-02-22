@@ -451,6 +451,7 @@ sub irc_public {
         $site_name=~s/ /\%20/g;
         print STDERR "Looking up address for http://mina.dev.eftdomain.net:9090/caoPrinterStatus/site/$site_name\n";
         my $struct;
+            print STDERR "[".get("http://mina.dev.eftdomain.net:9090/caoPrinterStatus/site/$site_name" )."]\n";
         eval {
             $struct = $json->decode( get("http://mina.dev.eftdomain.net:9090/caoPrinterStatus/site/$site_name" ) );
         };
