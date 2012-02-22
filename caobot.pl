@@ -475,12 +475,13 @@ sub irc_public {
             eval {
                 $geodata = $json->decode( get("http://maps.googleapis.com/maps/api/geocode/json?address=$geolookup&sensor=false"));
             };
+            my $latlong;
             if($geodata->{'status'} eq 'OK'){
-                print STDERR "($geodata->{'results'}->[0]->{'geometry'}->{'location'}->{'lat'}],$geodata->{'results'}->[0]->{'geometry'}->{'location'}->{'lng'})";
+                $latlong = "($geodata->{'results'}->[0]->{'geometry'}->{'location'}->{'lat'}, $geodata->{'results'}->[0]->{'geometry'}->{'location'}->{'lng'})";
             }else{
-                print STDERR "$geodata->{'status'}\n";
+                $latlong = "[ $geodata->{'status'} ]";
             }
-            $self->{'irc'}->yield( privmsg => $channel => "$address");
+            $self->{'irc'}->yield( privmsg => $channel => "$address $latlong");
         }
     }else{
         print STDERR "Unrecognized line\n";
