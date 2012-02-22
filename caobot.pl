@@ -449,11 +449,10 @@ sub irc_public {
     }elsif ( $what =~ /^\s*\!*address\s+(.*)/){
         my $site_name=$1;
         $site_name=~s/ /\%20/g;
+        my $json = JSON->new->allow_nonref;
         my $struct;
         eval {
-            my $stuff = get("http://mina.dev.eftdomain.net:9090/caoPrinterStatus/site/$site_name" );
-            print STDERR "[".$stuff."]\n";
-            $struct = $json->decode( $stuff );
+            $struct = $json->decode( get("http://mina.dev.eftdomain.net:9090/caoPrinterStatus/site/$site_name"));
         };
         if($@){
             $self->{'irc'}->yield( privmsg => $channel => "$@");
