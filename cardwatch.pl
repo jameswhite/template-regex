@@ -458,6 +458,8 @@ sub irc_public {
             $self->{'irc'}->yield( privmsg => $channel => "$@");
         }
         print STDERR Data::Dumper->Dump([$struct]);
+    }else{
+        print STDERR "Unrecognized line\n";
     }
     return;
 }
