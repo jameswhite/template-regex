@@ -456,8 +456,15 @@ sub irc_public {
         };
         if($@){
             $self->{'irc'}->yield( privmsg => $channel => "$@");
+        }else{
+            my $address = $struct->{'Address1'};
+            $address .= " ".$struct->{'Address2'} if(defined($struct->{'Address2'}));
+            $address .= " ".$struct->{'City'};
+            $address .= ", ".$struct->{'State'};
+            $address .= " ".$struct->{'Zip'};
+            $self->{'irc'}->yield( privmsg => $channel => "$address");
+            print STDERR Data::Dumper->Dump([$struct]);
         }
-        print STDERR Data::Dumper->Dump([$struct]);
     }else{
         print STDERR "Unrecognized line\n";
     }
