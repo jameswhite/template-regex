@@ -453,6 +453,7 @@ sub irc_public {
         eval {
             $addressdata = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/sites"));
         };
+
         if($@){
             print STDERR "caoPrinterStatus ERROR: $@\n";
             $self->{'irc'}->yield( privmsg => $channel => "Address Lookup Failed.");
