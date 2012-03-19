@@ -448,43 +448,44 @@ sub irc_public {
         }
     }elsif ( $what =~ /^\s*\!*address\s+(.*)/){
         my $site_name=$1;
-        $site_name=~s/ /\%20/g;
-        $site_name=~s/\//\%2F/g;
         my $json = JSON->new->allow_nonref;
-        my $struct;
+        my $addressdata;
         eval {
             print STDERR "http://mina.dev.$domainname:9090/caoPrinterStatus/site/$site_name\n";
-            $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/site/$site_name"));
+            $addressdata = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/sites"));
         };
         if($@){
             print STDERR "$@\n";
-            $self->{'irc'}->yield( privmsg => $channel => "Lookup Failed. Check that your spelling is *exactly* what's in the database for the branch. Hint: the 'where' command returns Bank ");
+            $self->{'irc'}->yield( privmsg => $channel => "Address Lookup Failed.");
         }else{
-            my $address = $struct->{'Address1'};
-            my $geolookup = $struct->{'Address1'};
-
-            $address .= " ".$struct->{'Address2'} if(defined($struct->{'Address2'}));
-            $geolookup .= "+".$struct->{'Address2'} if(defined($struct->{'Address2'}));
-
-            $address .= " ".$struct->{'City'};
-            $geolookup .= "+".$struct->{'City'};
-
-            $address .= ", ".$struct->{'State'};
-            $geolookup .= "+".$struct->{'State'};
-
-            $address .= " ".$struct->{'Zip'};
-            $geolookup .= "+".$struct->{'Zip'};
-            my $geodata;
-            eval {
-                $geodata = $json->decode( get("http://maps.googleapis.com/maps/api/geocode/json?address=$geolookup&sensor=false"));
-            };
-            my $latlong;
-            if($geodata->{'status'} eq 'OK'){
-                $latlong = "($geodata->{'results'}->[0]->{'geometry'}->{'location'}->{'lat'}, $geodata->{'results'}->[0]->{'geometry'}->{'location'}->{'lng'})";
-            }else{
-                $latlong = "[ $geodata->{'status'} ]";
-            }
-            $self->{'irc'}->yield( privmsg => $channel => "$address $latlong");
+            foreach my $struct (@{ $addressdata }){
+                if($struct->{'AddressName'} =~m/$site_name/i){
+                    my $address = $struct->{'Address1'};
+                    my $geolookup = $struct->{'Address1'};
+    
+                    $address .= " ".$struct->{'Address2'} if(defined($struct->{'Address2'}));
+                    $geolookup .= "+".$struct->{'Address2'} if(defined($struct->{'Address2'}));
+        
+                    $address .= " ".$struct->{'City'};
+                    $geolookup .= "+".$struct->{'City'};
+        
+                    $address .= ", ".$struct->{'State'};
+                    $geolookup .= "+".$struct->{'State'};
+        
+                    $address .= " ".$struct->{'Zip'};
+                    $geolookup .= "+".$struct->{'Zip'};
+                    my $geodata;
+                    eval {
+                        $geodata = $json->decode( get("http://maps.googleapis.com/maps/api/geocode/json?address=$geolookup&sensor=false"));
+                    };
+                    my $latlong;
+                    if($geodata->{'status'} eq 'OK'){
+                        $latlong = "($geodata->{'results'}->[0]->{'geometry'}->{'location'}->{'lat'}, $geodata->{'results'}->[0]->{'geometry'}->{'location'}->{'lng'})";
+                    }else{
+                        $latlong = "[ $geodata->{'status'} ]";
+                    }
+                    $self->{'irc'}->yield( privmsg => $channel => "$address $latlong");
+                }
         }
     }else{
         print STDERR "Unrecognized line\n";
