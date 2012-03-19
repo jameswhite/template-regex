@@ -451,11 +451,10 @@ sub irc_public {
         my $json = JSON->new->allow_nonref;
         my $addressdata;
         eval {
-            print STDERR "http://mina.dev.$domainname:9090/caoPrinterStatus/site/$site_name\n";
             $addressdata = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/sites"));
         };
         if($@){
-            print STDERR "$@\n";
+            print STDERR "caoPrinterStatus ERROR: $@\n";
             $self->{'irc'}->yield( privmsg => $channel => "Address Lookup Failed.");
         }else{
             foreach my $struct (@{ $addressdata }){
