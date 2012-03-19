@@ -484,7 +484,7 @@ sub irc_public {
                     }else{
                         $latlong = "[ $geodata->{'status'} ]";
                     }
-                    $self->{'irc'}->yield( privmsg => $channel => "$address $latlong");
+                    $self->{'irc'}->yield( privmsg => $channel => "$struct->{'AddressName'} =>  $address => $latlong");
                 }
            }
         }
