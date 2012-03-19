@@ -465,7 +465,7 @@ sub irc_public {
             }
             if($addr_counter > 3){
                 
-                $self->{'irc'}->yield( privmsg => $channel => "Could you be more specific? That matches $addr_counter names. [ ".join(',',@names." ]");
+                $self->{'irc'}->yield( privmsg => $channel => "Could you be more specific? That matches $addr_counter names. [ ".join(',',@names)." ]");
                 return
             }
             foreach my $struct (@{ $addressdata }){
