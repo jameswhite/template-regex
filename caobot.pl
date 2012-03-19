@@ -455,18 +455,15 @@ sub irc_public {
             print STDERR "caoPrinterStatus ERROR: $@\n";
             $self->{'irc'}->yield( privmsg => $channel => "Address Lookup Failed.");
         }else{
-            my $addr_count=0;
-            my @names;
+            my @names = ();
             foreach my $struct (@{ $addressdata }){
                 if($struct->{'AddressName'} =~m/$site_name/i){
                     push(@names,$struct->{'AddressName'});
-                    $addr_counter++;
                 }
             }
-            if($addr_counter > 3){
-                
-                $self->{'irc'}->yield( privmsg => $channel => "Could you be more specific? That matches $addr_counter names. [ ".join(',',@names)." ]");
-                return
+            if($#names > 3){
+                $self->{'irc'}->yield( privmsg => $channel => "Could you be more specific? That matches ". $#names + 1 ." names. [ ".join(',',@names)." ]");
+                return;
             }
             foreach my $struct (@{ $addressdata }){
                 if($struct->{'AddressName'} =~m/$site_name/i){
