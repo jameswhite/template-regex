@@ -455,18 +455,16 @@ sub irc_public {
             print STDERR "caoPrinterStatus ERROR: $@\n";
             $self->{'irc'}->yield( privmsg => $channel => "Address Lookup Failed.");
         }else{
-            my $addr_count=0;
-            my @names;
+            my @names = ();
             foreach my $struct (@{ $addressdata }){
                 if($struct->{'AddressName'} =~m/$site_name/i){
                     push(@names,$struct->{'AddressName'});
-                    $addr_counter++;
                 }
             }
-            if($addr_counter > 3){
-                
-                $self->{'irc'}->yield( privmsg => $channel => "Could you be more specific? That matches $addr_counter names. [ ".join(',',@names)." ]");
-                return
+            if($#names > 3){
+                my $namecount=$#names + 1;
+                $self->{'irc'}->yield( privmsg => $channel => "Could you be more specific? That matches $namecount names... ".join(',',@names)."");
+                return;
             }
             foreach my $struct (@{ $addressdata }){
                 if($struct->{'AddressName'} =~m/$site_name/i){
@@ -596,10 +594,10 @@ my $cisco  = Log::Tail::Reporter->new({
                                          'template' => 'windows.yml',
                                          'server'   => 'irc',
                                          'ircname'  => 'Card@Once Watcher',
-#                                         'nick'     => 'cardwatch',
-                                         'nick'     => 'caobot',
-#                                         'channel'  => '#cao',
-                                         'channel'  => '#bottest',
+                                         'nick'     => 'cardwatch',
+#                                         'nick'     => 'caobot',
+                                         'channel'  => '#cao',
+#                                         'channel'  => '#bottest',
                                        });
 POE::Kernel->run();
 exit;
