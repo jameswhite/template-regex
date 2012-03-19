@@ -486,6 +486,7 @@ sub irc_public {
                     }
                     $self->{'irc'}->yield( privmsg => $channel => "$address $latlong");
                 }
+           }
         }
     }else{
         print STDERR "Unrecognized line\n";
