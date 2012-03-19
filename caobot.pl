@@ -284,9 +284,6 @@ sub lookup_location{
             push (@{ $printers },"$city, $branch => $member");
         }
         $found ++;
-        my $dname = $entry->dn;
-        $dname=~s/,\s+/,/g;
-        my ($city, $branch);
     }
     unless ($found > 0){
         return undef;
