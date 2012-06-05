@@ -460,11 +460,6 @@ sub irc_public {
         my $search = $3;
         $search=~s/\s*\?\s*$//; # remove trailing question marks
         print "Initiate search for: $search\n";
-
-    }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){
-        my $search = $3;
-        $search=~s/\s*\?\s*$//; # remove trailing question marks
-        print "Initiate search for: $search\n";
         $kernel->yield('location_lookup',$search,$channel,$nick);
     }elsif ( $what =~ /^\s*!*report/ ){
         my $json = JSON->new->allow_nonref;
