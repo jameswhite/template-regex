@@ -361,6 +361,7 @@ sub irc_public {
         }
         $self->{'irc'}->yield( privmsg => $where => "I'll check...");
         $kernel->yield('spawn', ["rtatiem","$device"]);
+
     }elsif ( my ($device) = $what =~ /^\s*ping\s*(\S*[0-9]+)\s*$/ ){
         # Sanitize $device FIXME
         $device=~s/\s*//; 
@@ -381,6 +382,26 @@ sub irc_public {
         }
         $self->{'irc'}->yield( privmsg => $where => "pinging...");
         $kernel->yield('spawn', ["rtatiem","$device"]);
+    }elsif ( my ($device) = $what =~ /^\s*cgi\s*(\S*[0-9]+)\s*$/ ){
+        # Sanitize $device FIXME
+        $device=~s/\s*//; 
+        $device=~tr/A-Z/a-z/; 
+        my $sanitized_device='';
+        if($device=~m/prnt/){
+            $sanitized_device='prnt';
+        }else{
+            $sanitized_device='skrs';
+        }
+        $device=~s/^[Ss][Kk][Rr][Ss]//;
+        $device=~s/^[Pp][Rr][Nn][Tt]//;
+        $device=~s/^0*//;
+        if($device=~m/.*([0-9]+)/){
+            if($device < 10){ $device=$sanitized_device.'000'.$device; }
+            elsif($device < 100){ $device=$sanitized_device.'00'.$device; }
+            elsif($device < 1000){ $device=$sanitized_device.'0'.$device; }
+        }
+        $self->{'irc'}->yield( privmsg => $where => "querying the cgi...");
+        $kernel->yield('spawn', ["prnthealth","$device"]);
     }elsif ( my ($device) = $what =~ /^\s*firmware\s*(\S*[0-9]+)\s*$/ ){
         # Sanitize $device FIXME
         $device=~s/\s*//; 
