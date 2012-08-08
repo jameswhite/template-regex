@@ -83,6 +83,7 @@ sub new {
                                                         'run_watchlist',
                                                         'unwatch',
                                                         'say',
+                                                        'state_change',
                                                       ],
                                            ],
     );
@@ -535,7 +536,7 @@ sub _default {
 
 sub spawn{
     my ($self, $kernel, $heap, $sender, $program, $reply_event) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-    print STDERR Data::Dumper->Dump([$program,$reply_event]);
+    #print STDERR Data::Dumper->Dump([$program,$reply_event]);
     my $child = POE::Wheel::Run->new(
                                       Program      => $program,
                                       StdoutEvent  => "on_child_stdout",
