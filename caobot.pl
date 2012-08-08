@@ -168,10 +168,16 @@ sub watchlist{
 sub run_watchlist{
    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
    foreach my $device (@{ $heap->{'watchlist'} }){
-        $kernel->yield('spawn', ["rtatiem_curt",$self->sanitize($device)],"say");
+        $kernel->yield('spawn', ["rtatiem_curt",$self->sanitize($device)],"state_change");
    }
    # run the watch list in 30
    $kernel->delay('run_watchlist',30);
+}
+
+sub state_change{
+   my ($self, $kernel, $heap, $sender, $devicestate, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+   #foreach my my $inspect = shift(@{ $heap->{'watchlist'} })){
+   print STDERR "$devicestate\n";
 }
 
 sub event_timeout{
