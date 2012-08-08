@@ -177,7 +177,9 @@ sub run_watchlist{
 
 sub state_change{
    my ($self, $kernel, $heap, $sender, $devicestate, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-   my ($device,$state) = $devicestate =~ /\s*(\S+)\s*=>\s*(.*)\s*/;
+   my ($device, $state) = $devicestate =~ /\s*(\S+)\s*=>\s*(.*)\s*/;
+   $state=~s/\s+$//; $state=~s/^\s+//;
+   $device=~s/\s+$//; $device=~s/^\s+//;
    #foreach (my $inspect = shift(@{ $heap->{'watchlist'} })){
    #}
    print STDERR "$device [$state]\n";
