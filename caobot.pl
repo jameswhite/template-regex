@@ -367,23 +367,23 @@ sub irc_public {
         $kernel->yield('printer_lookup',$self->sanitize($device),$channel,$nick);
     }elsif ( my ($device) = $what =~ /^\s*[Ii]s\s*(\S*[0-9]+)\s*up\s*\?*$/ ){ 
         $self->{'irc'}->yield( privmsg => $where => "I'll check...");
-        $kernel->yield('spawn', ["rtatiem","$self->sanitize($device)"]);
+        $kernel->yield('spawn', ["rtatiem",$self->sanitize($device)]);
     }elsif ( my ($device) = $what =~ /^\s*ping\s*(\S*[0-9]+)\s*$/ ){
         $self->{'irc'}->yield( privmsg => $where => "pinging...");
-        $kernel->yield('spawn', ["rtatiem","$self->sanitize($device)"]);
+        $kernel->yield('spawn', ["rtatiem",$self->sanitize($device)]);
     }elsif ( my ($device) = $what =~ /^\s*cgi\s*(\S*[0-9]+)\s*$/ ){
         $self->{'irc'}->yield( privmsg => $where => "querying the cgi...");
-        $kernel->yield('spawn', ["prnthealth","$self->sanitize($device)"]);
+        $kernel->yield('spawn', ["prnthealth",$self->sanitize($device)]);
     }elsif ( my ($device) = $what =~ /^\s*status\s*(\S*[0-9]+)\s*$/ ){
         $self->{'irc'}->yield( privmsg => $where => "checking the status...");
-        $kernel->yield('spawn', ["rtatiem","$self->sanitize($device)"]);
+        $kernel->yield('spawn', ["rtatiem",$self->sanitize($device)]);
         $kernel->yield('spawn', ["prnthealth","$self->sanitize($device)"]);
     }elsif ( my ($device) = $what =~ /^\s*firmware\s*(\S*[0-9]+)\s*$/ ){
         $self->{'irc'}->yield( privmsg => $where => "looking...");
-        $kernel->yield('spawn', ["firmware","$self->sanitize($device)"]);
+        $kernel->yield('spawn', ["firmware",$self->sanitize($device)]);
     }elsif ( my ($device) = $what =~ /^\s*firmware\s*(\S*[0-9]+)\s*$/ ){
         $self->{'irc'}->yield( privmsg => $where => "looking...");
-        $kernel->yield('spawn', ["firmware","$self->sanitize($device)"]);
+        $kernel->yield('spawn', ["firmware",$self->sanitize($device)]);
     }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){
         my $search = $3;
         $search=~s/\s*\?\s*$//; # remove trailing question marks
@@ -473,9 +473,9 @@ sub irc_public {
            }
         }
     }elsif ( my ($device) = $what =~ /^\s*watch\s*(\S*[0-9]+)\s*$/ ){
-        $kernel->yield('watch', "$self->sanitize($device)");
+        $kernel->yield('watch', $self->sanitize($device));
     }elsif ( my ($device) = $what =~ /^\s*unwatch\s*(\S*[0-9]+)\s*$/ ){
-        $kernel->yield('unwatch', "$self->sanitize($device)");
+        $kernel->yield('unwatch', $self->sanitize($device));
     }elsif ( my ($device) = $what =~ /^\s*watchlist\s*$/ ){
         $kernel->yield('watchlist');
     }else{
