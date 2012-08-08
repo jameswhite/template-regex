@@ -171,8 +171,8 @@ sub run_watchlist{
    foreach my $device (@{ $heap->{'watchlist'} }){
         $kernel->yield('spawn', ["rtatiem_curt",$self->sanitize($device)],"state_change");
    }
-   # run the watch list in 30
-   $kernel->delay('run_watchlist',30);
+   # run the watch list in 10 
+   $kernel->delay('run_watchlist',10);
 }
 
 sub state_change{
