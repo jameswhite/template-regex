@@ -545,8 +545,11 @@ sub spawn{
     # Signal events include the process ID.
     $_[HEAP]{children_by_pid}{$child->PID} = $child;
 
-    # Save who will get the reply
+    # Save what device we're talking about
     $_[HEAP]{device}{$child->ID} = $program->[1];
+
+    # Save what event will get the reply
+    $_[HEAP]{reply_to}{$child->ID} = $reply_event;
 
     print("Child pid ", $child->PID, " started as wheel ", $child->ID, ".\n");
 }
@@ -559,10 +562,12 @@ sub say{
 sub on_child_stdout {
     my ($self, $kernel, $heap, $sender, $stdout_line, $wheel_id) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my $child = $_[HEAP]{children_by_wid}{$wheel_id};
-
     print "pid ", $child->PID, " STDOUT: $stdout_line\n";
+
     my $device =  $_[HEAP]{device}{$wheel_id};
-    $self->{'irc'}->yield( privmsg => $self->{'channel'} => "$device => $stdout_line") unless( $stdout_line =~m/^\s*$/ ) ;
+    my $event =  $_[HEAP]{reply_to}{$wheel_id};
+
+    $kernel->yield($event, $self->sanitize($device),$where);
 }
 
 # Wheel event, including the wheel's ID.
