@@ -521,7 +521,7 @@ sub spawn{
     # Save who whil get the reply
     $_[HEAP]{device}{$child->ID} = $program->[1];
 
-    print("Child pid ", $child->PID, " started as wheel ", $child->ID, "[", $program, "].\n");
+    print("Child pid ", $child->PID, " started as wheel ", $child->ID, "[", join(" ",$program), "].\n");
 }
 
 sub on_child_stdout {
