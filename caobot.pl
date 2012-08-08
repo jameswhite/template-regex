@@ -181,7 +181,7 @@ sub state_change{
    $state=~s/\s+$//; $state=~s/^\s+//;
    $device=~s/\s+$//; $device=~s/^\s+//;
    if ($heap->{'watched'}->{$device} ne $state){
-       $kernel->yield('say', "[$device] changed state to => $state");
+       $kernel->yield('say', "$device changed state to => $state");
        $heap->{'watched'}->{$device} = $state;
    }
 }
