@@ -180,9 +180,9 @@ sub state_change{
    my ($device, $state) = $devicestate =~ /\s*(\S+)\s*=>\s*(.*)\s*/;
    $state=~s/\s+$//; $state=~s/^\s+//;
    $device=~s/\s+$//; $device=~s/^\s+//;
-   if ($heap->{'watchlist'}->{$device} ne $state){
+   if ($heap->{'watched'}->{$device} ne $state){
        $kernel->yield('say', "[$device] changed state to => $state");
-       $heap->{'watchlist'}->{$device} = $state;
+       $heap->{'watched'}->{$device} = $state;
    }
 }
 
