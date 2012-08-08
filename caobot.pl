@@ -82,6 +82,7 @@ sub new {
                                                         'watchlist',
                                                         'run_watchlist',
                                                         'unwatch',
+                                                        'say',
                                                       ],
                                            ],
     );
