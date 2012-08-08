@@ -139,7 +139,7 @@ sub got_log_line {
 
 sub watch{
    my ($self, $kernel, $heap, $sender, $device, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-   push(@{ $heap->{'watchlist'} }, $device);
+   push(@{ $heap->{'watchlist'} }, $device) unless(grep /$device/, @{ $heap->{'watchlist'} });
 }
 
 sub unwatch{
