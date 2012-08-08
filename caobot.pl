@@ -150,6 +150,9 @@ sub unwatch{
        push(@{ $new_watchlist }, $inspect ) unless($inspect eq $device);
        $heap->{'watchlist'} = $new_watchlist;
    }
+   while (my $copy = shift(@{ $new_watchlist })){
+       push(@{ $heap->{'watchlist'} }, $copy );
+   }
    $self->{'irc'}->yield( privmsg => $replyto => "$device unwatched");
 }
 
