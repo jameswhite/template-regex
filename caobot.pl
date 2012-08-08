@@ -155,7 +155,11 @@ sub unwatch{
 
 sub watchlist{
    my ($self, $kernel, $heap, $sender, $replyto, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-   $self->{'irc'}->yield( privmsg => $replyto => "currently watching: [".join(", ", @{ $heap->{'watchlist'} })."]");
+   if($#{ $heap->{'watchlist'} > -1){
+       $self->{'irc'}->yield( privmsg => $replyto => "currently watching: [".join(", ", @{ $heap->{'watchlist'} })."]");
+   }else{
+       $self->{'irc'}->yield( privmsg => $replyto => "not currently watching any devices.");
+   }
 }
 
 sub event_timeout{
