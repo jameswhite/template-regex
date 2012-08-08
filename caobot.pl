@@ -78,6 +78,9 @@ sub new {
                                                         'on_child_stderr',
                                                         'on_child_close',
                                                         'on_child_signal',
+                                                        'watch',
+                                                        'watchlist',
+                                                        'unwatch',
                                                       ],
                                            ],
     );
@@ -132,6 +135,18 @@ sub got_log_line {
        }
    }
 } 
+
+sub watch{
+   my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+}
+
+sub unwatch{
+   my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+}
+
+sub watchlist{
+   my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+}
 
 sub event_timeout{
     my ($self, $kernel, $heap, $sender, $id, $message, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
@@ -318,6 +333,24 @@ sub irc_001 {
      return;
 }
 
+sub sanitize {
+    my $self = shift;
+    my $device = shift if @_;
+    return "" unless $device;
+    $device=~s/\s*//; 
+    $device=~tr/A-Z/a-z/; 
+    $device=~s/^[Ss][Kk][Rr][Ss]//;
+    $device=~s/^[Pp][Rr][Nn][Tt]//;
+    $device=~s/^0*//;
+    if($device=~m/[0-9]+/){
+        if($device < 10){ $soekris="skrs000$device"; }
+        elsif($device < 100){ $soekris="skrs00$device"; }
+        elsif($device < 1000){ $soekris="skrs0$device"; }
+        return $soekris;
+    }
+    return "";
+}
+
 sub irc_public {
     my ($self, $kernel, $heap, $sender, $who, $where, $what, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my $nick = ( split /!/, $who )[0];
@@ -331,132 +364,33 @@ sub irc_public {
 
     print "$what\n";
     if ( my ($device) = $what =~ /^\s*[Ww]here\s*is\s*(\S*[0-9]+)\s*\?*$/ ){ 
-        $device=~s/^[Ss][Kk][Rr][Ss]//;
-        $device=~s/^[Pp][Rr][Nn][Tt]//;
-        $device=~s/^0*//;
-        if($device=~m/[0-9]+/){
-            if($device < 10){ $soekris="skrs000$device"; }
-            elsif($device < 100){ $soekris="skrs00$device"; }
-            elsif($device < 1000){ $soekris="skrs0$device"; }
-            #$self->{'irc'}->yield( privmsg => $channel => "parsed as: $soekris");
-            $kernel->yield('printer_lookup',$soekris,$channel,$nick);
-        }
+        $kernel->yield('printer_lookup',$self->sanitize($device),$channel,$nick);
     }elsif ( my ($device) = $what =~ /^\s*[Ii]s\s*(\S*[0-9]+)\s*up\s*\?*$/ ){ 
-        # Sanitize $device FIXME
-        $device=~s/\s*//; 
-        $device=~tr/A-Z/a-z/; 
-        my $sanitized_device='';
-        if($device=~m/prnt/){
-            $sanitized_device='prnt';
-        }else{
-            $sanitized_device='skrs';
-        }
-        $device=~s/^[Ss][Kk][Rr][Ss]//;
-        $device=~s/^[Pp][Rr][Nn][Tt]//;
-        $device=~s/^0*//;
-        if($device=~m/.*([0-9]+)/){
-            if($device < 10){ $device=$sanitized_device.'000'.$device; }
-            elsif($device < 100){ $device=$sanitized_device.'00'.$device; }
-            elsif($device < 1000){ $device=$sanitized_device.'0'.$device; }
-        }
         $self->{'irc'}->yield( privmsg => $where => "I'll check...");
-        $kernel->yield('spawn', ["rtatiem","$device"]);
-
+        $kernel->yield('spawn', ["rtatiem","$self->sanitize($device)"]);
     }elsif ( my ($device) = $what =~ /^\s*ping\s*(\S*[0-9]+)\s*$/ ){
-        # Sanitize $device FIXME
-        $device=~s/\s*//; 
-        $device=~tr/A-Z/a-z/; 
-        my $sanitized_device='';
-        if($device=~m/prnt/){
-            $sanitized_device='prnt';
-        }else{
-            $sanitized_device='skrs';
-        }
-        $device=~s/^[Ss][Kk][Rr][Ss]//;
-        $device=~s/^[Pp][Rr][Nn][Tt]//;
-        $device=~s/^0*//;
-        if($device=~m/.*([0-9]+)/){
-            if($device < 10){ $device=$sanitized_device.'000'.$device; }
-            elsif($device < 100){ $device=$sanitized_device.'00'.$device; }
-            elsif($device < 1000){ $device=$sanitized_device.'0'.$device; }
-        }
         $self->{'irc'}->yield( privmsg => $where => "pinging...");
-        $kernel->yield('spawn', ["rtatiem","$device"]);
+        $kernel->yield('spawn', ["rtatiem","$self->sanitize($device)"]);
     }elsif ( my ($device) = $what =~ /^\s*cgi\s*(\S*[0-9]+)\s*$/ ){
-        # Sanitize $device FIXME
-        $device=~s/\s*//; 
-        $device=~tr/A-Z/a-z/; 
-        my $sanitized_device='';
-        if($device=~m/prnt/){
-            $sanitized_device='prnt';
-        }else{
-            $sanitized_device='skrs';
-        }
-        $device=~s/^[Ss][Kk][Rr][Ss]//;
-        $device=~s/^[Pp][Rr][Nn][Tt]//;
-        $device=~s/^0*//;
-        if($device=~m/.*([0-9]+)/){
-            if($device < 10){ $device=$sanitized_device.'000'.$device; }
-            elsif($device < 100){ $device=$sanitized_device.'00'.$device; }
-            elsif($device < 1000){ $device=$sanitized_device.'0'.$device; }
-        }
         $self->{'irc'}->yield( privmsg => $where => "querying the cgi...");
-        $kernel->yield('spawn', ["prnthealth","$device"]);
-
+        $kernel->yield('spawn', ["prnthealth","$self->sanitize($device)"]);
     }elsif ( my ($device) = $what =~ /^\s*status\s*(\S*[0-9]+)\s*$/ ){
-        # Sanitize $device FIXME
-        $device=~s/\s*//; 
-        $device=~tr/A-Z/a-z/; 
-        my $sanitized_device='';
-        if($device=~m/prnt/){
-            $sanitized_device='prnt';
-        }else{
-            $sanitized_device='skrs';
-        }
-        $device=~s/^[Ss][Kk][Rr][Ss]//;
-        $device=~s/^[Pp][Rr][Nn][Tt]//;
-        $device=~s/^0*//;
-        if($device=~m/.*([0-9]+)/){
-            if($device < 10){ $device=$sanitized_device.'000'.$device; }
-            elsif($device < 100){ $device=$sanitized_device.'00'.$device; }
-            elsif($device < 1000){ $device=$sanitized_device.'0'.$device; }
-        }
         $self->{'irc'}->yield( privmsg => $where => "checking the status...");
-        $kernel->yield('spawn', ["rtatiem","$device"]);
-        $kernel->yield('spawn', ["prnthealth","$device"]);
-
+        $kernel->yield('spawn', ["rtatiem","$self->sanitize($device)"]);
+        $kernel->yield('spawn', ["prnthealth","$self->sanitize($device)"]);
     }elsif ( my ($device) = $what =~ /^\s*firmware\s*(\S*[0-9]+)\s*$/ ){
-        # Sanitize $device FIXME
-        $device=~s/\s*//; 
-        $device=~tr/A-Z/a-z/; 
-        $sanitized_device='prnt';
-        $device=~s/^[Ss][Kk][Rr][Ss]//;
-        $device=~s/^[Pp][Rr][Nn][Tt]//;
-        $device=~s/^0*//;
-        if($device=~m/.*([0-9]+)/){
-            if($device < 10){ $device=$sanitized_device.'000'.$device; }
-            elsif($device < 100){ $device=$sanitized_device.'00'.$device; }
-            elsif($device < 1000){ $device=$sanitized_device.'0'.$device; }
-        }
         $self->{'irc'}->yield( privmsg => $where => "looking...");
-        $kernel->yield('spawn', ["firmware","$device"]);
+        $kernel->yield('spawn', ["firmware","$self->sanitize($device)"]);
     }elsif ( my ($device) = $what =~ /^\s*firmware\s*(\S*[0-9]+)\s*$/ ){
-        # Sanitize $device FIXME
-        $device=~s/\s*//; 
-        $device=~tr/A-Z/a-z/; 
-        $sanitized_device='prnt';
-        $device=~s/^[Ss][Kk][Rr][Ss]//;
-        $device=~s/^[Pp][Rr][Nn][Tt]//;
-        $device=~s/^0*//;
-        if($device=~m/.*([0-9]+)/){
-            if($device < 10){ $device=$sanitized_device.'000'.$device; }
-            elsif($device < 100){ $device=$sanitized_device.'00'.$device; }
-            elsif($device < 1000){ $device=$sanitized_device.'0'.$device; }
-        }
         $self->{'irc'}->yield( privmsg => $where => "looking...");
-        $kernel->yield('spawn', ["firmware","$device"]);
-
-    }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){
+        $kernel->yield('spawn', ["firmware","$self->sanitize($device)"]);
+    }elsif ( my ($device) = $what =~ /^\s*watch\s*(\S*[0-9]+)\s*$/ ){
+        $kernel->yield('watch', "$self->sanitize($device)");
+    }elsif ( my ($device) = $what =~ /^\s*unwatch\s*(\S*[0-9]+)\s*$/ ){
+        $kernel->yield('unwatch', "$self->sanitize($device)");
+    }elsif ( my ($device) = $what =~ /^\s*watchlist\s*$/ ){
+        $kernel->yield('watchlist');
+    }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(\S+)\s*\?*$/ ){
         my $search = $3;
         $search=~s/\s*\?\s*$//; # remove trailing question marks
         print "Initiate search for: $search\n";
@@ -476,18 +410,7 @@ sub irc_public {
         $self->{'irc'}->yield( privmsg => $channel => "[Success/Total] Summary");
         $self->{'irc'}->yield( privmsg => $channel => "------------------------------");
         foreach my $item (@{ $struct }){
-            my $device=$item->{'PrinterName'};
-            $device=~s/\..*//;
-            $device=~tr/A-Z/a-z/;
-            $device=~s/^[Ss][Kk][Rr][Ss]//;
-            $device=~s/^[Pp][Rr][Nn][Tt]//;
-            $device=~s/^0*//;
-            my $soekris='';
-            if($device=~m/[0-9]+/){
-                if($device < 10){ $soekris="skrs000$device"; }
-                elsif($device < 100){ $soekris="skrs00$device"; }
-                elsif($device < 1000){ $soekris="skrs0$device"; }
-            }
+            my $soekris=$self->sanitize($item->{'PrinterName'});
             my $location=$self->lookup_printer($soekris);
             my $total = ($item->{'GoodJobs'} + $item->{'BadJobs'});
             my $percentage = int(10000*($item->{'GoodJobs'}/$total))/100;
