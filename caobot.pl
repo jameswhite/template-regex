@@ -565,7 +565,7 @@ sub on_child_stdout {
     print "pid ", $child->PID, " STDOUT: $stdout_line\n";
 
     my $device =  $_[HEAP]{device}{$wheel_id};
-    $kernel->yield( $_[HEAP]{reply_to}{$wheel_id} , $self->sanitize($device)." => $stdout_line";
+    $kernel->yield( $_[HEAP]{reply_to}{$wheel_id} , $self->sanitize($device)." => $stdout_line");
     #$self->{'irc'}->yield( privmsg => $self->{'channel'} => "$device => $stdout_line") unless( $stdout_line =~m/^\s*$/ ) ;
 }
 
