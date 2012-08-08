@@ -177,8 +177,10 @@ sub run_watchlist{
 
 sub state_change{
    my ($self, $kernel, $heap, $sender, $devicestate, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-   #foreach my my $inspect = shift(@{ $heap->{'watchlist'} })){
-   print STDERR "$devicestate\n";
+   my ($device,$state) = $devicestate =~ /\s*(\S+)\s*=>\s*(.*)\s*/;
+   #foreach (my $inspect = shift(@{ $heap->{'watchlist'} })){
+   #}
+   print STDERR "$device [$state]\n";
 }
 
 sub event_timeout{
