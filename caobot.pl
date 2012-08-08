@@ -384,7 +384,7 @@ sub irc_public {
     }elsif ( my ($device) = $what =~ /^\s*firmware\s*(\S*[0-9]+)\s*$/ ){
         $self->{'irc'}->yield( privmsg => $where => "looking...");
         $kernel->yield('spawn', ["firmware","$self->sanitize($device)"]);
-    }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(\S+)\s*\?*$/ ){
+    }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){
         my $search = $3;
         $search=~s/\s*\?\s*$//; # remove trailing question marks
         print "Initiate search for: $search\n";
@@ -521,7 +521,7 @@ sub spawn{
     # Save who whil get the reply
     $_[HEAP]{device}{$child->ID} = $program->[1];
 
-    print("Child pid ", $child->PID, " started as wheel ", $child->ID, ".\n");
+    print("Child pid ", $child->PID, " started as wheel ", $child->ID, "[", $program, "].\n");
 }
 
 sub on_child_stdout {
