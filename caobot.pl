@@ -172,7 +172,7 @@ sub run_watchlist{
         $kernel->yield('spawn', ["rtatiem_curt",$self->sanitize($device)],"state_change");
    }
    # run the watch list in 10 
-   $kernel->delay('run_watchlist',10);
+   $kernel->delay('run_watchlist',30);
 }
 
 sub state_change{
@@ -180,10 +180,12 @@ sub state_change{
    my ($device, $state) = $devicestate =~ /\s*(\S+)\s*=>\s*(.*)\s*/;
    $state=~s/\s+$//; $state=~s/^\s+//;
    $device=~s/\s+$//; $device=~s/^\s+//;
-   unless($state =~/^\s*$/){
-       if ($heap->{'watched'}->{$device} ne $state){
-           $kernel->yield('say', "$device changed state to => $state");
-           $heap->{'watched'}->{$device} = $state;
+   if($state){
+       unless($state =~/^\s*$/){
+           if ($heap->{'watched'}->{$device} ne $state){
+               $kernel->yield('say', "$device changed state to => $state");
+               $heap->{'watched'}->{$device} = $state;
+           }
        }
    }
 }
@@ -626,9 +628,9 @@ my $cisco  = Log::Tail::Reporter->new({
                                          'template' => 'windows.yml',
                                          'server'   => 'irc',
                                          'ircname'  => 'Card@Once Watcher',
-  #                                       'nick'     => 'cardwatch',
+#                                         'nick'     => 'cardwatch',
                                          'nick'     => 'caobot',
-  #                                       'channel'  => '#cao',
+#                                         'channel'  => '#cao',
                                          'channel'  => '#bottest',
                                        });
 POE::Kernel->run();
