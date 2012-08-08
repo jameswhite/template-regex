@@ -147,7 +147,7 @@ sub unwatch{
    my ($self, $kernel, $heap, $sender, $device, $replyto, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
    my $new_watchlist;
    while (my $inspect = shift(@{ $heap->{'watchlist'} })){
-       push(@{ $new_watchlist }, $inspect ) unless($inspect == $device);
+       push(@{ $new_watchlist }, $inspect ) unless($inspect eq $device);
        $heap->{'watchlist'} = $new_watchlist;
    }
    $self->{'irc'}->yield( privmsg => $replyto => "$device unwatched");
