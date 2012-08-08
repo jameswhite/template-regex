@@ -138,22 +138,25 @@ sub got_log_line {
 } 
 
 sub watch{
-   my ($self, $kernel, $heap, $sender, $device, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+   my ($self, $kernel, $heap, $sender, $device, $replyto, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
    push(@{ $heap->{'watchlist'} }, $device) unless(grep /$device/, @{ $heap->{'watchlist'} });
+   $self->{'irc'}->yield( privmsg => $replyto => "watching $device");
 }
 
 sub unwatch{
-   my ($self, $kernel, $heap, $sender, $device, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+   my ($self, $kernel, $heap, $sender, $device, $replyto, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
    my $new_watchlist;
    while (my $inspect = shift(@{ $heap->{'watchlist'} })){
        push(@{ $new_watchlist }, $inspect ) unless($inspect == $device);
        $heap->{'watchlist'} = $new_watchlist;
    }
+   $self->{'irc'}->yield( privmsg => $replyto => "$device unwatched");
 }
 
 sub watchlist{
-   my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-   print STDERR join(",", @{ $heap->{'watchlist'} });
+   my ($self, $kernel, $heap, $sender, $replyto, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+   print STDERR join(", ", @{ $heap->{'watchlist'} });
+   $self->{'irc'}->yield( privmsg => $replyto => "currently watching: [".join(", ", @{ $heap->{'watchlist'} })."]");
 }
 
 sub event_timeout{
@@ -481,11 +484,11 @@ sub irc_public {
            }
         }
     }elsif ( my ($device) = $what =~ /^\s*watch\s*(\S*[0-9]+)\s*$/ ){
-        $kernel->yield('watch', $self->sanitize($device));
+        $kernel->yield('watch', $self->sanitize($device),$where);
     }elsif ( my ($device) = $what =~ /^\s*unwatch\s*(\S*[0-9]+)\s*$/ ){
-        $kernel->yield('unwatch', $self->sanitize($device));
+        $kernel->yield('unwatch', $self->sanitize($device),$where);
     }elsif ( my ($device) = $what =~ /^\s*watchlist\s*$/ ){
-        $kernel->yield('watchlist');
+        $kernel->yield('watchlist',$where);
     }else{
         print STDERR "Unrecognized line\n";
     }
