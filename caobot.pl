@@ -90,6 +90,7 @@ sub new {
 sub _start {
     my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     $_[HEAP]{linecount}=0;
+    $heap->{'watchlist'} = [];
     $self->{'irc'}->yield( register => 'all' );
     $self->{'irc'}->yield( connect => { } );
     $kernel->delay('start_log',5);
@@ -144,7 +145,7 @@ sub watch{
 sub unwatch{
    my ($self, $kernel, $heap, $sender, $device, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
    my $new_watchlist;
-   while (my $inspect = shift(@{ $heap->{'watchlist'} }){
+   while (my $inspect = shift(@{ $heap->{'watchlist'} })){
        push(@{ $new_watchlist }, $inspect ) unless($inspect == $device);
        $heap->{'watchlist'} $new_watchlist;
    }
