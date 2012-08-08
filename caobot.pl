@@ -148,17 +148,13 @@ sub unwatch{
    my $new_watchlist;
    while (my $inspect = shift(@{ $heap->{'watchlist'} })){
        push(@{ $new_watchlist }, $inspect ) unless($inspect eq $device);
-       $heap->{'watchlist'} = $new_watchlist;
    }
-   while (my $copy = shift(@{ $new_watchlist })){
-       push(@{ $heap->{'watchlist'} }, $copy );
-   }
+   $heap->{'watchlist'} = $new_watchlist;
    $self->{'irc'}->yield( privmsg => $replyto => "$device unwatched");
 }
 
 sub watchlist{
    my ($self, $kernel, $heap, $sender, $replyto, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-   print STDERR join(", ", @{ $heap->{'watchlist'} });
    $self->{'irc'}->yield( privmsg => $replyto => "currently watching: [".join(", ", @{ $heap->{'watchlist'} })."]");
 }
 
