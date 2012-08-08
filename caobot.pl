@@ -565,9 +565,8 @@ sub on_child_stdout {
     print "pid ", $child->PID, " STDOUT: $stdout_line\n";
 
     my $device =  $_[HEAP]{device}{$wheel_id};
-    my $event =  $_[HEAP]{reply_to}{$wheel_id};
-
-    $kernel->yield($event, $self->sanitize($device),$where);
+    $kernel->yield( $_[HEAP]{reply_to}{$wheel_id} , $self->sanitize($device)." => $stdout_line";
+    #$self->{'irc'}->yield( privmsg => $self->{'channel'} => "$device => $stdout_line") unless( $stdout_line =~m/^\s*$/ ) ;
 }
 
 # Wheel event, including the wheel's ID.
