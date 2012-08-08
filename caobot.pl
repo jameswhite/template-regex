@@ -137,15 +137,22 @@ sub got_log_line {
 } 
 
 sub watch{
-   my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+   my ($self, $kernel, $heap, $sender, $device, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+   push(@{ $heap->{'watchlist'} }, $device);
 }
 
 sub unwatch{
-   my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+   my ($self, $kernel, $heap, $sender, $device, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+   my $new_watchlist;
+   while (my $inspect = shift(@{ $heap->{'watchlist'} }){
+       push(@{ $new_watchlist }, $inspect ) unless($inspect == $device);
+       $heap->{'watchlist'} $new_watchlist;
+   }
 }
 
 sub watchlist{
    my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+   print STDERR join(",", @{ $heap->{'watchlist'} });
 }
 
 sub event_timeout{
