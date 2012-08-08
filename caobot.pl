@@ -147,7 +147,7 @@ sub unwatch{
    my $new_watchlist;
    while (my $inspect = shift(@{ $heap->{'watchlist'} })){
        push(@{ $new_watchlist }, $inspect ) unless($inspect == $device);
-       $heap->{'watchlist'} $new_watchlist;
+       $heap->{'watchlist'} = $new_watchlist;
    }
 }
 
