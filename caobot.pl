@@ -180,9 +180,10 @@ sub state_change{
    my ($device, $state) = $devicestate =~ /\s*(\S+)\s*=>\s*(.*)\s*/;
    $state=~s/\s+$//; $state=~s/^\s+//;
    $device=~s/\s+$//; $device=~s/^\s+//;
-   #foreach (my $inspect = shift(@{ $heap->{'watchlist'} })){
-   #}
-   print STDERR "$device [$state]\n";
+   if ($heap->{'watchlist'}->{$device} ne $state){
+       $kernel->yield('say', "[$device] changed state to => $state");
+       $heap->{'watchlist'}->{$device} = $state;
+   }
 }
 
 sub event_timeout{
