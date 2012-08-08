@@ -578,7 +578,7 @@ sub say{
 sub on_child_stdout {
     my ($self, $kernel, $heap, $sender, $stdout_line, $wheel_id) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my $child = $_[HEAP]{children_by_wid}{$wheel_id};
-    print "pid ", $child->PID, " STDOUT: $stdout_line\n";
+    #print "pid ", $child->PID, " STDOUT: $stdout_line\n";
 
     my $device =  $_[HEAP]{device}{$wheel_id};
     $kernel->yield( $_[HEAP]{reply_to}{$wheel_id} , $self->sanitize($device)." => $stdout_line");
@@ -600,7 +600,7 @@ sub on_child_close {
 
     # May have been reaped by on_child_signal().
     unless (defined $child) {
-      print "wid $wheel_id closed all pipes.\n";
+      #print "wid $wheel_id closed all pipes.\n";
       return;
     }
 
@@ -610,7 +610,7 @@ sub on_child_close {
 
 sub on_child_signal {
     my ($self, $kernel, $heap, $sender, $wheel_id) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-    print "pid $_[ARG1] exited with status $_[ARG2].\n";
+    #print "pid $_[ARG1] exited with status $_[ARG2].\n";
     my $child = delete $_[HEAP]{children_by_pid}{$_[ARG1]};
 
     # May have been reaped by on_child_close().
