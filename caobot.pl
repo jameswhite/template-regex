@@ -80,6 +80,7 @@ sub new {
                                                         'on_child_signal',
                                                         'watch',
                                                         'watchlist',
+                                                        'run_watchlist',
                                                         'unwatch',
                                                       ],
                                            ],
@@ -94,6 +95,7 @@ sub _start {
     $self->{'irc'}->yield( register => 'all' );
     $self->{'irc'}->yield( connect => { } );
     $kernel->delay('start_log',5);
+    $kernel->delay('run_watchlist',5);
     return;
 }
 
@@ -160,6 +162,15 @@ sub watchlist{
    }else{
        $self->{'irc'}->yield( privmsg => $replyto => "not currently watching any devices.");
    }
+}
+
+sub run_watchlist{
+   my ($self, $kernel, $heap, $sender, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+   foreach my $device (@{ $heap->{'watchlist'}){
+        $kernel->yield('spawn', ["rtatiem",$self->sanitize($device)]);
+   }
+   # run the watch list in 30
+   $kernel->delay('run_watchlist',30);
 }
 
 sub event_timeout{
