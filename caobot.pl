@@ -419,7 +419,7 @@ sub irc_public {
     }elsif ( my ($device) = $what =~ /^\s*status\s*(\S*[0-9]+)\s*$/ ){
         $self->{'irc'}->yield( privmsg => $where => "checking the status...");
         $kernel->yield('spawn', ["rtatiem",$self->sanitize($device)]);
-        $kernel->yield('spawn', ["prnthealth","$self->sanitize($device)"],"say");
+        $kernel->yield('spawn', ["prnthealth",$self->sanitize($device)],"say");
     }elsif ( my ($device) = $what =~ /^\s*firmware\s*(\S*[0-9]+)\s*$/ ){
         $self->{'irc'}->yield( privmsg => $where => "looking...");
         $kernel->yield('spawn', ["firmware",$self->sanitize($device)],"say");
