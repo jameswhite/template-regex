@@ -467,6 +467,7 @@ sub irc_public {
 
     print "$what\n";
     if ( my ($device) = $what =~ /^\s*[Hh][Ee][Ll][Pp]\s*(.*)$/ ){ 
+print STDERR "saw help\n";
         $kernel->yield('help',$1,$channel,$nick);
     }elsif ( my ($device) = $what =~ /^\s*[Ww]here\s*is\s*(\S*[0-9]+)\s*\?*$/ ){ 
         $kernel->yield('printer_lookup',$self->sanitize($device),$channel,$nick);
