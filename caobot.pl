@@ -348,6 +348,42 @@ sub lookup_location{
     return $printers;
 }
 
+sub help {
+    my ($self, $kernel, $heap, $sender, $topic, $channel, $nick, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my $helpreply = undef;
+    my $helpdata = { 
+                     'address'   => [ 
+                                      "Request the address of a bank branch",
+                                      "Usage 'address <bank branch>'",
+                                    ]
+                     'cgi'       => ['wip'],
+                     'firmware ' => ['wip'],
+                     'isup'      => ['wip'],
+                     'jobstatus' => ['wip'],
+                     'ping'      => ['wip'],
+                     'report'    => ['wip'],
+                     'status'    => ['wip'],
+                     'watch'     => ['wip'],
+                     'where'     => ['wip'] 
+                     'which'     => ['wip'] 
+                     'unwatch'   => ['wip'],
+                     'watchlist' => ['wip'],
+
+                   };
+    
+    if(!defined($topic){
+        $helpreply = [
+                       "help topics: [ address, cgi, firmware, isup, jobstatus, ping, report, status, unwatch, watch, watchlist ]",
+                       "use 'help <topic>' for specifics (e.g. 'help ping')"
+                     ];
+    }
+    elsif grep( /^$topic$/, keys(%{ $helpdata }); ){ $helpreply = $helpdata->{$topic}; }
+    foreach $reply (@{ $helpreply }){
+        $self->{'irc'}->yield( privmsg => $channel => "$hreply") if(defined($helpreply));
+    }
+}
+
+
 sub location_lookup{
     my ($self, $kernel, $heap, $sender, $location, $replyto, $who, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my $devices = $self->lookup_location($location);
@@ -405,7 +441,9 @@ sub irc_public {
     my $domainname = join('.',@parts);
 
     print "$what\n";
-    if ( my ($device) = $what =~ /^\s*[Ww]here\s*is\s*(\S*[0-9]+)\s*\?*$/ ){ 
+    if ( my ($device) = $what =~ /^\s*[Hh][Ee][Ll][Pp]\s+(.*)$/ ){ 
+        $kernel->yield('help',$1,$channel,$nick);
+    }elsif ( my ($device) = $what =~ /^\s*[Ww]here\s*is\s*(\S*[0-9]+)\s*\?*$/ ){ 
         $kernel->yield('printer_lookup',$self->sanitize($device),$channel,$nick);
     }elsif ( my ($device) = $what =~ /^\s*[Ii]s\s*(\S*[0-9]+)\s*up\s*\?*$/ ){ 
         $self->{'irc'}->yield( privmsg => $where => "I'll check...");
