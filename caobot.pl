@@ -355,16 +355,23 @@ sub help {
     my $helpdata = { 
                      'address'   => [ 
                                       "Request the address of a bank branch",
-                                      "Usage 'address <bank branch>'",
+                                      "Usage: address <bank branch>",
+                                      "Example: address Old Fort",
                                     ],
                      'cgi'       => [
-                                      'wip'
+                                      "Test the cgi on a soekris",
+                                      "Usage: cgi <[skrs]nnnn>",
+                                      "Example: cgi skrs0088"
                                     ],
                      'firmware ' => [
-                                      'wip'
+                                      "check the firmware on a printer",
+                                      "Usage: firmware <[prnt]nnnn>",
+                                      "Example: firmware skrs0088"
                                     ],
                      'isup'      => [
-                                      'wip'
+                                      "check if a soekris is up",
+                                      "Usage: is <[skrs]nnnn> up",
+                                      "Example: is skrs0088 up?"
                                     ],
                      'jobstatus' => [
                                       'wip'
