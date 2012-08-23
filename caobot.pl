@@ -470,6 +470,7 @@ sub sanitize {
     my $self = shift;
     my $device = shift if @_;
     return "" unless $device;
+    $device=~s/\..*//; 
     $device=~s/\s*//; 
     $device=~tr/A-Z/a-z/; 
     $device=~s/^[Ss][Kk][Rr][Ss]//;
