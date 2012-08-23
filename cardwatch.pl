@@ -62,6 +62,7 @@ sub new {
                           object_states => [
                                              $self => [ 
                                                         '_start',
+                                                        'help', 
                                                         'got_log_line', 
                                                         'got_log_rollover',
                                                         'sketch_connection',
@@ -348,6 +349,96 @@ sub lookup_location{
     return $printers;
 }
 
+sub help {
+    my ($self, $kernel, $heap, $sender, $topic, $channel, $nick, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+    my $helpreply = undef;
+    my $helpdata = { 
+                     'address'   => [ 
+                                      "Request the address of a bank branch",
+                                      "Usage: address <bank branch>",
+                                      "Example: address Old Fort",
+                                    ],
+                     'cgi'       => [
+                                      "Test the cgi on a soekris",
+                                      "Usage: cgi <[skrs]nnnn>",
+                                      "Example: cgi skrs0088"
+                                    ],
+                     'firmware'  => [
+                                      "check the firmware on a printer",
+                                      "Usage: firmware <[prnt]nnnn>",
+                                      "Example: firmware skrs0088"
+                                    ],
+                     'isup'      => [
+                                      "check if a soekris is up",
+                                      "Usage: is <[skrs]nnnn> up",
+                                      "Example: is skrs0088 up?"
+                                    ],
+                     'jobstatus' => [
+                                      "check the status of a job",
+                                      "Usage: jobstatus <job_id>",
+                                      "Example: jobstatus be52c1f6-1841-481b-9d61-982a5f2606ec",
+                                      
+                                    ],
+                     'ping'      => [
+                                      "check if a soekris is up",
+                                      "Usage: ping <[skrs]nnnn>",
+                                      "Example: ping skrs0088",
+                                    ],
+                     'report'    => [
+                                      "report on todays prints",
+                                      "Usage: report"
+                                    ],
+                     'status'    => [
+                                      "check if a soekris is up, and check it's cgi",
+                                      "Usage: status <[skrs]nnnn>",
+                                      "Example: status skrs0088",
+                                    ],
+                     'watch'     => [
+                                      "watch a soekris for up/down changes",
+                                      "Usage: watch <[skrs]nnnn>",
+                                      "Example: watch skrs0088",
+                                    ],
+                     'where'     => [
+                                      "find where a soekris is located",
+                                      "Usage: where is <[skrs]nnnn>",
+                                      "Example: where is skrs0088",
+                                    ],
+                     'which'     => [
+                                      "find which a soekris is at a branch",
+                                      "Usage: which is <bank branch>",
+                                      "Example: which is Cecilian",
+                                    ],
+                     'unwatch'   => [
+                                      "stop watching a soekris for up/down changes",
+                                      "Usage: unwatch <[skrs]nnnn>",
+                                      "Example: unwatch skrs0088",
+                                    ],
+                     'watchlist' => [
+                                      "display which soekris boxes are currently being watched",
+                                      "Usage: watchlist",
+                                    ],
+
+                   };
+    
+    if(!defined($topic) || ($topic eq '')){
+        print STDERR "help 1\n";
+        $helpreply = [
+                       "help topics: [ address, cgi, firmware, isup, jobstatus, ping, report, status, unwatch, watch, watchlist ]",
+                       "use 'help <topic>' for specifics (e.g. 'help ping')",
+                     ];
+    }elsif(grep( /^$topic$/, keys(%{ $helpdata }) )){ 
+        print STDERR "help 2\n";
+        $helpreply = $helpdata->{$topic}; 
+    }else{
+        print STDERR "help 3\n";
+       return;
+    }
+    foreach $reply (@{ $helpreply }){
+        $self->{'irc'}->yield( privmsg => $channel => "$reply") if(defined($helpreply));
+    }
+}
+
+
 sub location_lookup{
     my ($self, $kernel, $heap, $sender, $location, $replyto, $who, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
     my $devices = $self->lookup_location($location);
@@ -405,7 +496,9 @@ sub irc_public {
     my $domainname = join('.',@parts);
 
     print "$what\n";
-    if ( my ($device) = $what =~ /^\s*[Ww]here\s*is\s*(\S*[0-9]+)\s*\?*$/ ){ 
+    if ( my ($device) = $what =~ /^\s*[Hh][Ee][Ll][Pp]\s*(.*)$/ ){ 
+        $kernel->yield('help',$1,$channel,$nick);
+    }elsif ( my ($device) = $what =~ /^\s*[Ww]here\s*is\s*(\S*[0-9]+)\s*\?*$/ ){ 
         $kernel->yield('printer_lookup',$self->sanitize($device),$channel,$nick);
     }elsif ( my ($device) = $what =~ /^\s*[Ii]s\s*(\S*[0-9]+)\s*up\s*\?*$/ ){ 
         $self->{'irc'}->yield( privmsg => $where => "I'll check...");
