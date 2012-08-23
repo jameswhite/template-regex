@@ -62,6 +62,7 @@ sub new {
                           object_states => [
                                              $self => [ 
                                                         '_start',
+                                                        'help', 
                                                         'got_log_line', 
                                                         'got_log_rollover',
                                                         'sketch_connection',
