@@ -464,7 +464,7 @@ sub irc_public {
     my $domainname = join('.',@parts);
 
     print "$what\n";
-    if ( my ($device) = $what =~ /^\s*[Hh][Ee][Ll][Pp]\s+(.*)$/ ){ 
+    if ( my ($device) = $what =~ /^\s*[Hh][Ee][Ll][Pp]\s*(.*)$/ ){ 
         $kernel->yield('help',$1,$channel,$nick);
     }elsif ( my ($device) = $what =~ /^\s*[Ww]here\s*is\s*(\S*[0-9]+)\s*\?*$/ ){ 
         $kernel->yield('printer_lookup',$self->sanitize($device),$channel,$nick);
