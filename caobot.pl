@@ -410,7 +410,7 @@ sub help {
        return;
     }
     foreach $reply (@{ $helpreply }){
-        $self->{'irc'}->yield( privmsg => $channel => "$hreply") if(defined($helpreply));
+        $self->{'irc'}->yield( privmsg => $channel => "$reply") if(defined($helpreply));
     }
 }
 
