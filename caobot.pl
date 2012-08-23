@@ -397,11 +397,18 @@ sub help {
                    };
     
     if(!defined($topic) || ($topic eq '')){
+        print STDERR "help 1\n";
         $helpreply = [
                        "help topics: [ address, cgi, firmware, isup, jobstatus, ping, report, status, unwatch, watch, watchlist ]",
                        "use 'help <topic>' for specifics (e.g. 'help ping')",
                      ];
-    }elsif(grep( /^$topic$/, keys(%{ $helpdata }) )){ $helpreply = $helpdata->{$topic}; }
+    }elsif(grep( /^$topic$/, keys(%{ $helpdata }) )){ 
+        print STDERR "help 2\n";
+        $helpreply = $helpdata->{$topic}; 
+    }else{
+        print STDERR "help 3\n";
+       return;
+    }
     foreach $reply (@{ $helpreply }){
         $self->{'irc'}->yield( privmsg => $channel => "$hreply") if(defined($helpreply));
     }
