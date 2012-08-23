@@ -351,7 +351,6 @@ sub lookup_location{
 
 sub help {
     my ($self, $kernel, $heap, $sender, $topic, $channel, $nick, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
-print STDERR Data::Dumper->Dump([$topic, $channel, $nick]);
     my $helpreply = undef;
     my $helpdata = { 
                      'address'   => [ 
@@ -397,7 +396,7 @@ print STDERR Data::Dumper->Dump([$topic, $channel, $nick]);
 
                    };
     
-    if(!defined($topic)){
+    if(!defined($topic) || ($topic eq '')){
         $helpreply = [
                        "help topics: [ address, cgi, firmware, isup, jobstatus, ping, report, status, unwatch, watch, watchlist ]",
                        "use 'help <topic>' for specifics (e.g. 'help ping')",
@@ -467,7 +466,6 @@ sub irc_public {
 
     print "$what\n";
     if ( my ($device) = $what =~ /^\s*[Hh][Ee][Ll][Pp]\s*(.*)$/ ){ 
-print STDERR "saw help\n";
         $kernel->yield('help',$1,$channel,$nick);
     }elsif ( my ($device) = $what =~ /^\s*[Ww]here\s*is\s*(\S*[0-9]+)\s*\?*$/ ){ 
         $kernel->yield('printer_lookup',$self->sanitize($device),$channel,$nick);
