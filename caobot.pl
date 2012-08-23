@@ -400,8 +400,7 @@ sub help {
                        "help topics: [ address, cgi, firmware, isup, jobstatus, ping, report, status, unwatch, watch, watchlist ]",
                        "use 'help <topic>' for specifics (e.g. 'help ping')",
                      ];
-    }
-    elsif grep( /^$topic$/, keys(%{ $helpdata }); ){ $helpreply = $helpdata->{$topic}; }
+    }elsif(grep( /^$topic$/, keys(%{ $helpdata }); )){ $helpreply = $helpdata->{$topic}; }
     foreach $reply (@{ $helpreply }){
         $self->{'irc'}->yield( privmsg => $channel => "$hreply") if(defined($helpreply));
     }
