@@ -355,26 +355,50 @@ sub help {
                      'address'   => [ 
                                       "Request the address of a bank branch",
                                       "Usage 'address <bank branch>'",
-                                    ]
-                     'cgi'       => ['wip'],
-                     'firmware ' => ['wip'],
-                     'isup'      => ['wip'],
-                     'jobstatus' => ['wip'],
-                     'ping'      => ['wip'],
-                     'report'    => ['wip'],
-                     'status'    => ['wip'],
-                     'watch'     => ['wip'],
-                     'where'     => ['wip'] 
-                     'which'     => ['wip'] 
-                     'unwatch'   => ['wip'],
-                     'watchlist' => ['wip'],
+                                    ],
+                     'cgi'       => [
+                                      'wip'
+                                    ],
+                     'firmware ' => [
+                                      'wip'
+                                    ],
+                     'isup'      => [
+                                      'wip'
+                                    ],
+                     'jobstatus' => [
+                                      'wip'
+                                    ],
+                     'ping'      => [
+                                      'wip'
+                                    ],
+                     'report'    => [
+                                      'wip'
+                                    ],
+                     'status'    => [
+                                      'wip'
+                                    ],
+                     'watch'     => [
+                                      'wip'
+                                    ],
+                     'where'     => [
+                                      'wip'
+                                    ] 
+                     'which'     => [
+                                      'wip'
+                                    ] 
+                     'unwatch'   => [
+                                      'wip'
+                                    ],
+                     'watchlist' => [
+                                      'wip'
+                                    ],
 
                    };
     
     if(!defined($topic){
         $helpreply = [
                        "help topics: [ address, cgi, firmware, isup, jobstatus, ping, report, status, unwatch, watch, watchlist ]",
-                       "use 'help <topic>' for specifics (e.g. 'help ping')"
+                       "use 'help <topic>' for specifics (e.g. 'help ping')",
                      ];
     }
     elsif grep( /^$topic$/, keys(%{ $helpdata }); ){ $helpreply = $helpdata->{$topic}; }
