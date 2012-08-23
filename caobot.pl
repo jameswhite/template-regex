@@ -351,6 +351,7 @@ sub lookup_location{
 
 sub help {
     my ($self, $kernel, $heap, $sender, $topic, $channel, $nick, @args) = @_[OBJECT, KERNEL, HEAP, SENDER, ARG0 .. $#_];
+print STDERR Data::Dumper->Dump([$topic, $channel, $nick]);
     my $helpreply = undef;
     my $helpdata = { 
                      'address'   => [ 
