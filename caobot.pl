@@ -363,7 +363,7 @@ sub help {
                                       "Usage: cgi <[skrs]nnnn>",
                                       "Example: cgi skrs0088"
                                     ],
-                     'firmware ' => [
+                     'firmware'  => [
                                       "check the firmware on a printer",
                                       "Usage: firmware <[prnt]nnnn>",
                                       "Example: firmware skrs0088"
@@ -374,10 +374,15 @@ sub help {
                                       "Example: is skrs0088 up?"
                                     ],
                      'jobstatus' => [
-                                      'wip'
+                                      "check the status of a job",
+                                      "Usage: jobstatus <job_id>",
+                                      "Example: jobstatus be52c1f6-1841-481b-9d61-982a5f2606ec",
+                                      
                                     ],
                      'ping'      => [
-                                      'wip'
+                                      "check if a soekris is up",
+                                      "Usage: ping <[skrs]nnnn>",
+                                      "Example: ping skrs0088",
                                     ],
                      'report'    => [
                                       'wip'
