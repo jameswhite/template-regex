@@ -395,7 +395,7 @@ sub help {
 
                    };
     
-    if(!defined($topic){
+    if(!defined($topic)){
         $helpreply = [
                        "help topics: [ address, cgi, firmware, isup, jobstatus, ping, report, status, unwatch, watch, watchlist ]",
                        "use 'help <topic>' for specifics (e.g. 'help ping')",
