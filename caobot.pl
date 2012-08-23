@@ -382,10 +382,10 @@ sub help {
                                     ],
                      'where'     => [
                                       'wip'
-                                    ] 
+                                    ],
                      'which'     => [
                                       'wip'
-                                    ] 
+                                    ],
                      'unwatch'   => [
                                       'wip'
                                     ],
