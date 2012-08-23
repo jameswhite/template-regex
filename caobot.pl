@@ -385,25 +385,37 @@ sub help {
                                       "Example: ping skrs0088",
                                     ],
                      'report'    => [
-                                      'wip'
+                                      "report on todays prints",
+                                      "Usage: report"
                                     ],
                      'status'    => [
-                                      'wip'
+                                      "check if a soekris is up, and check it's cgi",
+                                      "Usage: status <[skrs]nnnn>",
+                                      "Example: status skrs0088",
                                     ],
                      'watch'     => [
-                                      'wip'
+                                      "watch a soekris for up/down changes",
+                                      "Usage: watch <[skrs]nnnn>",
+                                      "Example: watch skrs0088",
                                     ],
                      'where'     => [
-                                      'wip'
+                                      "find where a soekris is located",
+                                      "Usage: where is <[skrs]nnnn>",
+                                      "Example: where is skrs0088",
                                     ],
                      'which'     => [
-                                      'wip'
+                                      "find which a soekris is at a branch",
+                                      "Usage: which is <bank branch>",
+                                      "Example: which is Cecilian",
                                     ],
                      'unwatch'   => [
-                                      'wip'
+                                      "stop watching a soekris for up/down changes",
+                                      "Usage: unwatch <[skrs]nnnn>",
+                                      "Example: unwatch skrs0088",
                                     ],
                      'watchlist' => [
-                                      'wip'
+                                      "display which soekris boxes are currently being watched",
+                                      "Usage: watchlist",
                                     ],
 
                    };
