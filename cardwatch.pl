@@ -201,11 +201,11 @@ sub event_timeout{
             my $json = JSON->new->allow_nonref;
             my $struct = '';
             eval {
-              $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/job/$job") );
+              $struct = $json->decode( get("http://quark.$domainname:9090/caoPrinterStatus/job/$job") );
             };
             if($@){
                 $self->{'irc'}->yield( privmsg => $channel => "$@");
-                $self->{'irc'}->yield( privmsg => $channel => "(while fetching http://mina.dev.$domainname:9090/caoPrinterStatus/job/$job)");
+                $self->{'irc'}->yield( privmsg => $channel => "(while fetching http://quark.$domainname:9090/caoPrinterStatus/job/$job)");
                 $self->{'irc'}->yield( privmsg => $channel => "^^^^^^^^^^^^^^^^^^^^ aleclanter?");
                 return;
             }
@@ -529,11 +529,11 @@ sub irc_public {
         my $json = JSON->new->allow_nonref;
         my $struct;
         eval {
-               $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/") );
+               $struct = $json->decode( get("http://quark.$domainname:9090/caoPrinterStatus/") );
         };
         if($@){
             $self->{'irc'}->yield( privmsg => $channel => "$@");
-            $self->{'irc'}->yield( privmsg => $channel => "(while fetching http://mina.dev.$domainname:9090/caoPrinterStatus/)");
+            $self->{'irc'}->yield( privmsg => $channel => "(while fetching http://quark.$domainname:9090/caoPrinterStatus/)");
             $self->{'irc'}->yield( privmsg => $channel => "^^^^^^^^^^^^^^^^^^^^ aleclanter?");
             return;
         }
@@ -552,7 +552,7 @@ sub irc_public {
         $job=~tr/A-Z/a-z/;
         if($job=~m/[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+/){
             my $json = JSON->new->allow_nonref;
-            my $struct = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/job/$job") );
+            my $struct = $json->decode( get("http://quark.$domainname:9090/caoPrinterStatus/job/$job") );
             $self->{'irc'}->yield( privmsg => $channel => "$struct");
         }
     }elsif ( $what =~ /^\s*\!*address\s+(.*)/){
@@ -560,7 +560,7 @@ sub irc_public {
         my $json = JSON->new->allow_nonref;
         my $addressdata;
         eval {
-            $addressdata = $json->decode( get("http://mina.dev.$domainname:9090/caoPrinterStatus/sites"));
+            $addressdata = $json->decode( get("http://quark.$domainname:9090/caoPrinterStatus/sites"));
         };
 
         if($@){
