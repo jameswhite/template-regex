@@ -520,6 +520,9 @@ sub irc_public {
     }elsif ( my ($device) = $what =~ /^\s*firmware\s*(\S*[0-9]+)\s*$/ ){
         $self->{'irc'}->yield( privmsg => $where => "looking...");
         $kernel->yield('spawn', ["firmware",$self->sanitize($device)],"say");
+    }elsif ( my ($device) = $what =~ /^\s*cert\s*(\S*[0-9]+)\s*$/ ){
+        $self->{'irc'}->yield( privmsg => $where => "fetching certificate...");
+        $kernel->yield('spawn', ["certificate_check",$self->sanitize($device)],"say");
     }elsif ( $what =~ /^\s*[Ww]hich\s*(skrs|prnt|soekris|device|printer)*\s*(is)*\s*(.*)\s*\?*$/ ){
         my $search = $3;
         $search=~s/\s*\?\s*$//; # remove trailing question marks
