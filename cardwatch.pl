@@ -271,7 +271,7 @@ sub got_log_rollover {
 
 sub lookup_printer{
     my $self = shift;
-    my $soekris = shift if @_;
+    my $soekris = shift||undef;
     return undef unless defined($soekris);
     my $fqdn = `hostname -f`;
     chomp($fqdn);
