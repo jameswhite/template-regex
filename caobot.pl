@@ -528,6 +528,9 @@ sub irc_public {
         $search=~s/\s*\?\s*$//; # remove trailing question marks
         print "Initiate search for: $search\n";
         $kernel->yield('location_lookup',$search,$channel,$nick);
+    }elsif ( my ($device) = $what =~ /^\s*recycle\s*(\S*[0-9]+)\s*$/ ){
+        $self->{'irc'}->yield( privmsg => $where => "recycling...");
+        $kernel->yield('spawn', ["recycle",$self->sanitize($device)],"say");
     }elsif ( $what =~ /^\s*!*report/ ){
         my $json = JSON->new->allow_nonref;
         my $struct;
