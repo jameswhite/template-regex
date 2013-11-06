@@ -480,6 +480,7 @@ sub sanitize {
         if($device < 10){ $soekris="skrs000$device"; }
         elsif($device < 100){ $soekris="skrs00$device"; }
         elsif($device < 1000){ $soekris="skrs0$device"; }
+        elsif($device < 10000){ $soekris="skrs$device"; }
         return $soekris;
     }
     return "";
